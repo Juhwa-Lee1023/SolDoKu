@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIImageView!
     
