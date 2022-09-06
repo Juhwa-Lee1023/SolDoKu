@@ -23,7 +23,7 @@ class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampl
     }
     
     func cameraOn() {
-        let camera = AVCaptureDevice.default(for: AVMediaType.video)
+        let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
 
@@ -33,7 +33,8 @@ class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampl
             session?.addInput(cameraInput)
             
             let videoOutput = AVCaptureVideoDataOutput()
-            /*https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutput
+            /*
+             https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutput
              */
             
             //픽셀버퍼 핸들링을 용이하게 하기위해 BGRA타입으로 변환
@@ -44,11 +45,12 @@ class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampl
             session?.addOutput(videoOutput)
             
             previewLayer = AVCaptureVideoPreviewLayer(session: session!)
+            
             previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-            previewLayer?.frame = cameraView.layer.bounds
+            previewLayer?.frame = cameraView.frame
             cameraView.layer.addSublayer(previewLayer!)
-        }catch{
+        } catch {
             
         }
         
