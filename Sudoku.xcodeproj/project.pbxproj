@@ -306,6 +306,7 @@
 				DEVELOPMENT_TEAM = 5N5TS7Y4MA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = camera;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -334,6 +335,7 @@
 				DEVELOPMENT_TEAM = 5N5TS7Y4MA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = camera;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

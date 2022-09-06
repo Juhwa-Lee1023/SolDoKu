@@ -6,15 +6,55 @@
 //
 
 import UIKit
+import AVFoundation
 
-class photoSudokuViewController: UIViewController {
-
+final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+    
+    @IBOutlet weak var cameraView: UIImageView!
+    
+    private var session: AVCaptureSession?
+    private var previewLayer: AVCaptureVideoPreviewLayer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        preparedSession()
+        session?.startRunning()
+        
     }
     
+    func preparedSession() {
+        let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+        do {
+            let cameraInput = try AVCaptureDeviceInput(device: camera!)
+
+            session = AVCaptureSession()
+            session?.sessionPreset = AVCaptureSession.Preset.hd1280x720
+            //해상도 지정
+            session?.addInput(cameraInput)
+            
+            let videoOutput = AVCaptureVideoDataOutput()
+            /*
+             https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutput
+             */
+            
+            //픽셀버퍼 핸들링을 용이하게 하기위해 BGRA타입으로 변환
+            videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
+            
+            let sessionQueue = DispatchQueue(label: "camera")
+            videoOutput.setSampleBufferDelegate(self, queue: sessionQueue)
+            session?.addOutput(videoOutput)
+            
+            previewLayer = AVCaptureVideoPreviewLayer(session: session!)
+            
+            previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
+            previewLayer?.frame = cameraView.frame
+            cameraView.layer.addSublayer(previewLayer!)
+        } catch {
+            
+        }
+        
+    }
 
     /*
     // MARK: - Navigation
