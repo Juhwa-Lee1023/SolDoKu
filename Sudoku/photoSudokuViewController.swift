@@ -17,12 +17,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        cameraOn()
+        preparedSession()
         session?.startRunning()
         
     }
     
-    func cameraOn() {
+    func preparedSession() {
         let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
