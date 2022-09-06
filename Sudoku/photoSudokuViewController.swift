@@ -12,8 +12,8 @@ class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampl
     
     @IBOutlet weak var cameraView: UIImageView!
     
-    var session: AVCaptureSession?
-    var previewLayer: AVCaptureVideoPreviewLayer?
+    private var session: AVCaptureSession?
+    private var previewLayer: AVCaptureVideoPreviewLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
