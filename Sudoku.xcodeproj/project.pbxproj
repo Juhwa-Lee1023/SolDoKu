@@ -13,6 +13,10 @@
 		D53F618C28C77AE20017D756 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F618A28C77AE20017D756 /* Main.storyboard */; };
 		D53F618E28C77AE30017D756 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D53F618D28C77AE30017D756 /* Assets.xcassets */; };
 		D53F619128C77AE30017D756 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F618F28C77AE30017D756 /* LaunchScreen.storyboard */; };
+		D53F619928C77BC90017D756 /* photoSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F619828C77BC90017D756 /* photoSudoku.storyboard */; };
+		D53F619B28C77BE40017D756 /* photoSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */; };
+		D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F619C28C77BF70017D756 /* importSudoku.storyboard */; };
+		D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619E28C77C070017D756 /* importSudokuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		D53F618D28C77AE30017D756 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D53F619028C77AE30017D756 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D53F619228C77AE30017D756 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D53F619828C77BC90017D756 /* photoSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = photoSudoku.storyboard; sourceTree = "<group>"; };
+		D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = photoSudokuViewController.swift; sourceTree = "<group>"; };
+		D53F619C28C77BF70017D756 /* importSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = importSudoku.storyboard; sourceTree = "<group>"; };
+		D53F619E28C77C070017D756 /* importSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importSudokuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +71,10 @@
 				D53F618D28C77AE30017D756 /* Assets.xcassets */,
 				D53F618F28C77AE30017D756 /* LaunchScreen.storyboard */,
 				D53F619228C77AE30017D756 /* Info.plist */,
+				D53F619828C77BC90017D756 /* photoSudoku.storyboard */,
+				D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */,
+				D53F619C28C77BF70017D756 /* importSudoku.storyboard */,
+				D53F619E28C77C070017D756 /* importSudokuViewController.swift */,
 			);
 			path = Sudoku;
 			sourceTree = "<group>";
@@ -125,8 +137,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */,
 				D53F619128C77AE30017D756 /* LaunchScreen.storyboard in Resources */,
 				D53F618E28C77AE30017D756 /* Assets.xcassets in Resources */,
+				D53F619928C77BC90017D756 /* photoSudoku.storyboard in Resources */,
 				D53F618C28C77AE20017D756 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,7 +153,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
+				D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */,
 				D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */,
+				D53F619B28C77BE40017D756 /* photoSudokuViewController.swift in Sources */,
 				D53F618728C77AE20017D756 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
