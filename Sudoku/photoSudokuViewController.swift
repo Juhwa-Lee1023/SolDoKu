@@ -11,6 +11,7 @@ import AVFoundation
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIImageView!
+    @IBOutlet weak var refinedView: UIImageView!
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -56,6 +57,15 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
     }
 
+    // 비디오 프레임이 들어올 때마다 갱신됨
+    /*
+     참고
+     https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
+     */
+    func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+
+        
+    }
     /*
     // MARK: - Navigation
 
