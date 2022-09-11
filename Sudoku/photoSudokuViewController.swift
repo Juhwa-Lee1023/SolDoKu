@@ -11,6 +11,7 @@ import AVFoundation
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var cameraView: UIImageView!
+    @IBOutlet weak var refinedView: UIImageView!
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -55,7 +56,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
         
     }
-
+    
     /*
     // MARK: - Navigation
 

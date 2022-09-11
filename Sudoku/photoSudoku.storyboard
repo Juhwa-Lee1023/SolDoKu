@@ -30,6 +30,7 @@
                     </view>
                     <connections>
                         <outlet property="cameraView" destination="cLG-Qq-7gK" id="3EJ-eq-Spp"/>
+                        <outlet property="refinedView" destination="aep-Ba-2AR" id="Vx1-kn-Ca8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
