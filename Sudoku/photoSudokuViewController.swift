@@ -65,6 +65,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
+        //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
+        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue)!
+        
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
