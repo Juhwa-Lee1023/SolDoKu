@@ -129,5 +129,52 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
     }
 }
 
+// 스도쿠를 9 * 9 로 잘라서 좌표 구하기
++ (NSMutableArray *) getSlicedSudokuNumImages: (UIImage *)image imageSize: (int)imageSize cutOffset: (int)cutOffset {
+
+    cv::Mat mat;
+    UIImageToMat(image, mat);
+
+    std::vector<UIImage *> slicedImages;
+    cv::Mat numImageMat = cv::Mat(imageSize * 9, imageSize * 9, CV_8UC4);
+
+    double dx = (mat.size()).width / 9.0;
+    double dy = (mat.size()).height / 9.0;
+
+    for (int row = 0; row < 9; row++)
+    {
+        for (int col = 0; col < 9; col++)
+        {
+            int x = (int)(col * dx);
+            int y = (int)(row * dy);
+            cv::Rect r = cv::Rect(x + cutOffset, y + cutOffset, dx - cutOffset, dy - cutOffset);
+            cv::Mat sliced = mat(r);
+            cv::Mat resized;
+            cv::resize(sliced, resized, cv::Size(imageSize, imageSize));
+
+            slicedImages.push_back(MatToUIImage(resized));
+
+            // 잘랐던 것들을 다시 합친다.
+            x = col * imageSize;
+            y = row * imageSize;
+            r = cv::Rect(x, y, imageSize, imageSize);
+            resized.copyTo(numImageMat(r));
+        }
+    }
+
+    // 잘라두었던 이미지들을 배열에 집어넣는다.
+    NSArray *numImages = [NSArray arrayWithObjects:&slicedImages[0] count:slicedImages.size()];
+
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    [result addObject:numImages];
+    [result addObject:MatToUIImage(numImageMat)];
+    
+    mat.release();
+    numImageMat.release();
+    
+    return result;
+}
+
+
 @end
 
