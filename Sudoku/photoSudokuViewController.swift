@@ -12,9 +12,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var refinedView: UIImageView!
+    @IBOutlet weak var shooting: UIButton!
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    var check: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +27,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     func preparedSession() {
-        let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+        let camera = AVCaptureDevice.default(for: AVMediaType.video)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
             
@@ -103,7 +106,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let img = UIImage(cgImage: frame!)
                 // crop
                 let w = img.size.width
-                let r = CGRect(x: 0, y: 0, width: w, height: w)
+                let y = (img.size.height - w) / 2
+                let r = CGRect(x: 0, y: y, width: w, height: w)
                 let imgCrop = img.cgImage?.cropping(to: r)
                 let refinedImage = UIImage(cgImage: imgCrop!)
                 
@@ -118,6 +122,51 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         if let detectRectangle = wrapper.detectRectangle(capturedImage){
             refinedView.image = detectRectangle[1] as? UIImage
         }
+    }
+    
+    @IBAction func shootingAction(_ sender: Any) {
+        if check{
+            start()
+            check = false
+        }
+        else{
+            showNum(refinedView.image!)
+            stop()
+            check = true
+        }
+        
+    }
+    func start(){
+        session?.startRunning()
+    }
+    func stop(){
+        session?.stopRunning()
+    }
+    func showNum(_ sudokuImage: UIImage) {
+        UIGraphicsBeginImageContext(refinedView.bounds.size)
+        sudokuImage.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
+        let dx = refinedView.bounds.size.width / 9
+        let dy = refinedView.bounds.size.height / 9
+        let w = Int(dx)
+        let h = Int(dy)
+        for row in 0..<9 {
+            let y = Int(CGFloat(row) * dy)
+            for col in 0..<9 {
+                let x = Int(CGFloat(col) * dx)
+                let c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
+                let fsz: CGFloat = 28
+                let rect: CGRect = CGRect(x: x, y: y, width: w, height: h)
+                let num = String(0)
+                let textFontAttributes = [
+                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fsz)!,
+                    NSAttributedString.Key.foregroundColor: c,
+                ] as [NSAttributedString.Key : Any]
+                num.draw(in: rect, withAttributes: textFontAttributes)
+            }
+        }
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        refinedView.image = newImage
     }
     
     /*

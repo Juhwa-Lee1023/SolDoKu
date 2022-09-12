@@ -165,6 +165,8 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
     // 잘라두었던 이미지들을 배열에 집어넣는다.
     NSArray *numImages = [NSArray arrayWithObjects:&slicedImages[0] count:slicedImages.size()];
 
+    
+
     NSMutableArray *result = [[NSMutableArray alloc] init];
     [result addObject:numImages];
     [result addObject:MatToUIImage(numImageMat)];
