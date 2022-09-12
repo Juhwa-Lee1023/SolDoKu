@@ -64,7 +64,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-
+        
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
@@ -113,7 +113,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
 
     func toRefinedView(_ capturedImage: UIImage) {
-        refinedView.image = capturedImage
+        if let detectRectangle = wrapper.detectRectangle(capturedImage){
+            refinedView.image = detectRectangle[1] as? UIImage
+        }
     }
 
     /*
@@ -122,3 +124,4 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     */
 
 }
+

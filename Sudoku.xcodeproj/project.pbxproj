@@ -18,6 +18,8 @@
 		D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F619C28C77BF70017D756 /* importSudoku.storyboard */; };
 		D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619E28C77C070017D756 /* importSudokuViewController.swift */; };
 		D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */; };
+		D597D1C928CF740A00694D66 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597D1C828CF740A00694D66 /* opencv2.framework */; };
+		D597D1D728CF765D00694D66 /* wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D597D1D628CF765D00694D66 /* wrapper.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,10 @@
 		D53F619C28C77BF70017D756 /* importSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = importSudoku.storyboard; sourceTree = "<group>"; };
 		D53F619E28C77C070017D756 /* importSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importSudokuViewController.swift; sourceTree = "<group>"; };
 		D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sudokuCalculation.swift; sourceTree = "<group>"; };
+		D597D1C828CF740A00694D66 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		D597D1D428CF765000694D66 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
+		D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sudoku-Bridging-Header.h"; sourceTree = "<group>"; };
+		D597D1D628CF765D00694D66 /* wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = wrapper.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D597D1C928CF740A00694D66 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +57,7 @@
 		D53F617828C77AE20017D756 = {
 			isa = PBXGroup;
 			children = (
+				D597D1C328CF703500694D66 /* Framework */,
 				D53F618328C77AE20017D756 /* Sudoku */,
 				D53F618228C77AE20017D756 /* Products */,
 			);
@@ -78,8 +86,19 @@
 				D53F619C28C77BF70017D756 /* importSudoku.storyboard */,
 				D53F619E28C77C070017D756 /* importSudokuViewController.swift */,
 				D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */,
+				D597D1D428CF765000694D66 /* wrapper.h */,
+				D597D1D628CF765D00694D66 /* wrapper.mm */,
+				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
 			);
 			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		D597D1C328CF703500694D66 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				D597D1C828CF740A00694D66 /* opencv2.framework */,
+			);
+			path = Framework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -114,6 +133,7 @@
 				TargetAttributes = {
 					D53F618028C77AE20017D756 = {
 						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -155,6 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D597D1D728CF765D00694D66 /* wrapper.mm in Sources */,
 				D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */,
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
 				D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */,
@@ -236,7 +257,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -290,7 +311,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -305,9 +326,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5N5TS7Y4MA;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Framework",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = camera;
@@ -324,6 +350,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.coin.Sudoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Sudoku/Sudoku-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -334,9 +362,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5N5TS7Y4MA;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Framework",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = camera;
@@ -353,6 +386,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.coin.Sudoku;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Sudoku/Sudoku-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
