@@ -7,15 +7,16 @@
 
 
 #import "wrapper.h"
+#import <opencv2/opencv.hpp>
+#import <opencv2/imgcodecs/ios.h>
+#import <cmath>
 
 #ifdef __cplusplus
 #undef NO
 #undef YES
-#import <opencv2/opencv.hpp>
-#import <opencv2/imgcodecs/ios.h>
 #endif
 
-#import <cmath>
+
 
 @implementation wrapper
 
