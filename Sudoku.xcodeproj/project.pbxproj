@@ -18,8 +18,8 @@
 		D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F619C28C77BF70017D756 /* importSudoku.storyboard */; };
 		D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619E28C77C070017D756 /* importSudokuViewController.swift */; };
 		D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */; };
-		D597D1C928CF740A00694D66 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597D1C828CF740A00694D66 /* opencv2.framework */; };
 		D597D1D728CF765D00694D66 /* wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D597D1D628CF765D00694D66 /* wrapper.mm */; };
+		D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597D1DD28CF98FF00694D66 /* opencv2.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,10 +36,10 @@
 		D53F619C28C77BF70017D756 /* importSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = importSudoku.storyboard; sourceTree = "<group>"; };
 		D53F619E28C77C070017D756 /* importSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importSudokuViewController.swift; sourceTree = "<group>"; };
 		D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sudokuCalculation.swift; sourceTree = "<group>"; };
-		D597D1C828CF740A00694D66 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		D597D1D428CF765000694D66 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
 		D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sudoku-Bridging-Header.h"; sourceTree = "<group>"; };
 		D597D1D628CF765D00694D66 /* wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = wrapper.mm; sourceTree = "<group>"; };
+		D597D1DD28CF98FF00694D66 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D597D1C928CF740A00694D66 /* opencv2.framework in Frameworks */,
+				D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +96,7 @@
 		D597D1C328CF703500694D66 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				D597D1C828CF740A00694D66 /* opencv2.framework */,
+				D597D1DD28CF98FF00694D66 /* opencv2.framework */,
 			);
 			path = Framework;
 			sourceTree = "<group>";

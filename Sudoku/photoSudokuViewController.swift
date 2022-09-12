@@ -12,9 +12,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var refinedView: UIImageView!
+    @IBOutlet weak var shooting: UIButton!
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    var check: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +27,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     func preparedSession() {
-        let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+        let camera = AVCaptureDevice.default(for: AVMediaType.video)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
             
@@ -65,13 +68,16 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
-        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue)!
+        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue) ?? AVCaptureVideoOrientation.portrait
+
 
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
         //CMSampleBuffer를 CVImageBuffer로 변환시켜준다.
-        let CVimageBuffer = CMSampleBufferGetImageBuffer(buffer)!
+        guard let CVimageBuffer = CMSampleBufferGetImageBuffer(buffer) else {
+            return
+        }
         
         /*
          CVPixelBufferLockBaseAddress:
@@ -90,8 +96,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         let bytesRow = CVPixelBufferGetBytesPerRow(CVimageBuffer)
         
         //이미지의 주소값을 구한다.
-        let imageAddress = CVPixelBufferGetBaseAddress(CVimageBuffer)!
-        
+        guard let imageAddress = CVPixelBufferGetBaseAddress(CVimageBuffer) else {
+            return
+        }
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         
         //비트 연산자 or 을 이용해 비트를 정리한다.
@@ -103,7 +110,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let img = UIImage(cgImage: frame!)
                 // crop
                 let w = img.size.width
-                let r = CGRect(x: 0, y: 0, width: w, height: w)
+                let y = (img.size.height - w) / 2
+                let r = CGRect(x: 0, y: y, width: w, height: w)
                 let imgCrop = img.cgImage?.cropping(to: r)
                 let refinedImage = UIImage(cgImage: imgCrop!)
                 
@@ -118,6 +126,53 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         if let detectRectangle = wrapper.detectRectangle(capturedImage){
             refinedView.image = detectRectangle[1] as? UIImage
         }
+    }
+    
+    @IBAction func shootingAction(_ sender: Any) {
+        if check{
+            start()
+            check = false
+        }
+        else{
+            showNum(refinedView.image!)
+            stop()
+            check = true
+        }
+        
+    }
+    func start(){
+        session?.startRunning()
+    }
+    func stop(){
+        session?.stopRunning()
+    }
+    func showNum(_ sudokuImage: UIImage) {
+        UIGraphicsBeginImageContext(refinedView.bounds.size)
+        sudokuImage.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
+        let dx = refinedView.bounds.size.width / 9
+        let dy = refinedView.bounds.size.height / 9
+        let w = Int(dx)
+        let h = Int(dy)
+        for row in 0..<9 {
+            let y = Int(CGFloat(row) * dy)
+            for col in 0..<9 {
+                let x = Int(CGFloat(col) * dx)
+                let c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
+                let fsz: CGFloat = 28
+                
+                let num = String(0)
+                let textFontAttributes = [
+                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fsz)!,
+                    NSAttributedString.Key.foregroundColor: c,
+                ] as [NSAttributedString.Key : Any]
+                let sz = num.size(withAttributes: textFontAttributes)
+                let rect: CGRect = CGRect(x: x + Int((dx - sz.width) / 2), y: y + Int((dy - sz.height) / 2), width: w, height: h)
+                num.draw(in: rect, withAttributes: textFontAttributes)
+            }
+        }
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        refinedView.image = newImage
     }
     
     /*
