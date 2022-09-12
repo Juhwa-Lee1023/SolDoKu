@@ -159,12 +159,14 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let x = Int(CGFloat(col) * dx)
                 let c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
                 let fsz: CGFloat = 28
-                let rect: CGRect = CGRect(x: x, y: y, width: w, height: h)
+                
                 let num = String(0)
                 let textFontAttributes = [
                     NSAttributedString.Key.font: UIFont(name: "Arial", size: fsz)!,
                     NSAttributedString.Key.foregroundColor: c,
                 ] as [NSAttributedString.Key : Any]
+                let sz = num.size(withAttributes: textFontAttributes)
+                let rect: CGRect = CGRect(x: x + Int((dx - sz.width) / 2), y: y + Int((dy - sz.height) / 2), width: w, height: h)
                 num.draw(in: rect, withAttributes: textFontAttributes)
             }
         }

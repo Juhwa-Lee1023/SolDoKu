@@ -170,10 +170,7 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
     NSMutableArray *result = [[NSMutableArray alloc] init];
     [result addObject:numImages];
     [result addObject:MatToUIImage(numImageMat)];
-    
-    mat.release();
-    numImageMat.release();
-    
+
     return result;
 }
 
