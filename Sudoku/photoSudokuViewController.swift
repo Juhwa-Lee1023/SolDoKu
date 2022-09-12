@@ -68,13 +68,16 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
-        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue)!
+        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue) ?? AVCaptureVideoOrientation.portrait
+
 
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
         //CMSampleBuffer를 CVImageBuffer로 변환시켜준다.
-        let CVimageBuffer = CMSampleBufferGetImageBuffer(buffer)!
+        guard let CVimageBuffer = CMSampleBufferGetImageBuffer(buffer) else {
+            return
+        }
         
         /*
          CVPixelBufferLockBaseAddress:
@@ -93,8 +96,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         let bytesRow = CVPixelBufferGetBytesPerRow(CVimageBuffer)
         
         //이미지의 주소값을 구한다.
-        let imageAddress = CVPixelBufferGetBaseAddress(CVimageBuffer)!
-        
+        guard let imageAddress = CVPixelBufferGetBaseAddress(CVimageBuffer) else {
+            return
+        }
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         
         //비트 연산자 or 을 이용해 비트를 정리한다.
