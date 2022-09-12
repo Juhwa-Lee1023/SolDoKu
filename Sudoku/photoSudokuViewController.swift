@@ -7,7 +7,6 @@
 
 import UIKit
 import AVFoundation
-import Vision
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
@@ -28,7 +27,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
-            
+
             session = AVCaptureSession()
             session?.sessionPreset = AVCaptureSession.Preset.hd1280x720
             //해상도 지정
@@ -65,82 +64,61 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+
+        /*
+         https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
+         */
+        //CMSampleBuffer를 CVImageBuffer로 변환시켜준다.
+        let CVimageBuffer = CMSampleBufferGetImageBuffer(buffer)!
         
-        guard let frame = CMSampleBufferGetImageBuffer(buffer) else {
-            debugPrint("unable to get image from sample buffer")
-            return
+        /*
+         CVPixelBufferLockBaseAddress:
+         https://developer.apple.com/documentation/corevideo/1457128-cvpixelbufferlockbaseaddress
+         픽셀의 주소를 고정시켜준다.
+         */
+        CVPixelBufferLockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
+        //이미지의 넓이 구하기
+        let width = CVPixelBufferGetWidth(CVimageBuffer)
+        let height = CVPixelBufferGetHeight(CVimageBuffer)
+        
+        //이미지에서 사용되는 각각의 Component가 사용하는 비트 수 선언
+        let bitsPerComponent = 8
+        
+        //이미지의 row에 있는 바이트를 구한다.
+        let bytesRow = CVPixelBufferGetBytesPerRow(CVimageBuffer)
+        
+        //이미지의 주소값을 구한다.
+        let imageAddress = CVPixelBufferGetBaseAddress(CVimageBuffer)!
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        
+        //비트 연산자 or 을 이용해 비트를 정리한다.
+        let bitmap = CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+        let context = CGContext(data: imageAddress, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesRow, space:  colorSpace, bitmapInfo: bitmap)
+        if let newContext = context {
+            let frame = newContext.makeImage()
+            DispatchQueue.main.async {
+                let img = UIImage(cgImage: frame!)
+                // crop
+                let w = img.size.width
+                let r = CGRect(x: 0, y: 0, width: w, height: w)
+                let imgCrop = img.cgImage?.cropping(to: r)
+                let refinedImage = UIImage(cgImage: imgCrop!)
+                
+                self.toRefinedView(refinedImage)
+            }
         }
-        
-        self.detectRectangle(in: frame)
+        //사용했던 픽셀 주소의 고정을 풀고 재사용이 가능하도록 한다.
+        CVPixelBufferUnlockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
     }
-    
+
     func toRefinedView(_ capturedImage: UIImage) {
         refinedView.image = capturedImage
     }
-    
-    func detectRectangle(in image: CVPixelBuffer) {
-       
-        let request = VNDetectRectanglesRequest(completionHandler: { (request: VNRequest, error: Error?) in
-            DispatchQueue.main.async {
-                
-                guard let results = request.results as? [VNRectangleObservation] else { return }
-                
-                
-                guard let rect = results.first else{return}
-                
-                self.refinedView.contentMode = .scaleAspectFit
-                self.refinedView.image = self.imageExtraction(rect, from: image)
-            }
-        })
-        
-        
-        request.minimumAspectRatio = VNAspectRatio(0.3)
-        request.maximumAspectRatio = VNAspectRatio(0.9)
-        request.minimumSize = Float(0.3)
-        request.maximumObservations = 1
-        
-        
-        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: image, options: [:])
-        try? imageRequestHandler.perform([request])
-    }
-    
-    func imageExtraction(_ observation: VNRectangleObservation, from buffer: CVImageBuffer) -> UIImage {
-        var ciImage = CIImage(cvImageBuffer: buffer)
-        
-        let topLeft = observation.topLeft.scaled(to: ciImage.extent.size)
-        let topRight = observation.topRight.scaled(to: ciImage.extent.size)
-        let bottomLeft = observation.bottomLeft.scaled(to: ciImage.extent.size)
-        let bottomRight = observation.bottomRight.scaled(to: ciImage.extent.size)
-        
-        
-        ciImage = ciImage.applyingFilter("CIPerspectiveCorrection", parameters: [
-            "inputTopLeft": CIVector(cgPoint: topLeft),
-            "inputTopRight": CIVector(cgPoint: topRight),
-            "inputBottomLeft": CIVector(cgPoint: bottomLeft),
-            "inputBottomRight": CIVector(cgPoint: bottomRight),
-        ])
-        
-        let context = CIContext()
-        let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
-        let output = UIImage(cgImage: cgImage!)
-        
-        
-        return output
-    }
-    
+
     /*
      https://stijnoomes.com/access-camera-pixels-with-av-foundation/
      참고
-     */
-    
-    
-    
-}
+    */
 
-extension CGPoint {
-    func scaled(to size: CGSize) -> CGPoint {
-        return CGPoint(x: self.x * size.width,
-                       y: self.y * size.height)
-    }
 }
-
