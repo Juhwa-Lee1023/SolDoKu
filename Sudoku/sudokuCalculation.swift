@@ -60,29 +60,3 @@ func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int) -> Bool {
     
     return false
 }
-//
-//func sudokuValid(_ sudoku: inout [[Int]]) -> Bool {
-//    var row:Int = 0
-//    var col:Int = 0
-//    var check = [[Int]]()
-////    var colCheck = [[Int]]()
-//
-//    for _ in 0..<9 {
-//        for _ in 0..<9{
-//            print(row)
-//            if (sudoku[row][col] != 0) {
-//                for i in 0..<check.count {
-//                    if (sudoku[row][col] == check[row][i]) {
-//                        return false
-//                    }
-//                }
-//                check[row].append(sudoku[row][col])
-//            }
-//            col += 1
-//        }
-//        check.append([])
-//        row += 1
-//    }
-//
-//    return true
-//}
