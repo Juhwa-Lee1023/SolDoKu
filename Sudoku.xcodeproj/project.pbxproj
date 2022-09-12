@@ -50,6 +50,7 @@
 		D53F617828C77AE20017D756 = {
 			isa = PBXGroup;
 			children = (
+				D597D1C328CF703500694D66 /* Framework */,
 				D53F618328C77AE20017D756 /* Sudoku */,
 				D53F618228C77AE20017D756 /* Products */,
 			);
@@ -80,6 +81,13 @@
 				D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */,
 			);
 			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		D597D1C328CF703500694D66 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Framework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
