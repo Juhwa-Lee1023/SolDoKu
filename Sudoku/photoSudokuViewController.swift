@@ -27,7 +27,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         let camera = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
-
+            
             session = AVCaptureSession()
             session?.sessionPreset = AVCaptureSession.Preset.hd1280x720
             //해상도 지정
@@ -64,7 +64,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+        //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
+        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue)!
+
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
@@ -111,17 +113,17 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         //사용했던 픽셀 주소의 고정을 풀고 재사용이 가능하도록 한다.
         CVPixelBufferUnlockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
     }
-
+    
     func toRefinedView(_ capturedImage: UIImage) {
         if let detectRectangle = wrapper.detectRectangle(capturedImage){
             refinedView.image = detectRectangle[1] as? UIImage
         }
     }
-
+    
     /*
      https://stijnoomes.com/access-camera-pixels-with-av-foundation/
      참고
-    */
-
+     */
+    
 }
 
