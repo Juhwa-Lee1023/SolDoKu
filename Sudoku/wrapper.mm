@@ -207,7 +207,7 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
     //이미지 자르기
     cv::rectangle(contourMat, cv::Point(gx, gy), cv::Point(gx+gw, gy+gh), CV_RGB(0, 255, 0), 2);
     
-    // find max contour
+
     int maxArea = 0;
     int maxContourIndex = -1;
     cv::Rect bRect;
@@ -217,7 +217,6 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
         if (area > 10)
         {
             cv::Rect r = cv::boundingRect(contours[i]);
-            // overrap 영역 찾기
             int ox = MAX(gx, r.x);
             int oy = MAX(gy, r.y);
             int ox2 = MIN(gx+gw, r.x+r.width);
@@ -225,7 +224,6 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
             int ow = ox2 - ox;
             int oh = oy2 - oy;
             int oarea = ow * oh;
-            // overrap 영역의 크기가 bounding rect와 같으면 counding rect를 포함하고 있는 것
             if (oarea == r.area())
             {
                 // 포함되는 것 중 제일 큰 것만 남긴다

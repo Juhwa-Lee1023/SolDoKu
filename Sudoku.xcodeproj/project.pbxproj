@@ -22,6 +22,7 @@
 		D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597D1DD28CF98FF00694D66 /* opencv2.framework */; };
 		D597D1E028CFB46F00694D66 /* numberClassifier 1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */; };
 		D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E128CFBBCA00694D66 /* model_64.mlpackage */; };
+		D597D1E528D0DF3200694D66 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E428D0DF3200694D66 /* UIImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		D597D1DD28CF98FF00694D66 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "numberClassifier 1.mlmodel"; sourceTree = "<group>"; };
 		D597D1E128CFBBCA00694D66 /* model_64.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = model_64.mlpackage; sourceTree = "<group>"; };
+		D597D1E428D0DF3200694D66 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		D53F618328C77AE20017D756 /* Sudoku */ = {
 			isa = PBXGroup;
 			children = (
+				D597D1E328D0DF1F00694D66 /* Extension */,
 				D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */,
 				D597D1E128CFBBCA00694D66 /* model_64.mlpackage */,
 				D53F618428C77AE20017D756 /* AppDelegate.swift */,
@@ -105,6 +108,14 @@
 				D597D1DD28CF98FF00694D66 /* opencv2.framework */,
 			);
 			path = Framework;
+			sourceTree = "<group>";
+		};
+		D597D1E328D0DF1F00694D66 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				D597D1E428D0DF3200694D66 /* UIImage.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D597D1D728CF765D00694D66 /* wrapper.mm in Sources */,
+				D597D1E528D0DF3200694D66 /* UIImage.swift in Sources */,
 				D597D1E028CFB46F00694D66 /* numberClassifier 1.mlmodel in Sources */,
 				D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */,
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
