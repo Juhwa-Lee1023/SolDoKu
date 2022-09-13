@@ -11,7 +11,7 @@
 @interface wrapper : NSObject
 
 + (NSMutableArray *) detectRectangle: (UIImage *)image;
-+ (NSMutableArray *) getSlicedSudokuNumImages: (UIImage *)sourceImage imageSize: (int)imageSize cutOffset: (int)cutOffset;
-
++ (NSMutableArray *) sliceImages: (UIImage *)image imageSize: (int)imageSize cutOffset: (int)cutOffset;
++ (NSMutableArray *) getNumImage: (UIImage *)sourceImage imageSize: (int)imageSize;
 
 @end

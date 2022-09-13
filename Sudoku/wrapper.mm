@@ -130,7 +130,7 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
 }
 
 // 스도쿠를 9 * 9 로 잘라서 좌표 구하기
-+ (NSMutableArray *) getSlicedSudokuNumImages: (UIImage *)image imageSize: (int)imageSize cutOffset: (int)cutOffset {
++ (NSMutableArray *) sliceImages: (UIImage *)image imageSize: (int)imageSize cutOffset: (int)cutOffset {
 
     cv::Mat mat;
     UIImageToMat(image, mat);
@@ -174,6 +174,91 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
     return result;
 }
 
++ (NSMutableArray *) getNumImage: (UIImage *)image imageSize: (int)imageSize {
+    // UIImage를 cv::Mat로 변환
+    cv::Mat mat;
+    UIImageToMat(image, mat);
+    
+    // grayScale을 입힌다.
+    cv::Mat toGray;
+    cv::cvtColor(mat, toGray, CV_BGR2GRAY);
+    
+    // threshold를 강조한다.
+    cv::Mat toThresh;
+    cv::adaptiveThreshold(toGray, toThresh, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 11, 41);
+    
+    // 테두리를 찾는다.
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    cv::findContours(toThresh, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+    if (contours.size() < 1)
+    {
+        //테두리가 없으면...
+        return nil;
+    }
+    
+    cv::Mat contourMat;
+    cv::cvtColor(toThresh, contourMat, cv::COLOR_GRAY2RGB);
+    
+    int gx = (int)(mat.size().width * 0.1);
+    int gy = (int)(mat.size().height * 0.1);
+    int gw = (int)(mat.size().width * 0.7);
+    int gh = (int)(mat.size().height * 0.8);
+    //이미지 자르기
+    cv::rectangle(contourMat, cv::Point(gx, gy), cv::Point(gx+gw, gy+gh), CV_RGB(0, 255, 0), 2);
+    
 
+    int maxArea = 0;
+    int maxContourIndex = -1;
+    cv::Rect bRect;
+    for (int i = 0; i < contours.size(); i++)
+    {
+        double area = cv::contourArea(contours[i]);
+        if (area > 10)
+        {
+            cv::Rect r = cv::boundingRect(contours[i]);
+            int ox = MAX(gx, r.x);
+            int oy = MAX(gy, r.y);
+            int ox2 = MIN(gx+gw, r.x+r.width);
+            int oy2 = MIN(gy+gh, r.y+r.height);
+            int ow = ox2 - ox;
+            int oh = oy2 - oy;
+            int oarea = ow * oh;
+            if (oarea == r.area())
+            {
+                // 포함되는 것 중 제일 큰 것만 남긴다
+                if (area > maxArea)
+                {
+                    maxArea = area;
+                    maxContourIndex = i;
+                    bRect = r;
+                }
+            }
+        }
+    }
+    
+    // 여러 가지 정보를 묶어 return
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+
+    // maxContourIndex가 0이상이면 숫자가 있는 것
+    if (maxContourIndex >= 0)
+    {
+        cv::drawContours(contourMat, contours, maxContourIndex, CV_RGB(0, 255, 0), 2);
+        NSNumber *t = [NSNumber numberWithBool:true]; // true를 return
+        [result addObject:t];
+    }
+    else
+    {
+        NSNumber *f = [NSNumber numberWithBool:false]; // false를 return
+        [result addObject:f];
+    }
+    
+    // 디버깅을 위한 정보 제공 목적
+    // contourMat는 80% box와 안의 숫자 contour가 그려진 이미지
+    [result addObject:MatToUIImage(contourMat)];
+
+    
+    return result;
+}
 @end
 

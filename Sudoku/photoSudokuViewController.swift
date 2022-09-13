@@ -7,6 +7,8 @@
 
 import UIKit
 import AVFoundation
+import CoreML
+import Vision
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
@@ -16,6 +18,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    var sudokuSolvingWorkItem: DispatchWorkItem?
     
     var check: Bool = false
     
@@ -24,6 +27,29 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         preparedSession()
         session?.startRunning()
         
+    }
+    
+    @IBAction func shootingAction(_ sender: Any) {
+        if check {
+            start()
+            check = false
+        }
+        else {
+            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: sudokuSolvingWorkItem!)
+            stop()
+            check = true
+        }
+    }
+    
+    func sudokuSolvingQueue() {
+        self.recognizeNum(image: refinedView.image!)
+    }
+    func start(){
+        session?.startRunning()
+    }
+    func stop(){
+        session?.stopRunning()
     }
     
     func preparedSession() {
@@ -69,8 +95,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
         connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue) ?? AVCaptureVideoOrientation.portrait
-
-
+        
+        
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
@@ -128,45 +154,81 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
     }
     
-    @IBAction func shootingAction(_ sender: Any) {
-        if check{
-            start()
-            check = false
+    
+    func recognizeNum(image: UIImage) {
+        // get sudoku number images
+        var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
+        if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
+            let numImages = UIImgaeSliceArr[0] as! NSArray
+            for i in 0..<numImages.count {
+                let numimg = numImages[i]
+                let col = i % 9
+                let row = Int(i / 9)
+                let img = numimg as! UIImage
+                if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
+                    // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
+                    let numExist = (sliceNumImage[0] as! NSNumber).boolValue
+                    if numExist == true {
+                        // 숫자가 존재 하는 경우 처리
+                        guard let buf = img.UIImageToPixelBuffer() else { return }
+                        
+                        let model = model_64()
+                        guard let predList = try? model.prediction(x: buf) else {
+                            break
+                        }
+                        let predListLength = predList.y.count
+                        let doublePtr =  predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
+                        let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
+                        let predArr = Array(doubleBuffer)
+                        let predArrMax = predArr.max()
+                        let result = predArr.firstIndex(of: predArrMax!)
+                        
+                        sudokuArray[row][col] = result ?? 0
+                    } else {
+                        sudokuArray[row][col] = 0
+                    }
+                } else {
+                    sudokuArray[row][col] = 0
+                }
+            }
+            // sudoku 풀이
+            
+            var solvedSudokuArray = sudokuArray
+            
+            _ = sudokuCalcuation(&solvedSudokuArray, 0, 0);
+            
+            // 풀어진 sudoku 표시
+            showNum(solvedSudokuArray, sudokuArray, image)
+            
+            
         }
-        else{
-            showNum(refinedView.image!)
-            stop()
-            check = true
-        }
-        
     }
-    func start(){
-        session?.startRunning()
-    }
-    func stop(){
-        session?.stopRunning()
-    }
-    func showNum(_ sudokuImage: UIImage) {
+    
+    
+    func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
-        sudokuImage.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
-        let dx = refinedView.bounds.size.width / 9
-        let dy = refinedView.bounds.size.height / 9
-        let w = Int(dx)
-        let h = Int(dy)
+        image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
+        let cutViewWidth = refinedView.bounds.size.width / 9
+        let cutViewHeight = refinedView.bounds.size.height / 9
+        let cutViewWidthInt = Int(cutViewWidth)
+        let cutViewHeightInt = Int(cutViewHeight)
         for row in 0..<9 {
-            let y = Int(CGFloat(row) * dy)
+            let yCoordinate = Int(CGFloat(row) * cutViewHeight)
             for col in 0..<9 {
-                let x = Int(CGFloat(col) * dx)
-                let c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
-                let fsz: CGFloat = 28
-                
-                let num = String(0)
+                let xCoordinate = Int(CGFloat(col) * cutViewWidth)
+                var fontColor: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
+                let fontSize: CGFloat = 28
+                //인식했던 숫자가 있는 경우 표현하지 않는다.
+                if (solSudoku[row][col] != 0) {
+                    fontColor = UIColor(red: 210/255, green: 31/255, blue: 81/255, alpha: 0)
+                }
+                let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fsz)!,
-                    NSAttributedString.Key.foregroundColor: c,
+                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
+                    NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
-                let sz = num.size(withAttributes: textFontAttributes)
-                let rect: CGRect = CGRect(x: x + Int((dx - sz.width) / 2), y: y + Int((dy - sz.height) / 2), width: w, height: h)
+                let numSize = num.size(withAttributes: textFontAttributes)
+                let rect: CGRect = CGRect(x: xCoordinate + Int((cutViewWidth - numSize.width) / 2), y: yCoordinate + Int((cutViewHeight - numSize.height) / 2), width: cutViewWidthInt, height: cutViewHeightInt)
                 num.draw(in: rect, withAttributes: textFontAttributes)
             }
         }
@@ -174,6 +236,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         UIGraphicsEndImageContext()
         refinedView.image = newImage
     }
+    
     
     /*
      https://stijnoomes.com/access-camera-pixels-with-av-foundation/
