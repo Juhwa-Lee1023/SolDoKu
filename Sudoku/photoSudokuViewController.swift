@@ -29,6 +29,29 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
     }
     
+    @IBAction func shootingAction(_ sender: Any) {
+        if check{
+            start()
+            check = false
+        }
+        else{
+            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: sudokuSolvingWorkItem!)
+            stop()
+            check = true
+        }
+    }
+    
+    func sudokuSolvingQueue() {
+        self.recognizeNum(image: refinedView.image!)
+    }
+    func start(){
+        session?.startRunning()
+    }
+    func stop(){
+        session?.stopRunning()
+    }
+    
     func preparedSession() {
         let camera = AVCaptureDevice.default(for: AVMediaType.video)
         do {
@@ -183,28 +206,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
     }
     
-    @IBAction func shootingAction(_ sender: Any) {
-        if check{
-            start()
-            check = false
-        }
-        else{
-            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: sudokuSolvingWorkItem!)
-            stop()
-            check = true
-        }
-    }
     
-    func sudokuSolvingQueue() {
-        self.recognizeNum(image: refinedView.image!)
-    }
-    func start(){
-        session?.startRunning()
-    }
-    func stop(){
-        session?.stopRunning()
-    }
     func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
