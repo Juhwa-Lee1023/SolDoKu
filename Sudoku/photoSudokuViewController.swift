@@ -158,18 +158,16 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
-        if let r2 = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
-            // r2[0]는 sudoku 영역을 9x9로 자르고 각각의 이미지를 64x64 크기로 변환한 UIImage array
-            // r2[1]은 디버깅 목적의 9x9로 자른 이미지를 다시 하나에 합쳐 놓은 이미지(제대로 잘렸는지 보기 위한 용도)
-            let numImages = r2[0] as! NSArray
+        if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0)
+            let numImages = UIImgaeSliceArr[0] as! NSArray
             for i in 0..<numImages.count {
                 let numimg = numImages[i]
                 let col = i % 9
                 let row = Int(i / 9)
                 let img = numimg as! UIImage
-                if let r3 = wrapper.getNumImage(img, imageSize: 64) {
-                    // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
-                    let numExist = (r3[0] as! NSNumber).boolValue
+                if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
+                    // sliceNumImage[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
+                    let numExist = (sliceNumImage[0] as! NSNumber).boolValue
                     if numExist == true {
                         // 숫자가 존재 하는 경우 처리
                         guard let buf = img.UIImageToPixelBuffer() else { return }
