@@ -198,6 +198,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let x = Int(CGFloat(col) * dx)
                 var c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
                 var fsz: CGFloat = 28
+                //인식했던 숫자가 있는 경우 표현하지 않는다.
                 if (solSudoku[row][col] != 0) {
                     c = UIColor(red: 210/255, green: 31/255, blue: 81/255, alpha: 0)
                     fsz = 24
