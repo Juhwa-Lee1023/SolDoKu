@@ -7,6 +7,8 @@
 
 import UIKit
 import AVFoundation
+import CoreML
+import Vision
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
@@ -16,6 +18,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    var sudokuSolvingWorkItem: DispatchWorkItem?
     
     var check: Bool = false
     
@@ -69,8 +72,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
         connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue) ?? AVCaptureVideoOrientation.portrait
-
-
+        
+        
         /*
          https://developer.apple.com/documentation/coremedia/1489236-cmsamplebuffergetimagebuffer
          */
@@ -128,27 +131,17 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
     }
     
-    @IBAction func shootingAction(_ sender: Any) {
-        if check{
-            start()
-            check = false
-        }
-        else{
-            showNum(refinedView.image!)
-            stop()
-            check = true
-        }
-        
-    }
+    
+    
     func start(){
         session?.startRunning()
     }
     func stop(){
         session?.stopRunning()
     }
-    func showNum(_ sudokuImage: UIImage) {
+    func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
-        sudokuImage.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
+        image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
         let dx = refinedView.bounds.size.width / 9
         let dy = refinedView.bounds.size.height / 9
         let w = Int(dx)
@@ -157,10 +150,13 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             let y = Int(CGFloat(row) * dy)
             for col in 0..<9 {
                 let x = Int(CGFloat(col) * dx)
-                let c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
-                let fsz: CGFloat = 28
-                
-                let num = String(0)
+                var c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
+                var fsz: CGFloat = 28
+                if (solSudoku[row][col] != 0) {
+                    c = UIColor(red: 210/255, green: 31/255, blue: 81/255, alpha: 0)
+                    fsz = 24
+                }
+                let num = String(sudoku[row][col])
                 let textFontAttributes = [
                     NSAttributedString.Key.font: UIFont(name: "Arial", size: fsz)!,
                     NSAttributedString.Key.foregroundColor: c,
@@ -175,6 +171,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         refinedView.image = newImage
     }
     
+    
     /*
      https://stijnoomes.com/access-camera-pixels-with-av-foundation/
      참고
@@ -182,3 +179,36 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
 }
 
+//UIImage에 UIImage를 픽셀버퍼 타입으로 변환시키는 function 추가
+extension UIImage {
+    func UIImageToPixelBuffer() -> CVPixelBuffer? {
+        
+        let width = Int(self.size.width)
+        let height = Int(self.size.height)
+        
+        let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
+        var pixelBuffer: CVPixelBuffer?
+        let status = CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
+        guard status == kCVReturnSuccess else {
+            return nil
+        }
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer!)
+        
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        guard let context = CGContext(data: pixelData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else {
+            return nil
+        }
+        
+        context.translateBy(x: 0, y: CGFloat(height))
+        context.scaleBy(x: 1.0, y: -1.0)
+        
+        UIGraphicsPushContext(context)
+        self.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
+        UIGraphicsPopContext()
+        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
+        
+        return pixelBuffer
+    }
+}
