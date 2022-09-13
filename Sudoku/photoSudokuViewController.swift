@@ -210,28 +210,27 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
-        let dx = refinedView.bounds.size.width / 9
-        let dy = refinedView.bounds.size.height / 9
-        let w = Int(dx)
-        let h = Int(dy)
+        let cutViewWidth = refinedView.bounds.size.width / 9
+        let cutViewHeight = refinedView.bounds.size.height / 9
+        let cutViewWidthInt = Int(cutViewWidth)
+        let cutViewHeightInt = Int(cutViewHeight)
         for row in 0..<9 {
-            let y = Int(CGFloat(row) * dy)
+            let yCoordinate = Int(CGFloat(row) * cutViewHeight)
             for col in 0..<9 {
-                let x = Int(CGFloat(col) * dx)
-                var c: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
-                var fsz: CGFloat = 28
+                let xCoordinate = Int(CGFloat(col) * cutViewWidth)
+                var fontColor: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
+                let fontSize: CGFloat = 28
                 //인식했던 숫자가 있는 경우 표현하지 않는다.
                 if (solSudoku[row][col] != 0) {
-                    c = UIColor(red: 210/255, green: 31/255, blue: 81/255, alpha: 0)
-                    fsz = 24
+                    fontColor = UIColor(red: 210/255, green: 31/255, blue: 81/255, alpha: 0)
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fsz)!,
-                    NSAttributedString.Key.foregroundColor: c,
+                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
+                    NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
-                let sz = num.size(withAttributes: textFontAttributes)
-                let rect: CGRect = CGRect(x: x + Int((dx - sz.width) / 2), y: y + Int((dy - sz.height) / 2), width: w, height: h)
+                let numSize = num.size(withAttributes: textFontAttributes)
+                let rect: CGRect = CGRect(x: xCoordinate + Int((cutViewWidth - numSize.width) / 2), y: yCoordinate + Int((cutViewHeight - numSize.height) / 2), width: cutViewWidthInt, height: cutViewHeightInt)
                 num.draw(in: rect, withAttributes: textFontAttributes)
             }
         }
