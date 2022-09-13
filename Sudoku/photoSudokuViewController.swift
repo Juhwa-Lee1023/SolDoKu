@@ -30,11 +30,11 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     @IBAction func shootingAction(_ sender: Any) {
-        if check{
+        if check {
             start()
             check = false
         }
-        else{
+        else {
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: sudokuSolvingWorkItem!)
             stop()
