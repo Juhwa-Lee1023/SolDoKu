@@ -151,12 +151,16 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                         // 숫자가 존재 하는 경우 처리
                         guard let buf = img.UIImageToPixelBuffer() else { return }
                         
-                        //model numberClassifier
-                            let model = numberClassifier_1()
-                            guard let pred = try? model.prediction(image: buf) else {
-                                break
-                            }
-                            let maxIdx = Int(pred.classLabel)
+                        let model = model_64()
+                        guard let pred = try? model.prediction(x: buf) else {
+                            break
+                        }
+                        let length = pred.y.count
+                        let doublePtr =  pred.y.dataPointer.bindMemory(to: Double.self, capacity: length)
+                        let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: length)
+                        let output = Array(doubleBuffer)
+                        let maxVal = output.max()
+                        let maxIdx = output.firstIndex(of: maxVal!)
                         
                         sudokuArray[row][col] = maxIdx ?? 0
                     } else {
