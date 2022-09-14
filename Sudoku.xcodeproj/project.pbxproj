@@ -23,6 +23,8 @@
 		D597D1E028CFB46F00694D66 /* numberClassifier 1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */; };
 		D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E128CFBBCA00694D66 /* model_64.mlpackage */; };
 		D597D1E528D0DF3200694D66 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E428D0DF3200694D66 /* UIImage.swift */; };
+		D5BBD65F28D205AE00747F15 /* pickerSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */; };
+		D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "numberClassifier 1.mlmodel"; sourceTree = "<group>"; };
 		D597D1E128CFBBCA00694D66 /* model_64.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = model_64.mlpackage; sourceTree = "<group>"; };
 		D597D1E428D0DF3200694D66 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = pickerSudoku.storyboard; sourceTree = "<group>"; };
+		D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pickerSudokuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +102,8 @@
 				D597D1D428CF765000694D66 /* wrapper.h */,
 				D597D1D628CF765D00694D66 /* wrapper.mm */,
 				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
+				D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */,
+				D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */,
 			);
 			path = Sudoku;
 			sourceTree = "<group>";
@@ -180,6 +186,7 @@
 				D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */,
 				D53F619128C77AE30017D756 /* LaunchScreen.storyboard in Resources */,
 				D53F618E28C77AE30017D756 /* Assets.xcassets in Resources */,
+				D5BBD65F28D205AE00747F15 /* pickerSudoku.storyboard in Resources */,
 				D53F619928C77BC90017D756 /* photoSudoku.storyboard in Resources */,
 				D53F618C28C77AE20017D756 /* Main.storyboard in Resources */,
 			);
@@ -192,6 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */,
 				D597D1D728CF765D00694D66 /* wrapper.mm in Sources */,
 				D597D1E528D0DF3200694D66 /* UIImage.swift in Sources */,
 				D597D1E028CFB46F00694D66 /* numberClassifier 1.mlmodel in Sources */,
@@ -357,6 +365,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = camera;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = photo;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -393,6 +402,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = camera;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = photo;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
