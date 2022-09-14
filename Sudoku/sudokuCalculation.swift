@@ -32,7 +32,6 @@ func isVerify(_ number: Int, _ sudoku: [[Int]], _ row: Int, _ col:Int) -> Bool {
 }
 
 func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: inout Int) -> Bool {
-    print(check)
     if(check >= 500000){
         return false
     }
