@@ -47,7 +47,7 @@ class pickerSudokuViewController: UIViewController {
             let yes = UIAlertAction(title: "네", style: .default) { (action) in
                 self.openLibrary()
             }
-            let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
+            let no = UIAlertAction(title: "아니요", style: .destructive, handler: nil)
             alret.addAction(no)
             alret.addAction(yes)
             present(alret, animated: true, completion: nil)
@@ -101,8 +101,10 @@ class pickerSudokuViewController: UIViewController {
             count = 0
             let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count);
             if !successCheck && count > 300 {
-                let alret = UIAlertController(title: "실패.", message: "다른 사진을 업로드해주세요.", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "네", style: .default, handler: nil)
+                let alret = UIAlertController(title: "스도쿠 문제를 풀이할 수 없습니다.", message: "다른 사진을 업로드 하시겠습니까?", preferredStyle: .alert)
+                let yes = UIAlertAction(title: "네", style: .default) { (action) in
+                    self.openLibrary()
+                }
                 let no = UIAlertAction(title: "아니요", style: .destructive, handler: nil)
                 alret.addAction(no)
                 alret.addAction(yes)

@@ -35,9 +35,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             check = false
         }
         else {
-            endTime = NSDate()
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
             stop()
             check = true
         }
