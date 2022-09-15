@@ -18,7 +18,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
-    var count:Int = 0
+    var count: Int = 0
     var sudokuSolvingWorkItem: DispatchWorkItem?
     var check: Bool = false
     
@@ -194,7 +194,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             
             var solvedSudokuArray = sudokuArray
             count = 0
-            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count);
+            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
                 let alret = UIAlertController(title: "실패.", message: "다시 사진을 찍어주세요.", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "네", style: .default, handler: nil)

@@ -31,10 +31,10 @@ class pickerSudokuViewController: UIViewController {
     
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select", message: nil, preferredStyle: .actionSheet)
-        let library = UIAlertAction(title: "Album", style: .default) { (action) in
+        let library = UIAlertAction(title: "Album", style: .default) { _ in
             self.openLibrary()
         }
-        let camera = UIAlertAction(title: "Camera", style: .default) { (action) in
+        let camera = UIAlertAction(title: "Camera", style: .default) { _ in
             self.openCamera()
         }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -42,7 +42,7 @@ class pickerSudokuViewController: UIViewController {
         alert.addAction(library)
         alert.addAction(camera)
         alert.addAction(cancel)
-        
+
         present(alert, animated: true, completion: nil)
     }
     
@@ -52,7 +52,7 @@ class pickerSudokuViewController: UIViewController {
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
         } else {
             let alret = UIAlertController(title: "사진이 업로드 되지 않았습니다.", message: "사진을 업로드 하시겠습니까?", preferredStyle: .alert)
-            let yes = UIAlertAction(title: "네", style: .default) { (action) in
+            let yes = UIAlertAction(title: "네", style: .default) { _ in
                 self.openLibrary()
             }
             let no = UIAlertAction(title: "아니요", style: .destructive, handler: nil)
@@ -60,7 +60,6 @@ class pickerSudokuViewController: UIViewController {
             alret.addAction(yes)
             present(alret, animated: true, completion: nil)
         }
-        
     }
     
     func sudokuSolvingQueue() {
@@ -119,11 +118,8 @@ class pickerSudokuViewController: UIViewController {
                 present(alret, animated: true, completion: nil)
                 return
             }
-            
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
-            
-            
         }
     }
     
