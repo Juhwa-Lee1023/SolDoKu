@@ -169,12 +169,12 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
     private func openLibrary() {
         picker.sourceType = .photoLibrary
         
-        self.present(picker, animated: false, completion: nil)
+        self.present(picker, animated: true, completion: nil)
     }
     
     private func openCamera() {
         picker.sourceType = .camera
-        self.present(picker, animated: false, completion: nil)
+        self.present(picker, animated: true, completion: nil)
     }
     
     internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
