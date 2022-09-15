@@ -239,7 +239,7 @@ extension UIImage {
                                                       bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!;
         
         cgValue.concatenate(transform)
-
+        
         if ( self.imageOrientation == UIImage.Orientation.left ||
              self.imageOrientation == UIImage.Orientation.leftMirrored ||
              self.imageOrientation == UIImage.Orientation.right ||
