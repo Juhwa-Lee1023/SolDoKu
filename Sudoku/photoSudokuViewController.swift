@@ -18,9 +18,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
-    var count:Int = 0
-    var sudokuSolvingWorkItem: DispatchWorkItem?
-    var check: Bool = false
+    private var count: Int = 0
+    private var sudokuSolvingWorkItem: DispatchWorkItem?
+    private var check: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,30 +28,31 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         session?.startRunning()
         
     }
-    
+
     @IBAction func shootingAction(_ sender: Any) {
         if check {
-            start()
+            cameraStart()
             check = false
         }
         else {
-            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            stop()
+            sudokuSolvingWorkItem = DispatchWorkItem(block: sudokuSolvingQueue)
+            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
+            cameraStop()
             check = true
         }
     }
     
-    func sudokuSolvingQueue() {
+    private func sudokuSolvingQueue() {
         self.recognizeNum(image: refinedView.image!)
     }
-    func start(){
+    private func cameraStart(){
         session?.startRunning()
     }
-    func stop(){
+    private func cameraStop(){
         session?.stopRunning()
     }
     
-    func preparedSession() {
+    private func preparedSession() {
         let camera = AVCaptureDevice.default(for: AVMediaType.video)
         do {
             let cameraInput = try AVCaptureDeviceInput(device: camera!)
@@ -77,7 +78,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             
             previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-            previewLayer?.frame = cameraView.frame
+            previewLayer?.frame = cameraView.bounds
             cameraView.layer.addSublayer(previewLayer!)
         } catch {
             
@@ -91,9 +92,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      참고
      https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
      */
-    func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    private func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
-        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue) ?? AVCaptureVideoOrientation.portrait
+        connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
         
         /*
@@ -136,10 +137,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 // crop
                 let w = img.size.width
                 let y = (img.size.height - w) / 2
-                let r = CGRect(x: 0, y: y, width: w, height: w)
-                let imgCrop = img.cgImage?.cropping(to: r)
+                let rect = CGRect(x: 0, y: y, width: w, height: w)
+                let imgCrop = img.cgImage?.cropping(to: rect)
                 let refinedImage = UIImage(cgImage: imgCrop!)
-                
                 self.toRefinedView(refinedImage)
             }
         }
@@ -147,14 +147,14 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         CVPixelBufferUnlockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
     }
     
-    func toRefinedView(_ capturedImage: UIImage) {
+    private func toRefinedView(_ capturedImage: UIImage) {
         if let detectRectangle = wrapper.detectRectangle(capturedImage){
             refinedView.image = detectRectangle[1] as? UIImage
         }
     }
     
     
-    func recognizeNum(image: UIImage) {
+    private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
         if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
@@ -194,7 +194,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             
             var solvedSudokuArray = sudokuArray
             count = 0
-            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count);
+            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
                 let alret = UIAlertController(title: "실패.", message: "다시 사진을 찍어주세요.", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "네", style: .default, handler: nil)
@@ -213,7 +213,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     
-    func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
+    private func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
         let cutViewWidth = refinedView.bounds.size.width / 9
