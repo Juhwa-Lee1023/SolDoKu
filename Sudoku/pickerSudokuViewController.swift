@@ -177,14 +177,14 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
         self.present(picker, animated: false, completion: nil)
     }
     
-    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             picker.dismiss(animated: true)
             return
         }
         let fixOrientationImage = image.fixOrientation()
         
-        if let detectRectangle = wrapper.detectRectangle(fixOrientationImage){
+        if let detectRectangle = wrapper.detectRectangle(fixOrientationImage) {
             pickerImage.image = detectRectangle[1] as? UIImage
         }
         picker.dismiss(animated: true)
