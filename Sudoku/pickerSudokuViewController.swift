@@ -242,9 +242,9 @@ extension UIImage {
              self.imageOrientation == UIImage.Orientation.leftMirrored ||
              self.imageOrientation == UIImage.Orientation.right ||
              self.imageOrientation == UIImage.Orientation.rightMirrored ) {
-            cgValue.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.height,height: self.size.width))
+            cgValue.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
         } else {
-            cgValue.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.width,height: self.size.height))
+            cgValue.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
         }
 
         return UIImage(cgImage: cgValue.makeImage()!)
