@@ -27,8 +27,6 @@ class pickerSudokuViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-
-    
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select", message: nil, preferredStyle: .actionSheet)
         let library = UIAlertAction(title: "Album", style: .default) { _ in
