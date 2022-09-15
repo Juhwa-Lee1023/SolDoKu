@@ -31,13 +31,13 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
 
     @IBAction func shootingAction(_ sender: Any) {
         if check {
-            start()
+            cameraStart()
             check = false
         }
         else {
             sudokuSolvingWorkItem = DispatchWorkItem(block: sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
-            stop()
+            cameraStop()
             check = true
         }
     }
@@ -45,10 +45,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     func sudokuSolvingQueue() {
         self.recognizeNum(image: refinedView.image!)
     }
-    func start(){
+    func cameraStart(){
         session?.startRunning()
     }
-    func stop(){
+    func cameraStop(){
         session?.stopRunning()
     }
     
