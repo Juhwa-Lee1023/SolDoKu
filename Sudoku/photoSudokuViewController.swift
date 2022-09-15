@@ -18,8 +18,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    var count:Int = 0
     var sudokuSolvingWorkItem: DispatchWorkItem?
-    
     var check: Bool = false
     
     override func viewDidLoad() {
@@ -36,7 +36,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
         else {
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: sudokuSolvingWorkItem!)
             stop()
             check = true
         }
@@ -194,9 +193,18 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             // sudoku 풀이
             
             var solvedSudokuArray = sudokuArray
-            
-            _ = sudokuCalcuation(&solvedSudokuArray, 0, 0);
-            
+            count = 0
+            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count);
+            if !successCheck && count > 300 {
+                let alret = UIAlertController(title: "실패.", message: "다시 사진을 찍어주세요.", preferredStyle: .alert)
+                let yes = UIAlertAction(title: "네", style: .default, handler: nil)
+                let no = UIAlertAction(title: "아니요", style: .destructive, handler: nil)
+                alret.addAction(no)
+                alret.addAction(yes)
+                present(alret, animated: true, completion: nil)
+                session?.startRunning()
+                return
+            }
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
             
