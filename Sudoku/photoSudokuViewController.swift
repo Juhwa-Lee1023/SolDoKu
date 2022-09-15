@@ -137,8 +137,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 // crop
                 let w = img.size.width
                 let y = (img.size.height - w) / 2
-                let r = CGRect(x: 0, y: y, width: w, height: w)
-                let imgCrop = img.cgImage?.cropping(to: r)
+                let rect = CGRect(x: 0, y: y, width: w, height: w)
+                let imgCrop = img.cgImage?.cropping(to: rect)
                 let refinedImage = UIImage(cgImage: imgCrop!)
                 self.toRefinedView(refinedImage)
             }
