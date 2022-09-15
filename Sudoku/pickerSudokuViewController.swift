@@ -5,6 +5,7 @@
 //  Created by 이주화 on 2022/09/14.
 //
 import UIKit
+import AVFoundation
 import CoreML
 import Vision
 
@@ -15,9 +16,10 @@ class pickerSudokuViewController: UIViewController {
     
     @IBOutlet weak var pickerImage: UIImageView!
     
-    let picker = UIImagePickerController()
+    
     var sudokuSolvingWorkItem: DispatchWorkItem?
     var count:Int = 0
+    let picker = UIImagePickerController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,14 +27,20 @@ class pickerSudokuViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+
+    
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select", message: nil, preferredStyle: .actionSheet)
         let library = UIAlertAction(title: "Album", style: .default) { (action) in
             self.openLibrary()
         }
+        let camera = UIAlertAction(title: "Camera", style: .default) { (action) in
+            self.openCamera()
+        }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         alert.addAction(library)
+        alert.addAction(camera)
         alert.addAction(cancel)
         
         present(alert, animated: true, completion: nil)
@@ -41,7 +49,7 @@ class pickerSudokuViewController: UIViewController {
     @IBAction func shootSolSudoku(_ sender: Any) {
         if pickerImage.image != nil {
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            self.recognizeNum(image: pickerImage.image!)
+            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
         } else {
             let alret = UIAlertController(title: "사진이 업로드 되지 않았습니다.", message: "사진을 업로드 하시겠습니까?", preferredStyle: .alert)
             let yes = UIAlertAction(title: "네", style: .default) { (action) in
@@ -166,7 +174,13 @@ class pickerSudokuViewController: UIViewController {
 extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func openLibrary() {
         picker.sourceType = .photoLibrary
-        present(picker, animated: false, completion: nil)
+        
+        self.present(picker, animated: false, completion: nil)
+    }
+    
+    func openCamera() {
+        picker.sourceType = .camera
+        self.present(picker, animated: false, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -174,11 +188,71 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
             picker.dismiss(animated: true)
             return
         }
-        if let detectRectangle = wrapper.detectRectangle(image){
+        let fixOrientationImage = image.fixOrientation()
+        
+        if let detectRectangle = wrapper.detectRectangle(fixOrientationImage){
             pickerImage.image = detectRectangle[1] as? UIImage
         }
-//        self.pickerImage.image = image
         picker.dismiss(animated: true)
     }
     
+}
+
+extension UIImage {
+
+    func fixOrientation() -> UIImage {
+
+        // 이미지의 방향이 올바를 경우 수정하지 않는다.
+        if ( self.imageOrientation == UIImage.Orientation.up ) {
+            return self;
+        }
+
+        // 이미지를 변환시키기 위한 함수 선언
+        var transform: CGAffineTransform = CGAffineTransform.identity
+
+        // 이미지의 상태에 맞게 이미지를 돌린다.
+        if ( self.imageOrientation == UIImage.Orientation.down || self.imageOrientation == UIImage.Orientation.downMirrored ) {
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(Double.pi))
+        }
+
+        if ( self.imageOrientation == UIImage.Orientation.left || self.imageOrientation == UIImage.Orientation.leftMirrored ) {
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: CGFloat(Double.pi / 2.0))
+        }
+
+        if ( self.imageOrientation == UIImage.Orientation.right || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
+            transform = transform.translatedBy(x: 0, y: self.size.height);
+            transform = transform.rotated(by: CGFloat(-Double.pi / 2.0));
+        }
+
+        if ( self.imageOrientation == UIImage.Orientation.upMirrored || self.imageOrientation == UIImage.Orientation.downMirrored ) {
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        }
+
+        if ( self.imageOrientation == UIImage.Orientation.leftMirrored || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
+            transform = transform.translatedBy(x: self.size.height, y: 0);
+            transform = transform.scaledBy(x: -1, y: 1);
+        }
+
+        // 이미지 변환용 값 선언
+        let cgValue: CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height),
+                                                      bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
+                                                      space: self.cgImage!.colorSpace!,
+                                                      bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!;
+        
+        cgValue.concatenate(transform)
+
+        if ( self.imageOrientation == UIImage.Orientation.left ||
+             self.imageOrientation == UIImage.Orientation.leftMirrored ||
+             self.imageOrientation == UIImage.Orientation.right ||
+             self.imageOrientation == UIImage.Orientation.rightMirrored ) {
+            cgValue.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.height,height: self.size.width))
+        } else {
+            cgValue.draw(self.cgImage!, in: CGRect(x: 0,y: 0,width: self.size.width,height: self.size.height))
+        }
+
+        return UIImage(cgImage: cgValue.makeImage()!)
+    }
 }
