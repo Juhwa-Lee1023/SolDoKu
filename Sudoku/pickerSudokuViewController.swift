@@ -104,7 +104,7 @@ class pickerSudokuViewController: UIViewController {
             
             var solvedSudokuArray = sudokuArray
             count = 0
-            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count);
+            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
                 let alret = UIAlertController(title: "스도쿠 문제를 풀이할 수 없습니다.", message: "다른 사진을 업로드 하시겠습니까?", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "네", style: .default) { (action) in
@@ -198,7 +198,7 @@ extension UIImage {
 
         // 이미지의 방향이 올바를 경우 수정하지 않는다.
         if ( self.imageOrientation == UIImage.Orientation.up ) {
-            return self;
+            return self
         }
 
         // 이미지를 변환시키기 위한 함수 선언
@@ -216,8 +216,8 @@ extension UIImage {
         }
 
         if ( self.imageOrientation == UIImage.Orientation.right || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
-            transform = transform.translatedBy(x: 0, y: self.size.height);
-            transform = transform.rotated(by: CGFloat(-Double.pi / 2.0));
+            transform = transform.translatedBy(x: 0, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(-Double.pi / 2.0))
         }
 
         if ( self.imageOrientation == UIImage.Orientation.upMirrored || self.imageOrientation == UIImage.Orientation.downMirrored ) {
@@ -226,15 +226,15 @@ extension UIImage {
         }
 
         if ( self.imageOrientation == UIImage.Orientation.leftMirrored || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
-            transform = transform.translatedBy(x: self.size.height, y: 0);
-            transform = transform.scaledBy(x: -1, y: 1);
+            transform = transform.translatedBy(x: self.size.height, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
         }
 
         // 이미지 변환용 값 선언
         let cgValue: CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height),
                                                       bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
                                                       space: self.cgImage!.colorSpace!,
-                                                      bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!;
+                                                      bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!
         
         cgValue.concatenate(transform)
         
