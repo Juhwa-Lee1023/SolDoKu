@@ -28,14 +28,15 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         session?.startRunning()
         
     }
-    
+
     @IBAction func shootingAction(_ sender: Any) {
         if check {
             start()
             check = false
         }
         else {
-            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
+            sudokuSolvingWorkItem = DispatchWorkItem(block: sudokuSolvingQueue)
+            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
             stop()
             check = true
         }
@@ -77,7 +78,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             
             previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-            previewLayer?.frame = cameraView.frame
+            previewLayer?.frame = cameraView.bounds
             cameraView.layer.addSublayer(previewLayer!)
         } catch {
             
@@ -93,7 +94,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      */
     func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
-        connection.videoOrientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue) ?? AVCaptureVideoOrientation.portrait
+        connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
         
         /*
@@ -139,7 +140,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let r = CGRect(x: 0, y: y, width: w, height: w)
                 let imgCrop = img.cgImage?.cropping(to: r)
                 let refinedImage = UIImage(cgImage: imgCrop!)
-                
                 self.toRefinedView(refinedImage)
             }
         }
