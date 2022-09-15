@@ -17,9 +17,9 @@ class pickerSudokuViewController: UIViewController {
     @IBOutlet weak var pickerImage: UIImageView!
     
     
-    var sudokuSolvingWorkItem: DispatchWorkItem?
-    var count:Int = 0
-    let picker = UIImagePickerController()
+    private var sudokuSolvingWorkItem: DispatchWorkItem?
+    private var count:Int = 0
+    private let picker = UIImagePickerController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,11 +60,11 @@ class pickerSudokuViewController: UIViewController {
         }
     }
     
-    func sudokuSolvingQueue() {
+    private func sudokuSolvingQueue() {
         self.recognizeNum(image: pickerImage.image!)
     }
     
-    func recognizeNum(image: UIImage) {
+    private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
         if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
@@ -122,7 +122,7 @@ class pickerSudokuViewController: UIViewController {
     }
     
     
-    func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
+    private func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(pickerImage.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: pickerImage.bounds.size))
         let cutViewWidth = pickerImage.bounds.size.width / 9
@@ -166,18 +166,18 @@ class pickerSudokuViewController: UIViewController {
 }
 
 extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func openLibrary() {
+    private func openLibrary() {
         picker.sourceType = .photoLibrary
         
         self.present(picker, animated: false, completion: nil)
     }
     
-    func openCamera() {
+    private func openCamera() {
         picker.sourceType = .camera
         self.present(picker, animated: false, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             picker.dismiss(animated: true)
             return
