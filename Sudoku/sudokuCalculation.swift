@@ -31,7 +31,7 @@ func isVerify(_ number: Int, _ sudoku: [[Int]], _ row: Int, _ col:Int) -> Bool {
     return true
 }
 
-func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: inout Int) -> Bool {
+func sudokuCalculation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: inout Int) -> Bool {
     
     if(check >= 1000000) { return false }
     
@@ -41,10 +41,10 @@ func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: 
     if (sudoku[row][col] != 0) {
         if (col == 8) {
             check += 1
-            if (sudokuCalcuation(&sudoku, row+1, 0, &check) == true) { return true }
+            if (sudokuCalculation(&sudoku, row+1, 0, &check) == true) { return true }
         } else {
             check += 1
-            if (sudokuCalcuation(&sudoku, row, col+1, &check) == true) { return true }
+            if (sudokuCalculation(&sudoku, row, col+1, &check) == true) { return true }
         }
         return false
     }
@@ -55,10 +55,10 @@ func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: 
             sudoku[row][col] = num
             if (col == 8) {
                 check += 1
-                if (sudokuCalcuation(&sudoku, row+1, 0, &check) == true) { return true }
+                if (sudokuCalculation(&sudoku, row+1, 0, &check) == true) { return true }
             } else {
                 check += 1
-                if (sudokuCalcuation(&sudoku, row, col+1, &check) == true) { return true }
+                if (sudokuCalculation(&sudoku, row, col+1, &check) == true) { return true }
             }
             // 계산이 불가능하면...
             sudoku[row][col] = 0

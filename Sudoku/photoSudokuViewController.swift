@@ -217,7 +217,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             
             var solvedSudokuArray = sudokuArray
             count = 0
-            let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
+            let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
                 let alert = UIAlertController(title: "Fail.", message: "Take a Picture Again.", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes", style: .default, handler: nil)
