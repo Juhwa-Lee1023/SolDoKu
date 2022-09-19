@@ -15,6 +15,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var refinedView: UIImageView!
     @IBOutlet weak var shooting: UIButton!
+    @IBOutlet weak var loadingView: UIView! {
+        didSet {
+            loadingView.layer.cornerRadius = 6
+        }
+    }
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -24,6 +30,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        hideIndicator()
         preparedSession()
         session?.startRunning()
         
@@ -41,7 +48,14 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             check = true
         }
     }
-    
+    private func showIndicator() {
+        activityIndicator.startAnimating()
+        loadingView.isHidden = false
+    }
+    private func hideIndicator() {
+        activityIndicator.stopAnimating()
+        loadingView.isHidden = true
+    }
     private func sudokuSolvingQueue() {
         self.recognizeNum(image: refinedView.image!)
     }
@@ -50,6 +64,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     private func cameraStop(){
         session?.stopRunning()
+        activityIndicator.startAnimating()
+        loadingView.isHidden = false
     }
     
     private func preparedSession() {
@@ -92,7 +108,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      참고
      https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
      */
-    private func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    internal func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
         connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
@@ -203,8 +219,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 alret.addAction(yes)
                 present(alret, animated: true, completion: nil)
                 session?.startRunning()
+                hideIndicator()
                 return
             }
+            hideIndicator()
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
             
