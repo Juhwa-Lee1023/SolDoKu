@@ -33,9 +33,8 @@ func isVerify(_ number: Int, _ sudoku: [[Int]], _ row: Int, _ col:Int) -> Bool {
 
 func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: inout Int) -> Bool {
     
-    if(check >= 700000){
-        return false
-    }
+    if(check >= 700000) { return false }
+    
     if (row == 9) { return true }
 
     // 기존에 존재하는 숫자가 있다면
