@@ -87,6 +87,7 @@ class pickerSudokuViewController: UIViewController {
         photoPicker.layer.cornerRadius = 10
         solSudoku.layer.cornerRadius = 10
     }
+    
     private func showIndicator() {
         activityIndicator.startAnimating()
         loadingView.isHidden = false
