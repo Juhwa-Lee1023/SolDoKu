@@ -64,8 +64,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     private func cameraStop(){
         session?.stopRunning()
-        activityIndicator.startAnimating()
-        loadingView.isHidden = false
+        showIndicator()
     }
     
     private func preparedSession() {
