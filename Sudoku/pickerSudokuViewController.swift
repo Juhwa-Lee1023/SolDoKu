@@ -68,6 +68,7 @@ class pickerSudokuViewController: UIViewController {
         activityIndicator.startAnimating()
         loadingView.isHidden = false
     }
+    
     private func hideIndicator() {
         activityIndicator.stopAnimating()
         loadingView.isHidden = true
@@ -135,7 +136,6 @@ class pickerSudokuViewController: UIViewController {
             showNum(solvedSudokuArray, sudokuArray, image)
         }
     }
-    
     
     private func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(pickerImage.bounds.size)

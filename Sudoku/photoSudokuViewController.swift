@@ -48,20 +48,25 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             check = true
         }
     }
+    
     private func showIndicator() {
         activityIndicator.startAnimating()
         loadingView.isHidden = false
     }
+    
     private func hideIndicator() {
         activityIndicator.stopAnimating()
         loadingView.isHidden = true
     }
+    
     private func sudokuSolvingQueue() {
         self.recognizeNum(image: refinedView.image!)
     }
+    
     private func cameraStart(){
         session?.startRunning()
     }
+    
     private func cameraStop(){
         session?.stopRunning()
         showIndicator()
@@ -100,7 +105,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
         
     }
-    
     
     // 비디오 프레임이 들어올 때마다 갱신됨
     /*
@@ -167,7 +171,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             refinedView.image = detectRectangle[1] as? UIImage
         }
     }
-    
     
     private func recognizeNum(image: UIImage) {
         // get sudoku number images
