@@ -14,6 +14,8 @@ class pickerSudokuViewController: UIViewController {
     @IBOutlet weak var photoPicker: UIButton!
     @IBOutlet weak var solSudoku: UIButton!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var pickerImage: UIImageView!
     
     
@@ -23,6 +25,7 @@ class pickerSudokuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        hideIndicator()
         picker.delegate = self
         // Do any additional setup after loading the view.
     }
@@ -46,6 +49,7 @@ class pickerSudokuViewController: UIViewController {
     
     @IBAction func shootSolSudoku(_ sender: Any) {
         if pickerImage.image != nil {
+            showIndicator()
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
         } else {
@@ -58,6 +62,16 @@ class pickerSudokuViewController: UIViewController {
             alret.addAction(yes)
             present(alret, animated: true, completion: nil)
         }
+    }
+    
+    private func showIndicator() {
+        activityIndicator.startAnimating()
+        loadingView.isHidden = false
+    }
+    
+    private func hideIndicator() {
+        activityIndicator.stopAnimating()
+        loadingView.isHidden = true
     }
     
     private func sudokuSolvingQueue() {
@@ -114,13 +128,14 @@ class pickerSudokuViewController: UIViewController {
                 alret.addAction(no)
                 alret.addAction(yes)
                 present(alret, animated: true, completion: nil)
+                hideIndicator()
                 return
             }
+            hideIndicator()
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
         }
     }
-    
     
     private func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(pickerImage.bounds.size)

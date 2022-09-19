@@ -15,6 +15,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var refinedView: UIImageView!
     @IBOutlet weak var shooting: UIButton!
+    @IBOutlet weak var loadingView: UIView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -24,6 +26,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        hideIndicator()
         preparedSession()
         session?.startRunning()
         
@@ -42,14 +45,27 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
     }
     
+    private func showIndicator() {
+        activityIndicator.startAnimating()
+        loadingView.isHidden = false
+    }
+    
+    private func hideIndicator() {
+        activityIndicator.stopAnimating()
+        loadingView.isHidden = true
+    }
+    
     private func sudokuSolvingQueue() {
         self.recognizeNum(image: refinedView.image!)
     }
+    
     private func cameraStart(){
         session?.startRunning()
     }
+    
     private func cameraStop(){
         session?.stopRunning()
+        showIndicator()
     }
     
     private func preparedSession() {
@@ -86,13 +102,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
     }
     
-    
     // 비디오 프레임이 들어올 때마다 갱신됨
     /*
      참고
      https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput
      */
-    private func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    internal func captureOutput(_ output: AVCaptureOutput, didOutput buffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         //기기의 현재 방향에 따라 화면의 방향도 돌려준다.
         connection.videoOrientation = AVCaptureVideoOrientation.portrait
         
@@ -153,7 +168,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
     }
     
-    
     private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
@@ -203,8 +217,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 alret.addAction(yes)
                 present(alret, animated: true, completion: nil)
                 session?.startRunning()
+                hideIndicator()
                 return
             }
+            hideIndicator()
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
             
