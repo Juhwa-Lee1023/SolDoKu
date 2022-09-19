@@ -15,11 +15,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var refinedView: UIImageView!
     @IBOutlet weak var shooting: UIButton!
-    @IBOutlet weak var loadingView: UIView! {
-        didSet {
-            loadingView.layer.cornerRadius = 6
-        }
-    }
+    @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private var session: AVCaptureSession?
