@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         self.view.addSubview(titleLabel)
         titleLabel.text = "SolDoKu"
         titleLabel.textColor = .black
-        titleLabel.font = .systemFont(ofSize: 50)
+        titleLabel.font = .systemFont(ofSize: 50, weight: .bold)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: bounds.height/10).isActive = true
         titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

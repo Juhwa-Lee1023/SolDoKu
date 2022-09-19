@@ -25,6 +25,7 @@ class pickerSudokuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.tintColor = .black
         hideIndicator()
         picker.delegate = self
         setbutton()

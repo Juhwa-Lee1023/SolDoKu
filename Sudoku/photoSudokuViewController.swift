@@ -26,6 +26,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.tintColor = .black
         hideIndicator()
         preparedSession()
         session?.startRunning()
