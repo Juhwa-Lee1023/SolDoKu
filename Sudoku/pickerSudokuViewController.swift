@@ -8,9 +8,10 @@ import UIKit
 import AVFoundation
 import CoreML
 import Vision
+import Photos
 
 class pickerSudokuViewController: UIViewController {
-
+    
     @IBOutlet weak var photoPicker: UIButton!
     @IBOutlet weak var solSudoku: UIButton!
     
@@ -35,17 +36,27 @@ class pickerSudokuViewController: UIViewController {
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select", message: nil, preferredStyle: .actionSheet)
         let library = UIAlertAction(title: "Album", style: .default) { _ in
-            self.openLibrary()
+            if self.PhotoAuth() {
+                self.openLibrary()
+            }
+            else {
+                self.AuthSettingOpen(AuthString: "Album")
+            }
         }
         let camera = UIAlertAction(title: "Camera", style: .default) { _ in
-            self.openCamera()
+            if self.CameraAuth() {
+                self.openCamera()
+            }
+            else {
+                self.AuthSettingOpen(AuthString: "Camera")
+            }
         }
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         alert.addAction(library)
         alert.addAction(camera)
         alert.addAction(cancel)
-
+        
         present(alert, animated: true, completion: nil)
     }
     
@@ -55,14 +66,20 @@ class pickerSudokuViewController: UIViewController {
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
         } else {
-            let alret = UIAlertController(title: "Picture hasn't been Uploaded.", message: "Want to Upload a Picture?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Picture hasn't been Uploaded.", message: "Want to Upload a Picture?", preferredStyle: .alert)
             let yes = UIAlertAction(title: "Yes", style: .default) { _ in
-                self.openLibrary()
+                if self.PhotoAuth() {
+                    self.openLibrary()
+                }
+                else {
+                    self.AuthSettingOpen(AuthString: "Album")
+                }
+                    
             }
             let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
-            alret.addAction(no)
-            alret.addAction(yes)
-            present(alret, animated: true, completion: nil)
+            alert.addAction(no)
+            alert.addAction(yes)
+            present(alert, animated: true, completion: nil)
         }
     }
     
@@ -126,14 +143,14 @@ class pickerSudokuViewController: UIViewController {
             count = 0
             let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
-                let alret = UIAlertController(title: "Cannot solve Sudoku.", message: "Upload another Picture?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Upload another Picture?", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
                     self.openLibrary()
                 }
                 let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
-                alret.addAction(no)
-                alret.addAction(yes)
-                present(alret, animated: true, completion: nil)
+                alert.addAction(no)
+                alert.addAction(yes)
+                present(alert, animated: true, completion: nil)
                 hideIndicator()
                 return
             }
@@ -175,15 +192,15 @@ class pickerSudokuViewController: UIViewController {
         pickerImage.image = newImage
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -211,51 +228,97 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
         picker.dismiss(animated: true)
     }
     
+    func PhotoAuth() -> Bool {
+        // 포토 라이브러리 접근 권한
+        let authorizationStatus = PHPhotoLibrary.authorizationStatus()
+        
+        var isAuth = false
+        
+        switch authorizationStatus {
+        case .authorized: return true // 사용자가 앱에 사진 라이브러리에 대한 액세스 권한을 명시 적으로 부여했습니다.
+        case .denied: break // 사용자가 사진 라이브러리에 대한 앱 액세스를 명시 적으로 거부했습니다.
+        case .limited: break // ?
+        case .notDetermined: // 사진 라이브러리 액세스에는 명시적인 사용자 권한이 필요하지만 사용자가 아직 이러한 권한을 부여하거나 거부하지 않았습니다
+            PHPhotoLibrary.requestAuthorization { (state) in
+                if state == .authorized {
+                    isAuth = true
+                }
+            }
+            return isAuth
+        case .restricted: break // 앱이 사진 라이브러리에 액세스 할 수있는 권한이 없으며 사용자는 이러한 권한을 부여 할 수 없습니다.
+        default: break
+        }
+        
+        return false;
+    }
+    
+    func CameraAuth() -> Bool {
+        return AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.authorized
+    }
+    
+    
+    func AuthSettingOpen(AuthString: String) {
+        if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
+            let message = "\(AppName) is not allowed access to \(AuthString). \r\n Do you want to go to the Setting Screen?"
+            let alert = UIAlertController(title: "Setting", message: message, preferredStyle: .alert)
+            
+            let cancle = UIAlertAction(title: "Cancel", style: .default) { _ in
+                
+            }
+            let confirm = UIAlertAction(title: "Confirm", style: .default) { (UIAlertAction) in
+                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+            }
+            alert.addAction(cancle)
+            alert.addAction(confirm)
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension UIImage {
-
+    
     func fixOrientation() -> UIImage {
-
+        
         // 이미지의 방향이 올바를 경우 수정하지 않는다.
         if ( self.imageOrientation == UIImage.Orientation.up ) {
             return self
         }
-
+        
         // 이미지를 변환시키기 위한 함수 선언
         var transform: CGAffineTransform = CGAffineTransform.identity
-
+        
         // 이미지의 상태에 맞게 이미지를 돌린다.
         if ( self.imageOrientation == UIImage.Orientation.down || self.imageOrientation == UIImage.Orientation.downMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: self.size.height)
             transform = transform.rotated(by: CGFloat(Double.pi))
         }
-
+        
         if ( self.imageOrientation == UIImage.Orientation.left || self.imageOrientation == UIImage.Orientation.leftMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: 0)
             transform = transform.rotated(by: CGFloat(Double.pi / 2.0))
         }
-
+        
         if ( self.imageOrientation == UIImage.Orientation.right || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             transform = transform.translatedBy(x: 0, y: self.size.height)
             transform = transform.rotated(by: CGFloat(-Double.pi / 2.0))
         }
-
+        
         if ( self.imageOrientation == UIImage.Orientation.upMirrored || self.imageOrientation == UIImage.Orientation.downMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
         }
-
+        
         if ( self.imageOrientation == UIImage.Orientation.leftMirrored || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             transform = transform.translatedBy(x: self.size.height, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
         }
-
+        
         // 이미지 변환용 값 선언
         let cgValue: CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height),
-                                                      bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
-                                                      space: self.cgImage!.colorSpace!,
-                                                      bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!
+                                           bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
+                                           space: self.cgImage!.colorSpace!,
+                                           bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!
         
         cgValue.concatenate(transform)
         
@@ -267,7 +330,7 @@ extension UIImage {
         } else {
             cgValue.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
         }
-
+        
         return UIImage(cgImage: cgValue.makeImage()!)
     }
 }

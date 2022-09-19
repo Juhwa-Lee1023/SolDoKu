@@ -31,8 +31,16 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         preparedSession()
         session?.startRunning()
         shooting.layer.cornerRadius = 10
+        
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !self.CameraAuth() {
+            self.AuthSettingOpen(AuthString: "Camera")
+        }
+    }
+    
     @IBAction func shootingAction(_ sender: Any) {
         if check {
             cameraStart()
@@ -211,10 +219,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             count = 0
             let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
-                let alret = UIAlertController(title: "Fail.", message: "Take a Picture Again.", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Fail.", message: "Take a Picture Again.", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes", style: .default, handler: nil)
-                alret.addAction(yes)
-                present(alret, animated: true, completion: nil)
+                alert.addAction(yes)
+                present(alert, animated: true, completion: nil)
                 session?.startRunning()
                 hideIndicator()
                 return
@@ -266,5 +274,30 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      참고
      */
     
+    func CameraAuth() -> Bool {
+        return AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.authorized
+    }
+    
+    private func AuthSettingOpen(AuthString: String) {
+        if !CameraAuth(){
+            if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
+                let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?"
+                let alert = UIAlertController(title: "Setting", message: message, preferredStyle: .alert)
+                
+                let cancle = UIAlertAction(title: "Cancel", style: .default) { _ in
+                    
+                }
+                let confirm = UIAlertAction(title: "Confirm", style: .default) { (UIAlertAction) in
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                }
+                alert.addAction(cancle)
+                alert.addAction(confirm)
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        
+        
+    }
 }
-
+    
