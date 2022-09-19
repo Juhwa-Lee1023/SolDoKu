@@ -33,7 +33,7 @@ func isVerify(_ number: Int, _ sudoku: [[Int]], _ row: Int, _ col:Int) -> Bool {
 
 func sudokuCalcuation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: inout Int) -> Bool {
     
-    if(check >= 700000) { return false }
+    if(check >= 1000000) { return false }
     
     if (row == 9) { return true }
 

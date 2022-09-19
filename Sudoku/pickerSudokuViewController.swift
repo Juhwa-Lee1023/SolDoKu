@@ -25,8 +25,10 @@ class pickerSudokuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.tintColor = .black
         hideIndicator()
         picker.delegate = self
+        setbutton()
         // Do any additional setup after loading the view.
     }
     
@@ -53,17 +55,21 @@ class pickerSudokuViewController: UIViewController {
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
         } else {
-            let alret = UIAlertController(title: "사진이 업로드 되지 않았습니다.", message: "사진을 업로드 하시겠습니까?", preferredStyle: .alert)
-            let yes = UIAlertAction(title: "네", style: .default) { _ in
+            let alret = UIAlertController(title: "Picture hasn't been Uploaded.", message: "Want to Upload a Picture?", preferredStyle: .alert)
+            let yes = UIAlertAction(title: "Yes", style: .default) { _ in
                 self.openLibrary()
             }
-            let no = UIAlertAction(title: "아니요", style: .destructive, handler: nil)
+            let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
             alret.addAction(no)
             alret.addAction(yes)
             present(alret, animated: true, completion: nil)
         }
     }
     
+    private func setbutton() {
+        photoPicker.layer.cornerRadius = 10
+        solSudoku.layer.cornerRadius = 10
+    }
     private func showIndicator() {
         activityIndicator.startAnimating()
         loadingView.isHidden = false
@@ -120,11 +126,11 @@ class pickerSudokuViewController: UIViewController {
             count = 0
             let successCheck = sudokuCalcuation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck && count > 300 {
-                let alret = UIAlertController(title: "스도쿠 문제를 풀이할 수 없습니다.", message: "다른 사진을 업로드 하시겠습니까?", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "네", style: .default) { (action) in
+                let alret = UIAlertController(title: "Cannot solve Sudoku.", message: "Upload another Picture?", preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
                     self.openLibrary()
                 }
-                let no = UIAlertAction(title: "아니요", style: .destructive, handler: nil)
+                let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
                 alret.addAction(no)
                 alret.addAction(yes)
                 present(alret, animated: true, completion: nil)

@@ -17,49 +17,89 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ve-0d-0vw">
-                                <rect key="frame" x="174" y="571" width="67" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ve-0d-0vw">
+                                <rect key="frame" x="10" y="478" width="394" height="65.5"/>
+                                <color key="backgroundColor" red="0.85098039215686272" green="0.85098039215686272" blue="0.85098039215686272" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="9Ve-0d-0vw" secondAttribute="height" multiplier="6:1" id="XrB-ju-Bkr"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Upload from Album"/>
                                 <connections>
                                     <action selector="shootPhotoPicker:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="JwF-1i-AZc"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gwM-Lj-KAn">
-                                <rect key="frame" x="174" y="678" width="67" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gwM-Lj-KAn">
+                                <rect key="frame" x="10" y="563.5" width="394" height="66"/>
+                                <color key="backgroundColor" red="0.85098039215686272" green="0.85098039215686272" blue="0.85098039215686272" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="gwM-Lj-KAn" secondAttribute="height" multiplier="6:1" id="Y1H-gB-mrK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Solving Sudoku"/>
                                 <connections>
                                     <action selector="shootSolSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="cvh-q7-IA8"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UYs-1J-XfZ">
-                                <rect key="frame" x="43" y="116" width="328" height="329"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please upload the Picture." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jAG-mM-LFV">
+                                <rect key="frame" x="108" y="224" width="198.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UYs-1J-XfZ">
+                                <rect key="frame" x="10" y="44" width="394" height="394"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="UYs-1J-XfZ" secondAttribute="height" multiplier="1:1" id="RNa-yT-BRX"/>
+                                </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rcG-lM-I8B">
-                                <rect key="frame" x="43" y="116" width="328" height="329"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rcG-lM-I8B">
+                                <rect key="frame" x="10" y="44" width="394" height="394"/>
                                 <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="ZY0-lj-P2r">
-                                        <rect key="frame" x="154" y="154" width="20" height="20"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </activityIndicatorView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="현재 스도쿠를 풀이 중 입니다." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCI-FB-75G">
-                                        <rect key="frame" x="65" y="252" width="199" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currently solving Sudoku" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCI-FB-75G">
+                                        <rect key="frame" x="94" y="265.5" width="206" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ZY0-lj-P2r">
+                                        <rect key="frame" x="178.5" y="178.5" width="37" height="37"/>
+                                        <color key="color" red="0.96007269559999997" green="1" blue="0.95649097370000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.3035873724489796" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="zCI-FB-75G" firstAttribute="centerX" secondItem="rcG-lM-I8B" secondAttribute="centerX" id="Izu-ia-hwN"/>
+                                    <constraint firstAttribute="width" secondItem="rcG-lM-I8B" secondAttribute="height" multiplier="1:1" id="Jyc-KT-tun"/>
+                                    <constraint firstItem="ZY0-lj-P2r" firstAttribute="centerY" secondItem="rcG-lM-I8B" secondAttribute="centerY" id="gjv-Qq-bNn"/>
+                                    <constraint firstItem="zCI-FB-75G" firstAttribute="top" secondItem="ZY0-lj-P2r" secondAttribute="bottom" constant="50" id="gnq-WL-zcx"/>
+                                    <constraint firstItem="ZY0-lj-P2r" firstAttribute="centerX" secondItem="rcG-lM-I8B" secondAttribute="centerX" id="soO-1W-lo6"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="UYs-1J-XfZ" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="10" id="47L-Si-PAs"/>
+                            <constraint firstItem="jAG-mM-LFV" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="180" id="87L-xd-6oQ"/>
+                            <constraint firstItem="UYs-1J-XfZ" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="8a4-ld-xdi"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="gwM-Lj-KAn" secondAttribute="trailing" constant="10" id="AnO-4u-IHH"/>
+                            <constraint firstItem="9Ve-0d-0vw" firstAttribute="top" secondItem="UYs-1J-XfZ" secondAttribute="bottom" constant="40" id="Rsi-gn-bNv"/>
+                            <constraint firstItem="rcG-lM-I8B" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="cDZ-Fo-uav"/>
+                            <constraint firstItem="jAG-mM-LFV" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="d1p-51-OHG"/>
+                            <constraint firstItem="gwM-Lj-KAn" firstAttribute="top" secondItem="9Ve-0d-0vw" secondAttribute="bottom" constant="20" id="dO6-Ac-gr1"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="9Ve-0d-0vw" secondAttribute="trailing" constant="10" id="gzv-63-jFq"/>
+                            <constraint firstItem="rcG-lM-I8B" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="10" id="mni-Jf-my3"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="UYs-1J-XfZ" secondAttribute="trailing" constant="10" id="net-nU-Bgm"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="rcG-lM-I8B" secondAttribute="trailing" constant="10" id="ozs-KB-THc"/>
+                            <constraint firstItem="gwM-Lj-KAn" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="10" id="tgx-YG-AKf"/>
+                            <constraint firstItem="9Ve-0d-0vw" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="10" id="veo-aF-Lly"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="ZY0-lj-P2r" id="V8g-3B-a8w"/>
@@ -75,6 +115,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
