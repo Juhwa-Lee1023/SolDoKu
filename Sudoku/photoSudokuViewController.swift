@@ -31,7 +31,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         preparedSession()
         session?.startRunning()
         shooting.layer.cornerRadius = 10
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
