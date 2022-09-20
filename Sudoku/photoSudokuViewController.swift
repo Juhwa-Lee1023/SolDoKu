@@ -193,7 +193,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                     if numExist == true {
                         // 숫자가 존재 하는 경우 처리
                         guard let buf = img.UIImageToPixelBuffer() else { return }
-                        
                         let model = model_64()
                         guard let predList = try? model.prediction(x: buf) else {
                             break
@@ -204,7 +203,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                         let predArr = Array(doubleBuffer)
                         let predArrMax = predArr.max()
                         let result = predArr.firstIndex(of: predArrMax!)
-                        
                         sudokuArray[row][col] = result ?? 0
                     } else {
                         sudokuArray[row][col] = 0
@@ -230,11 +228,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             hideIndicator()
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
-            
-            
         }
     }
-    
     
     private func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
@@ -284,9 +279,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?"
                 let alert = UIAlertController(title: "Setting", message: message, preferredStyle: .alert)
                 
-                let cancle = UIAlertAction(title: "Cancel", style: .default) { _ in
-                    
-                }
+                let cancle = UIAlertAction(title: "Cancel", style: .default) { _ in }
                 let confirm = UIAlertAction(title: "Confirm", style: .default) { (UIAlertAction) in
                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                 }
@@ -296,8 +289,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 self.present(alert, animated: true, completion: nil)
             }
         }
-        
-        
     }
 }
     
