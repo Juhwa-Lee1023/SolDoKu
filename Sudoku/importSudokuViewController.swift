@@ -23,7 +23,6 @@ class importSudokuViewController: UIViewController {
         super.viewDidLoad()
         collectionViewLink()
         setButton()
-        // Do any additional setup after loading the view.
     }
     
     @IBAction func setSudoku(_ sender: UIButton) {
@@ -162,7 +161,7 @@ extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let width = sudokuCollectionView.frame.width / 9///  3등분하여 배치, 옆 간격이 1이므로 1을 빼줌
+        let width = sudokuCollectionView.frame.width / 9
         let size = CGSize(width: width, height: width)
         return size
     }
