@@ -46,7 +46,7 @@ class importSudokuViewController: UIViewController {
         }
         count = 0
         let successCheck  = sudokuCalculation(&solSudokuNum, 0, 0, &count)
-        if !successCheck && count > 300 {
+        if !successCheck {
             let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
             let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
                 for i in 0...80 {
