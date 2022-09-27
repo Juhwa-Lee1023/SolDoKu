@@ -27,16 +27,13 @@ class importSudokuViewController: UIViewController {
     
     @IBAction func setSudoku(_ sender: UIButton) {
         if(selectNum != []) {
-            guard let cell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell else{
+            guard let cell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell else {
                 fatalError()
             }
             
             cell.importNum.text = sender.titleLabel!.text
             sudokuNum[selectNum.row] = Int(cell.importNum.text!) ?? 0
-        } else {
-            
         }
-        
     }
     
     @IBAction func solve(_ sender: Any) {
