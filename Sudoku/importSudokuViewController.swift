@@ -38,8 +38,8 @@ class importSudokuViewController: UIViewController {
     
     @IBAction func solve(_ sender: Any) {
         var check: Int = 0
-        for i in 0...8 {
-            for j in 0...8 {
+        for i in 0..<9 {
+            for j in 0..<9 {
                 solSudokuNum[i][j] = sudokuNum[check]
                 check += 1
             }
@@ -49,7 +49,7 @@ class importSudokuViewController: UIViewController {
         if !successCheck {
             let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
             let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
-                for i in 0...80 {
+                for i in 0..<81 {
                     guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                         fatalError()
                     }
@@ -68,14 +68,14 @@ class importSudokuViewController: UIViewController {
     
     private func drawSudoku() {
         var check: Int = 0
-        for i in 0...8 {
-            for j in 0...8 {
+        for i in 0..<9 {
+            for j in 0..<9 {
                 sudokuNum[check] = solSudokuNum[i][j]
                 check += 1
             }
         }
         
-        for i in 0...80 {
+        for i in 0..<81 {
             guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                 fatalError()
             }
@@ -125,7 +125,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        for i in 0...80 {
+        for i in 0..<81 {
             guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                 fatalError()
             }
