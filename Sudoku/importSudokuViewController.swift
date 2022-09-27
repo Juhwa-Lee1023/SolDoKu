@@ -50,7 +50,7 @@ class importSudokuViewController: UIViewController {
             let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
             let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
                 for i in 0...80 {
-                    guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else{
+                    guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                         fatalError()
                     }
                     
@@ -126,7 +126,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         for i in 0...80 {
-            guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else{
+            guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                 fatalError()
             }
             cell.contentView.layer.borderWidth = 1
