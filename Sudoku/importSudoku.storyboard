@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,16 +14,170 @@
         <scene sceneID="s0d-6b-0kx">
             <objects>
                 <viewController storyboardIdentifier="importSudoku" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="importSudokuViewController" customModule="Sudoku" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc" customClass="import">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="y4F-fs-WyG">
+                                <rect key="frame" x="0.0" y="80" width="375" height="375"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="y4F-fs-WyG" secondAttribute="height" multiplier="1:1" id="8pJ-cO-wye"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="k5D-5c-8e2">
+                                    <size key="itemSize" width="56" height="56"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="A2p-b3-hRC" customClass="sudokuCollectionViewCell" customModule="Sudoku" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="4EH-QU-gHN">
+                                            <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tvu-fZ-LPQ">
+                                                    <rect key="frame" x="7" y="18" width="42" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <attributedString key="attributedText">
+                                                        <fragment content="Label">
+                                                            <attributes>
+                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                <font key="NSFont" metaFont="system" size="17"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="56" height="56"/>
+                                        <connections>
+                                            <outlet property="importNum" destination="tvu-fZ-LPQ" id="MLy-Ed-ygv"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mw-20-JhS">
+                                <rect key="frame" x="0.0" y="475" width="375" height="42"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R6B-DQ-pni">
+                                        <rect key="frame" x="0.0" y="0.0" width="41.666666666666664" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="oiI-Uc-uwc"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="laD-QG-2rA">
+                                        <rect key="frame" x="41.666666666666671" y="0.0" width="41.666666666666671" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Kkc-0P-Tgo"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0mM-1M-xlL">
+                                        <rect key="frame" x="83.333333333333329" y="0.0" width="41.666666666666671" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="PUq-bK-UBK"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EgR-q2-ZqG">
+                                        <rect key="frame" x="125.00000000000001" y="0.0" width="41.666666666666671" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="7nM-gM-5ae"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eov-Km-l9s">
+                                        <rect key="frame" x="166.66666666666666" y="0.0" width="41.666666666666657" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="7RT-eh-6AE"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u5w-Dl-hgc">
+                                        <rect key="frame" x="208.33333333333334" y="0.0" width="41.666666666666657" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Axx-jQ-cXX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nEC-fP-erC">
+                                        <rect key="frame" x="249.99999999999997" y="0.0" width="41.666666666666657" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="lMO-z0-9cl"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FxV-36-9dV">
+                                        <rect key="frame" x="291.66666666666669" y="0.0" width="41.666666666666686" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="jhe-YD-7Sa"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8YJ-2P-5VJ">
+                                        <rect key="frame" x="333.33333333333331" y="0.0" width="41.666666666666686" height="42"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1"/>
+                                        <connections>
+                                            <action selector="setSudoku:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="e9w-yF-Hro"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="0Mw-20-JhS" secondAttribute="height" multiplier="125:14" id="WtC-eY-LJF"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m2S-ed-PPm">
+                                <rect key="frame" x="154" y="572" width="67" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <connections>
+                                    <action selector="solve:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="8d2-6y-taN"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="0Mw-20-JhS" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="L4C-Mh-XSm"/>
+                            <constraint firstItem="0Mw-20-JhS" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="POv-XY-fPS"/>
+                            <constraint firstItem="0Mw-20-JhS" firstAttribute="top" secondItem="y4F-fs-WyG" secondAttribute="bottom" constant="20" id="Rvd-zV-oMt"/>
+                            <constraint firstItem="y4F-fs-WyG" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="36" id="Wne-rg-nEO"/>
+                            <constraint firstItem="y4F-fs-WyG" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="fpJ-CJ-gat"/>
+                            <constraint firstItem="y4F-fs-WyG" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="lPR-tq-C6V"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="sudokuCollectionView" destination="y4F-fs-WyG" id="2ME-f2-sk8"/>
+                        <outletCollection property="buttons" destination="R6B-DQ-pni" collectionClass="NSMutableArray" id="f6E-me-dYE"/>
+                        <outletCollection property="buttons" destination="laD-QG-2rA" collectionClass="NSMutableArray" id="zqw-fG-jUw"/>
+                        <outletCollection property="buttons" destination="0mM-1M-xlL" collectionClass="NSMutableArray" id="Otr-H4-ypf"/>
+                        <outletCollection property="buttons" destination="EgR-q2-ZqG" collectionClass="NSMutableArray" id="tgn-9A-DCS"/>
+                        <outletCollection property="buttons" destination="Eov-Km-l9s" collectionClass="NSMutableArray" id="rAu-Hl-62J"/>
+                        <outletCollection property="buttons" destination="u5w-Dl-hgc" collectionClass="NSMutableArray" id="8hu-bN-jhr"/>
+                        <outletCollection property="buttons" destination="nEC-fP-erC" collectionClass="NSMutableArray" id="se1-Qw-i2w"/>
+                        <outletCollection property="buttons" destination="FxV-36-9dV" collectionClass="NSMutableArray" id="F6v-xO-vGi"/>
+                        <outletCollection property="buttons" destination="8YJ-2P-5VJ" collectionClass="NSMutableArray" id="OeL-hB-wzC"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="60.869565217391312" y="105.80357142857143"/>
+            <point key="canvasLocation" x="60" y="105.66502463054188"/>
         </scene>
     </scenes>
     <resources>

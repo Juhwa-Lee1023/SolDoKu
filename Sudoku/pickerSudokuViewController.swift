@@ -143,7 +143,7 @@ class pickerSudokuViewController: UIViewController {
             var solvedSudokuArray = sudokuArray
             count = 0
             let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
-            if !successCheck && count > 300 {
+            if !successCheck {
                 let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Upload another Picture?", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
                     self.openLibrary()
