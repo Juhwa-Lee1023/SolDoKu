@@ -76,7 +76,7 @@ class importSudokuViewController: UIViewController {
         }
         
         for i in 0...80 {
-            guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else{
+            guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                 fatalError()
             }
             
