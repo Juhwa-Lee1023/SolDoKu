@@ -47,7 +47,6 @@ class importSudokuViewController: UIViewController {
                 check += 1
             }
         }
-        print(sudokuNum)
         count = 0
         let successCheck  = sudokuCalculation(&solSudokuNum, 0, 0, &count)
         if !successCheck && count > 300 {
@@ -114,7 +113,6 @@ class importSudokuViewController: UIViewController {
 extension importSudokuViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(sudokuNum.count)
         return sudokuNum.count
     }
     
