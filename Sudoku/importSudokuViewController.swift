@@ -277,7 +277,8 @@ extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == sudokuCollectionView {
-            let width = sudokuCollectionView.frame.width / 9
+            let doubleNum: Double = Double(sudokuCollectionView.frame.width) / Double(9.0)
+            let width = CGFloat(doubleNum)
             let size = CGSize(width: width, height: width)
             return size
         } else {
