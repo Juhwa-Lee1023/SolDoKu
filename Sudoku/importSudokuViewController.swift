@@ -102,7 +102,6 @@ class importSudokuViewController: UIViewController {
         self.buttonCollectionView.delegate = self
         self.buttonCollectionView.dataSource = self
     }
-    
     /*
      // MARK: - Navigation
      
@@ -114,7 +113,6 @@ class importSudokuViewController: UIViewController {
      */
     
 }
-
 
 extension importSudokuViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -290,7 +288,6 @@ extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
         
     }
 }
-
 class sudokuCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var importNum: UILabel!
     
