@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var goPhotoView: UIButton!
     @IBOutlet weak var goPickerView: UIButton!
+    @IBOutlet weak var goInsertView: UIButton!
     
     let bounds = UIScreen.main.bounds
 
@@ -37,6 +38,7 @@ class ViewController: UIViewController {
     private func setButton() {
         goPhotoView.layer.cornerRadius = 10
         goPickerView.layer.cornerRadius = 10
+        goInsertView.layer.cornerRadius = 10
     }
 }
 

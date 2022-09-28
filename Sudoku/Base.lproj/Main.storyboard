@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Z44-LG-P2K">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Z44-LG-P2K">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -32,7 +32,7 @@
                                 <rect key="frame" x="15" y="515" width="360" height="60"/>
                                 <color key="backgroundColor" red="0.85098039215686272" green="0.85098039215686272" blue="0.85098039215686272" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="lhY-Iq-cRn" secondAttribute="height" multiplier="6:1" id="xmC-Dd-6be"/>
+                                    <constraint firstAttribute="width" secondItem="lhY-Iq-cRn" secondAttribute="height" multiplier="7:1" id="xmC-Dd-6be"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -43,11 +43,11 @@
                                     <segue destination="YIg-W0-kja" kind="show" id="uow-ak-G3z"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZO3-Dj-WKM">
-                                <rect key="frame" x="16" y="615" width="344" height="74"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZO3-Dj-WKM">
+                                <rect key="frame" x="15" y="615" width="360" height="74"/>
                                 <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="ZO3-Dj-WKM" secondAttribute="height" multiplier="6:1" id="S5Y-A5-cnH"/>
+                                    <constraint firstAttribute="width" secondItem="ZO3-Dj-WKM" secondAttribute="height" multiplier="7:1" id="S5Y-A5-cnH"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -64,23 +64,42 @@
                                     <constraint firstAttribute="width" secondItem="yX3-N4-22p" secondAttribute="height" multiplier="1:1" id="V6h-RX-ynZ"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jUL-xn-j9X">
+                                <rect key="frame" x="15" y="715" width="360" height="74"/>
+                                <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="jUL-xn-j9X" secondAttribute="height" multiplier="7:1" id="2cL-aB-hvV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="22"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Direct Input">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Xcl-WB-Jdb" kind="show" id="6fY-vL-9Er"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lhY-Iq-cRn" secondAttribute="trailing" constant="15" id="1KA-P2-AgX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="jUL-xn-j9X" secondAttribute="trailing" constant="15" id="1jF-BS-ncM"/>
                             <constraint firstItem="ZO3-Dj-WKM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="6Qw-Rx-Qcm"/>
                             <constraint firstItem="yX3-N4-22p" firstAttribute="top" secondItem="rui-3j-fam" secondAttribute="bottom" constant="5" id="7Mz-GI-9rk"/>
                             <constraint firstItem="yX3-N4-22p" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="EkS-98-Yye"/>
+                            <constraint firstItem="jUL-xn-j9X" firstAttribute="top" secondItem="ZO3-Dj-WKM" secondAttribute="bottom" constant="20" id="Hrt-yR-vcZ"/>
+                            <constraint firstItem="jUL-xn-j9X" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="Jo3-wN-ad3"/>
                             <constraint firstItem="ZO3-Dj-WKM" firstAttribute="top" secondItem="lhY-Iq-cRn" secondAttribute="bottom" constant="20" id="O2X-UL-ZSZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZO3-Dj-WKM" secondAttribute="trailing" constant="15" id="OIa-E6-VTh"/>
-                            <constraint firstItem="lhY-Iq-cRn" firstAttribute="top" secondItem="yX3-N4-22p" secondAttribute="bottom" constant="20" id="PoD-81-oa7"/>
+                            <constraint firstItem="lhY-Iq-cRn" firstAttribute="top" secondItem="yX3-N4-22p" secondAttribute="bottom" constant="10" id="PoD-81-oa7"/>
                             <constraint firstItem="yX3-N4-22p" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="ZkB-C9-g3Y"/>
                             <constraint firstItem="lhY-Iq-cRn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="f2O-67-HsM"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Qss-e1-LQI"/>
                     <connections>
+                        <outlet property="goInsertView" destination="jUL-xn-j9X" id="e0A-JU-HEb"/>
                         <outlet property="goPhotoView" destination="lhY-Iq-cRn" id="RfK-33-m9o"/>
                         <outlet property="goPickerView" destination="ZO3-Dj-WKM" id="6uM-ZE-VUx"/>
                         <outlet property="imageView" destination="yX3-N4-22p" id="ffT-Dw-hqc"/>
@@ -127,7 +146,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Z44-LG-P2K" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pGf-UR-Qce">
-                        <rect key="frame" x="0.0" y="44" width="390" height="44"/>
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -142,7 +161,7 @@
     </scenes>
     <resources>
         <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
