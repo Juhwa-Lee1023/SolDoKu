@@ -17,12 +17,14 @@
 		D53F619B28C77BE40017D756 /* photoSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */; };
 		D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D53F619C28C77BF70017D756 /* importSudoku.storyboard */; };
 		D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619E28C77C070017D756 /* importSudokuViewController.swift */; };
+		D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58069B528E4A19300461CD8 /* CALayer+.swift */; };
+		D58069B828E5C96F00461CD8 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58069B728E5C96F00461CD8 /* UIColor+.swift */; };
+		D58C916228E1E9B500270282 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D58C916128E1E9B500270282 /* opencv2.framework */; };
 		D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */; };
 		D597D1D728CF765D00694D66 /* wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D597D1D628CF765D00694D66 /* wrapper.mm */; };
 		D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597D1DD28CF98FF00694D66 /* opencv2.framework */; };
-		D597D1E028CFB46F00694D66 /* numberClassifier 1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */; };
 		D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E128CFBBCA00694D66 /* model_64.mlpackage */; };
-		D597D1E528D0DF3200694D66 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E428D0DF3200694D66 /* UIImage.swift */; };
+		D597D1E528D0DF3200694D66 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E428D0DF3200694D66 /* UIImage+.swift */; };
 		D5BBD65F28D205AE00747F15 /* pickerSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */; };
 		D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */; };
 /* End PBXBuildFile section */
@@ -40,14 +42,16 @@
 		D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = photoSudokuViewController.swift; sourceTree = "<group>"; };
 		D53F619C28C77BF70017D756 /* importSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = importSudoku.storyboard; sourceTree = "<group>"; };
 		D53F619E28C77C070017D756 /* importSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importSudokuViewController.swift; sourceTree = "<group>"; };
+		D58069B528E4A19300461CD8 /* CALayer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+.swift"; sourceTree = "<group>"; };
+		D58069B728E5C96F00461CD8 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
+		D58C916128E1E9B500270282 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sudokuCalculation.swift; sourceTree = "<group>"; };
 		D597D1D428CF765000694D66 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
 		D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sudoku-Bridging-Header.h"; sourceTree = "<group>"; };
 		D597D1D628CF765D00694D66 /* wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = wrapper.mm; sourceTree = "<group>"; };
 		D597D1DD28CF98FF00694D66 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
-		D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "numberClassifier 1.mlmodel"; sourceTree = "<group>"; };
 		D597D1E128CFBBCA00694D66 /* model_64.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = model_64.mlpackage; sourceTree = "<group>"; };
-		D597D1E428D0DF3200694D66 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		D597D1E428D0DF3200694D66 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = pickerSudoku.storyboard; sourceTree = "<group>"; };
 		D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pickerSudokuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D58C916228E1E9B500270282 /* opencv2.framework in Frameworks */,
 				D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,44 +89,78 @@
 		D53F618328C77AE20017D756 /* Sudoku */ = {
 			isa = PBXGroup;
 			children = (
-				D597D1E328D0DF1F00694D66 /* Extension */,
-				D597D1DF28CFB46F00694D66 /* numberClassifier 1.mlmodel */,
-				D597D1E128CFBBCA00694D66 /* model_64.mlpackage */,
+				D58069BD28E5D13B00461CD8 /* StoryBoard */,
+				D58069BC28E5D10D00461CD8 /* ViewController */,
+				D58069BA28E5D0E500461CD8 /* Wrapper */,
+				D58069B928E5D0BD00461CD8 /* DL */,
+				D597D1E328D0DF1F00694D66 /* Extensions */,
 				D53F618428C77AE20017D756 /* AppDelegate.swift */,
 				D53F618628C77AE20017D756 /* SceneDelegate.swift */,
-				D53F618828C77AE20017D756 /* ViewController.swift */,
-				D53F618A28C77AE20017D756 /* Main.storyboard */,
 				D53F618D28C77AE30017D756 /* Assets.xcassets */,
 				D53F618F28C77AE30017D756 /* LaunchScreen.storyboard */,
 				D53F619228C77AE30017D756 /* Info.plist */,
-				D53F619828C77BC90017D756 /* photoSudoku.storyboard */,
-				D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */,
-				D53F619C28C77BF70017D756 /* importSudoku.storyboard */,
-				D53F619E28C77C070017D756 /* importSudokuViewController.swift */,
 				D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */,
+			);
+			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		D58069B928E5D0BD00461CD8 /* DL */ = {
+			isa = PBXGroup;
+			children = (
+				D597D1E128CFBBCA00694D66 /* model_64.mlpackage */,
+			);
+			path = DL;
+			sourceTree = "<group>";
+		};
+		D58069BA28E5D0E500461CD8 /* Wrapper */ = {
+			isa = PBXGroup;
+			children = (
 				D597D1D428CF765000694D66 /* wrapper.h */,
 				D597D1D628CF765D00694D66 /* wrapper.mm */,
 				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
-				D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */,
+			);
+			path = Wrapper;
+			sourceTree = "<group>";
+		};
+		D58069BC28E5D10D00461CD8 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D53F618828C77AE20017D756 /* ViewController.swift */,
+				D53F619A28C77BE40017D756 /* photoSudokuViewController.swift */,
+				D53F619E28C77C070017D756 /* importSudokuViewController.swift */,
 				D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */,
 			);
-			path = Sudoku;
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		D58069BD28E5D13B00461CD8 /* StoryBoard */ = {
+			isa = PBXGroup;
+			children = (
+				D53F618A28C77AE20017D756 /* Main.storyboard */,
+				D53F619828C77BC90017D756 /* photoSudoku.storyboard */,
+				D53F619C28C77BF70017D756 /* importSudoku.storyboard */,
+				D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */,
+			);
+			path = StoryBoard;
 			sourceTree = "<group>";
 		};
 		D597D1C328CF703500694D66 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				D58C916128E1E9B500270282 /* opencv2.framework */,
 				D597D1DD28CF98FF00694D66 /* opencv2.framework */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
 		};
-		D597D1E328D0DF1F00694D66 /* Extension */ = {
+		D597D1E328D0DF1F00694D66 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				D597D1E428D0DF3200694D66 /* UIImage.swift */,
+				D597D1E428D0DF3200694D66 /* UIImage+.swift */,
+				D58069B528E4A19300461CD8 /* CALayer+.swift */,
+				D58069B728E5C96F00461CD8 /* UIColor+.swift */,
 			);
-			path = Extension;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,14 +239,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */,
+				D58069B828E5C96F00461CD8 /* UIColor+.swift in Sources */,
 				D597D1D728CF765D00694D66 /* wrapper.mm in Sources */,
-				D597D1E528D0DF3200694D66 /* UIImage.swift in Sources */,
-				D597D1E028CFB46F00694D66 /* numberClassifier 1.mlmodel in Sources */,
+				D597D1E528D0DF3200694D66 /* UIImage+.swift in Sources */,
 				D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */,
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
 				D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */,
 				D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */,
 				D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */,
+				D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */,
 				D53F619B28C77BE40017D756 /* photoSudokuViewController.swift in Sources */,
 				D53F618728C77AE20017D756 /* SceneDelegate.swift in Sources */,
 			);

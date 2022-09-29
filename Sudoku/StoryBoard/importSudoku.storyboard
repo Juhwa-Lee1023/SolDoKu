@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Import Sudoku View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="importSudoku" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="importSudokuViewController" customModule="Sudoku" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc" customClass="import">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="y4F-fs-WyG">
+                                <rect key="frame" x="7.6666666666666572" y="77" width="360" height="360"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="y4F-fs-WyG" secondAttribute="height" multiplier="1:1" id="vTC-E7-4gg"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="k5D-5c-8e2">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <view key="backgroundView" contentMode="scaleToFill" id="T9M-pM-f9B">
+                                    <rect key="frame" x="0.0" y="0.0" width="360" height="360"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="gQc-iW-bID">
+                                            <rect key="frame" x="161.33333333333334" y="161.66666666666666" width="37" height="37"/>
+                                            <color key="color" red="0.96078431372549022" green="1" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        </activityIndicatorView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currently solving Sudoku" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYb-wF-0x9">
+                                            <rect key="frame" x="76.999999999999986" y="289" width="205.66666666666663" height="21"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" red="0.96078431372549022" green="1" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" red="0.50588235294117645" green="0.50588235294117645" blue="0.50588235294117645" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <constraints>
+                                        <constraint firstItem="gQc-iW-bID" firstAttribute="centerY" secondItem="T9M-pM-f9B" secondAttribute="centerY" id="AXB-L5-1b1"/>
+                                        <constraint firstItem="iYb-wF-0x9" firstAttribute="centerX" secondItem="T9M-pM-f9B" secondAttribute="centerX" id="EAh-Qd-5FE"/>
+                                        <constraint firstAttribute="width" secondItem="T9M-pM-f9B" secondAttribute="height" multiplier="1:1" id="FVB-pZ-FbC"/>
+                                        <constraint firstItem="gQc-iW-bID" firstAttribute="centerX" secondItem="T9M-pM-f9B" secondAttribute="centerX" id="U0K-VN-jDf"/>
+                                        <constraint firstAttribute="bottom" secondItem="iYb-wF-0x9" secondAttribute="bottom" constant="50" id="lEv-zv-iOH"/>
+                                    </constraints>
+                                </view>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="A2p-b3-hRC" customClass="sudokuCollectionViewCell" customModule="Sudoku" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ZJw-Oa-obc">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tvu-fZ-LPQ">
+                                                    <rect key="frame" x="21.333333333333332" y="14.999999999999998" width="7.6666666666666679" height="20.333333333333329"/>
+                                                    <attributedString key="attributedText">
+                                                        <fragment content="1">
+                                                            <attributes>
+                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                <font key="NSFont" metaFont="system" size="17"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="tvu-fZ-LPQ" firstAttribute="centerX" secondItem="ZJw-Oa-obc" secondAttribute="centerX" id="41V-UH-2t0"/>
+                                                <constraint firstItem="tvu-fZ-LPQ" firstAttribute="centerY" secondItem="ZJw-Oa-obc" secondAttribute="centerY" id="vC1-CR-soz"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="50" height="50"/>
+                                        <connections>
+                                            <outlet property="importNum" destination="tvu-fZ-LPQ" id="MLy-Ed-ygv"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8hQ-hP-twm">
+                                <rect key="frame" x="20" y="457" width="335" height="321"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="lQq-RG-j4g">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="ggP-FV-NMh" customClass="buttonCollectionViewCell" customModule="Sudoku" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="iBU-TL-r6X">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OEw-RY-3XR">
+                                                    <rect key="frame" x="60" y="53.666666666666657" width="8" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="OEw-RY-3XR" firstAttribute="centerY" secondItem="iBU-TL-r6X" secondAttribute="centerY" id="1Rp-lT-NYd"/>
+                                                <constraint firstItem="OEw-RY-3XR" firstAttribute="centerX" secondItem="iBU-TL-r6X" secondAttribute="centerX" id="BPZ-YW-dBc"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="importButton" destination="OEw-RY-3XR" id="dtf-QY-EOr"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="y4F-fs-WyG" secondAttribute="trailing" constant="7.5" id="Dek-mq-8TN"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="8hQ-hP-twm" secondAttribute="trailing" constant="20" id="Kzy-MQ-lse"/>
+                            <constraint firstItem="y4F-fs-WyG" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="OLI-YG-rAc"/>
+                            <constraint firstItem="8hQ-hP-twm" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="Plu-wp-koL"/>
+                            <constraint firstItem="8hQ-hP-twm" firstAttribute="top" secondItem="y4F-fs-WyG" secondAttribute="bottom" constant="20" id="Ue8-EW-qYh"/>
+                            <constraint firstItem="y4F-fs-WyG" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="30" id="Wne-rg-nEO"/>
+                            <constraint firstItem="y4F-fs-WyG" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="7.5" id="c9f-AI-Opq"/>
+                            <constraint firstItem="8hQ-hP-twm" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="wJk-QC-lUx"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="gQc-iW-bID" id="BM4-AX-hJw"/>
+                        <outlet property="buttonCollectionView" destination="8hQ-hP-twm" id="MYj-Te-umV"/>
+                        <outlet property="loadingView" destination="T9M-pM-f9B" id="YKH-f2-tAb"/>
+                        <outlet property="sudokuCollectionView" destination="y4F-fs-WyG" id="2ME-f2-sk8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="60" y="105.66502463054188"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
