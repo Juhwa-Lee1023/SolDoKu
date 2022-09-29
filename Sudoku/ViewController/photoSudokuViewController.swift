@@ -245,7 +245,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let fontSize: CGFloat = 28
                 //인식했던 숫자가 있는 경우 표현하지 않는다.
                 if (solSudoku[row][col] != 0) {
-                    fontColor = UIColor.sudokuColor(.sudokuRed)
+                    fontColor = UIColor.sudokuColor(.sudokuEmpty)
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [

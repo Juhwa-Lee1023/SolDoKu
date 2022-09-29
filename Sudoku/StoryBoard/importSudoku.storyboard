@@ -30,30 +30,6 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
-                                <view key="backgroundView" contentMode="scaleToFill" id="T9M-pM-f9B">
-                                    <rect key="frame" x="0.0" y="0.0" width="360" height="360"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="gQc-iW-bID">
-                                            <rect key="frame" x="161.33333333333334" y="161.66666666666666" width="37" height="37"/>
-                                            <color key="color" red="0.96078431372549022" green="1" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        </activityIndicatorView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currently solving Sudoku" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYb-wF-0x9">
-                                            <rect key="frame" x="76.999999999999986" y="289" width="205.66666666666663" height="21"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                            <color key="textColor" red="0.96078431372549022" green="1" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" red="0.50588235294117645" green="0.50588235294117645" blue="0.50588235294117645" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    <constraints>
-                                        <constraint firstItem="gQc-iW-bID" firstAttribute="centerY" secondItem="T9M-pM-f9B" secondAttribute="centerY" id="AXB-L5-1b1"/>
-                                        <constraint firstItem="iYb-wF-0x9" firstAttribute="centerX" secondItem="T9M-pM-f9B" secondAttribute="centerX" id="EAh-Qd-5FE"/>
-                                        <constraint firstAttribute="width" secondItem="T9M-pM-f9B" secondAttribute="height" multiplier="1:1" id="FVB-pZ-FbC"/>
-                                        <constraint firstItem="gQc-iW-bID" firstAttribute="centerX" secondItem="T9M-pM-f9B" secondAttribute="centerX" id="U0K-VN-jDf"/>
-                                        <constraint firstAttribute="bottom" secondItem="iYb-wF-0x9" secondAttribute="bottom" constant="50" id="lEv-zv-iOH"/>
-                                    </constraints>
-                                </view>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="A2p-b3-hRC" customClass="sudokuCollectionViewCell" customModule="Sudoku" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -88,6 +64,29 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ljV-FH-AGh">
+                                <rect key="frame" x="7.6666666666666572" y="77" width="360" height="360"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="gQc-iW-bID">
+                                        <rect key="frame" x="161.33333333333334" y="161.66666666666666" width="37" height="37"/>
+                                        <color key="color" red="0.96078431372549022" green="1" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currently solving Sudoku" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iYb-wF-0x9">
+                                        <rect key="frame" x="76.999999999999986" y="289" width="205.66666666666663" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" red="0.96078431372549022" green="1" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="iYb-wF-0x9" secondAttribute="bottom" constant="50" id="6EW-eF-Z27"/>
+                                    <constraint firstItem="gQc-iW-bID" firstAttribute="centerX" secondItem="ljV-FH-AGh" secondAttribute="centerX" id="Raj-Eo-TCa"/>
+                                    <constraint firstAttribute="width" secondItem="ljV-FH-AGh" secondAttribute="height" multiplier="1:1" id="cHP-kc-FJz"/>
+                                    <constraint firstItem="gQc-iW-bID" firstAttribute="centerY" secondItem="ljV-FH-AGh" secondAttribute="centerY" id="cqq-k8-vgn"/>
+                                    <constraint firstItem="iYb-wF-0x9" firstAttribute="centerX" secondItem="ljV-FH-AGh" secondAttribute="centerX" id="ocM-qi-1vs"/>
+                                </constraints>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8hQ-hP-twm">
                                 <rect key="frame" x="20" y="457" width="335" height="321"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -128,19 +127,22 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="y4F-fs-WyG" secondAttribute="trailing" constant="7.5" id="Dek-mq-8TN"/>
+                            <constraint firstItem="ljV-FH-AGh" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="30" id="JO7-x2-zpx"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="8hQ-hP-twm" secondAttribute="trailing" constant="20" id="Kzy-MQ-lse"/>
+                            <constraint firstItem="ljV-FH-AGh" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="7.5" id="LMp-P1-nrn"/>
                             <constraint firstItem="y4F-fs-WyG" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="OLI-YG-rAc"/>
                             <constraint firstItem="8hQ-hP-twm" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="Plu-wp-koL"/>
                             <constraint firstItem="8hQ-hP-twm" firstAttribute="top" secondItem="y4F-fs-WyG" secondAttribute="bottom" constant="20" id="Ue8-EW-qYh"/>
                             <constraint firstItem="y4F-fs-WyG" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="30" id="Wne-rg-nEO"/>
                             <constraint firstItem="y4F-fs-WyG" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="7.5" id="c9f-AI-Opq"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ljV-FH-AGh" secondAttribute="trailing" constant="7.5" id="dik-lK-BSt"/>
                             <constraint firstItem="8hQ-hP-twm" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="wJk-QC-lUx"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="gQc-iW-bID" id="BM4-AX-hJw"/>
                         <outlet property="buttonCollectionView" destination="8hQ-hP-twm" id="MYj-Te-umV"/>
-                        <outlet property="loadingView" destination="T9M-pM-f9B" id="YKH-f2-tAb"/>
+                        <outlet property="loadingView" destination="ljV-FH-AGh" id="zZO-bb-vZg"/>
                         <outlet property="sudokuCollectionView" destination="y4F-fs-WyG" id="2ME-f2-sk8"/>
                     </connections>
                 </viewController>

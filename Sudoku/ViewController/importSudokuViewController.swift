@@ -201,6 +201,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     sudokuNum[selectNum.row] = 0
                 }
             case "Clean":
+                showIndicator()
                 let alert = UIAlertController(title: "Clean Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes", style: .default) { _ in
                     for i in 0..<81 {
@@ -219,6 +220,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                 if(selectNum != []) {
                     shootSolveSudoku()
                 } else {
+                    hideIndicator()
                     let alert = UIAlertController(title: "Sudoku has not entered.", message: "Please enter Sudoku.", preferredStyle: .alert)
                     let yes = UIAlertAction(title: "Yes", style: .default)
                     alert.addAction(yes)
@@ -233,11 +235,8 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     sudokuNum[selectNum.row] = Int(changeCell.importNum.text!) ?? 0
                 }
             }
-            
         }
-        
     }
-    
 }
 
 extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
@@ -258,7 +257,6 @@ extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return buttonCollectionView.frame.width / 15
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

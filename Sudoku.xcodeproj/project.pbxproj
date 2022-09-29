@@ -100,6 +100,7 @@
 				D53F618F28C77AE30017D756 /* LaunchScreen.storyboard */,
 				D53F619228C77AE30017D756 /* Info.plist */,
 				D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */,
+				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
 			);
 			path = Sudoku;
 			sourceTree = "<group>";
@@ -117,7 +118,6 @@
 			children = (
 				D597D1D428CF765000694D66 /* wrapper.h */,
 				D597D1D628CF765D00694D66 /* wrapper.mm */,
-				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";

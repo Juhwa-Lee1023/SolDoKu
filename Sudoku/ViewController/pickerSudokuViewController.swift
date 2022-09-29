@@ -160,7 +160,7 @@ class pickerSudokuViewController: UIViewController {
             showNum(solvedSudokuArray, sudokuArray, image)
         }
     }
-    
+
     private func showNum(_ sudoku: [[Int]], _ solSudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(pickerImage.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: pickerImage.bounds.size))
@@ -176,7 +176,7 @@ class pickerSudokuViewController: UIViewController {
                 let fontSize: CGFloat = 28
                 //인식했던 숫자가 있는 경우 표현하지 않는다.
                 if (solSudoku[row][col] != 0) {
-                    fontColor = UIColor.sudokuColor(.sudokuRed)
+                    fontColor = UIColor.sudokuColor(.sudokuEmpty)
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [

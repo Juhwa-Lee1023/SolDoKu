@@ -43,7 +43,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.50588238240000005" green="0.50588238240000005" blue="0.50588238240000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.30423575680272108" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstItem="ns0-sa-9Nc" firstAttribute="centerX" secondItem="IIn-3o-zDo" secondAttribute="centerX" id="OVV-o3-HiG"/>
                                     <constraint firstItem="Gdb-tc-lTc" firstAttribute="centerX" secondItem="IIn-3o-zDo" secondAttribute="centerX" id="UlC-A4-enb"/>
