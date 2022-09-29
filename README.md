@@ -12,12 +12,14 @@
 ### 동작화면
 ![솔더쿠](https://user-images.githubusercontent.com/63584245/191350892-ffbc2802-2847-4a72-8fd0-1dfc4ccf46ed.gif)
 ![솔더쿠2](https://user-images.githubusercontent.com/63584245/191350899-77975436-bbf7-4be5-aba0-b6f54dd57546.gif)
+<img src= "https://user-images.githubusercontent.com/63584245/193111762-2ff77ca9-02d4-4d8a-a400-2a44daac1781.gif" width="296">
 
 
 ---
 ### :sparkles: Skills & Tech Stack
 * UIKit
-* Obj C
+* Objective-C
+* AVFoundation
 * OpenCV
 * PyTorch
 * Coremltools
