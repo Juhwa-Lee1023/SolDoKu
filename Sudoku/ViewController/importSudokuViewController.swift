@@ -185,11 +185,31 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             guard let cell = collectionView.cellForItem(at: indexPath) as? sudokuCollectionViewCell else {
                 fatalError()
             }
+            UIView.animate(withDuration: 0.1,
+                           animations: {
+                cell.transform = .init(scaleX: 0.90, y: 0.90)
+            }) { (completed) in
+                UIView.animate(withDuration: 0.1,
+                               animations: {
+                    cell.transform = .init(scaleX: 1, y: 1)
+                })
+            }
             cell.backgroundColor = UIColor.sudokuColor(.sudokuPuple)
             selectNum = indexPath
         } else {
             guard let cell = buttonCollectionView.cellForItem(at: indexPath) as? buttonCollectionViewCell else {
                 fatalError()
+            }
+            UIView.animate(withDuration: 0.2,
+                           animations: {
+                cell.transform = .init(scaleX: 0.90, y: 0.90)
+                cell.alpha = 0.5
+            }) { (completed) in
+                UIView.animate(withDuration: 0.2,
+                               animations: {
+                    cell.alpha = 1
+                    cell.transform = .init(scaleX: 1, y: 1)
+                })
             }
             switch cell.importButton.text {
             case "Delete":
@@ -219,6 +239,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                 if(selectNum != []) {
                     shootSolveSudoku()
                 } else {
+                    hideIndicator()
                     let alert = UIAlertController(title: "Sudoku has not entered.", message: "Please enter Sudoku.", preferredStyle: .alert)
                     let yes = UIAlertAction(title: "Yes", style: .default)
                     alert.addAction(yes)
@@ -233,11 +254,8 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     sudokuNum[selectNum.row] = Int(changeCell.importNum.text!) ?? 0
                 }
             }
-            
         }
-        
     }
-    
 }
 
 extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
@@ -258,7 +276,6 @@ extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return buttonCollectionView.frame.width / 15
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

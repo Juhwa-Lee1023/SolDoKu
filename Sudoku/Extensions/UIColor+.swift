@@ -8,6 +8,7 @@ enum Colors {
   case sudokuPuple
   case sudokuButton
   case sudokuRed
+  case sudokuEmpty
 }
 
 extension UIColor {
@@ -19,6 +20,8 @@ extension UIColor {
             return UIColor(red: 217/255, green: 217/255, blue: 217/255, alpha: 100/100)
         case .sudokuRed:
             return UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100/100)
+        case .sudokuEmpty:
+            return UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 0/100)
         }
       }
 }

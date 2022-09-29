@@ -44,7 +44,7 @@
                                         <color key="color" red="0.96007269559999997" green="1" blue="0.95649097370000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </activityIndicatorView>
                                 </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.3035873724489796" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29976084183673468" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="zCI-FB-75G" firstAttribute="centerX" secondItem="rcG-lM-I8B" secondAttribute="centerX" id="Izu-ia-hwN"/>
                                     <constraint firstAttribute="width" secondItem="rcG-lM-I8B" secondAttribute="height" multiplier="1:1" id="Jyc-KT-tun"/>
