@@ -43,22 +43,18 @@ extension UIImage {
         if self.imageOrientation == UIImage.Orientation.up {
             return self
         }
-        
+
         // 이미지를 변환시키기 위한 함수 선언
         var transform: CGAffineTransform = CGAffineTransform.identity
-        
+
         // 이미지의 상태에 맞게 이미지를 돌린다.
         if ( self.imageOrientation == UIImage.Orientation.down || self.imageOrientation == UIImage.Orientation.downMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: self.size.height)
             transform = transform.rotated(by: CGFloat(Double.pi))
-        }
-        
-        if ( self.imageOrientation == UIImage.Orientation.left || self.imageOrientation == UIImage.Orientation.leftMirrored ) {
+        } else if ( self.imageOrientation == UIImage.Orientation.left || self.imageOrientation == UIImage.Orientation.leftMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: 0)
             transform = transform.rotated(by: CGFloat(Double.pi / 2.0))
-        }
-        
-        if ( self.imageOrientation == UIImage.Orientation.right || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
+        } else if ( self.imageOrientation == UIImage.Orientation.right || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             transform = transform.translatedBy(x: 0, y: self.size.height)
             transform = transform.rotated(by: CGFloat(-Double.pi / 2.0))
         }
@@ -66,9 +62,7 @@ extension UIImage {
         if ( self.imageOrientation == UIImage.Orientation.upMirrored || self.imageOrientation == UIImage.Orientation.downMirrored ) {
             transform = transform.translatedBy(x: self.size.width, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
-        }
-        
-        if ( self.imageOrientation == UIImage.Orientation.leftMirrored || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
+        } else if ( self.imageOrientation == UIImage.Orientation.leftMirrored || self.imageOrientation == UIImage.Orientation.rightMirrored ) {
             transform = transform.translatedBy(x: self.size.height, y: 0)
             transform = transform.scaledBy(x: -1, y: 1)
         }
@@ -78,7 +72,7 @@ extension UIImage {
                                            bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
                                            space: self.cgImage!.colorSpace!,
                                            bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!
-        
+
         cgValue.concatenate(transform)
         
         if ( self.imageOrientation == UIImage.Orientation.left ||

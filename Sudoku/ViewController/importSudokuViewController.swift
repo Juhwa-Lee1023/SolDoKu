@@ -166,7 +166,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                 cell.importButton.minimumScaleFactor = 0.5
             }
             cell.layer.cornerRadius = cell.frame.width / 2
-            cell.layer.backgroundColor = UIColor(red: 217/255, green: 217/255, blue: 217/255, alpha: 100/100).cgColor
+            cell.layer.backgroundColor = UIColor.sudokuColor(.sudokuButton).cgColor
             
             return cell
         }
@@ -185,9 +185,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             guard let cell = collectionView.cellForItem(at: indexPath) as? sudokuCollectionViewCell else {
                 fatalError()
             }
-            cell.backgroundColor = UIColor(red: 107/255, green: 28/255, blue: 255/255, alpha: 60/100)
-//            cell.layer.borderWidth = 2
-//            cell.layer.borderColor = UIColor(red: 107/255, green: 28/255, blue: 255/255, alpha: 60/100).cgColor
+            cell.backgroundColor = UIColor.sudokuColor(.sudokuPuple)
             selectNum = indexPath
         } else {
             guard let cell = buttonCollectionView.cellForItem(at: indexPath) as? buttonCollectionViewCell else {

@@ -241,11 +241,11 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             let yCoordinate = Int(CGFloat(row) * cutViewHeight)
             for col in 0..<9 {
                 let xCoordinate = Int(CGFloat(col) * cutViewWidth)
-                var fontColor: UIColor = UIColor(red: 210/255, green: 31/255, blue: 0/255, alpha: 100)
+                var fontColor: UIColor = UIColor.sudokuColor(.sudokuRed)
                 let fontSize: CGFloat = 28
                 //인식했던 숫자가 있는 경우 표현하지 않는다.
                 if (solSudoku[row][col] != 0) {
-                    fontColor = UIColor(red: 210/255, green: 31/255, blue: 81/255, alpha: 0)
+                    fontColor = UIColor.sudokuColor(.sudokuRed)
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [

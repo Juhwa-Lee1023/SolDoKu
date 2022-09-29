@@ -17,6 +17,7 @@
 ---
 ### :sparkles: Skills & Tech Stack
 * UIKit
+* Obj C
 * OpenCV
 * PyTorch
 * Coremltools
