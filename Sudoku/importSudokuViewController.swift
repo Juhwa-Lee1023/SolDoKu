@@ -19,7 +19,7 @@ class importSudokuViewController: UIViewController {
     var solSudokuNum: [[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
     var selectNum: IndexPath = []
     let setNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    var count:Int = 0
+    var count: Int = 0
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     
     override func viewDidLoad() {
@@ -37,13 +37,14 @@ class importSudokuViewController: UIViewController {
         activityIndicator.stopAnimating()
         loadingView.isHidden = true
     }
+    
     func shootSolveSudoku() {
         showIndicator()
-        sudokuSolvingWorkItem = DispatchWorkItem(block: self.solve)
+        sudokuSolvingWorkItem = DispatchWorkItem(block: self.solveSudoku)
         DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
     }
     
-    func solve() {
+    func solveSudoku() {
         var check: Int = 0
         for i in 0..<9 {
             for j in 0..<9 {
@@ -55,7 +56,7 @@ class importSudokuViewController: UIViewController {
         let successCheck  = sudokuCalculation(&solSudokuNum, 0, 0, &count)
         if !successCheck {
             let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
-            let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
+            let yes = UIAlertAction(title: "Yes", style: .default) { _ in
                 for i in 0..<81 {
                     guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                         fatalError()
@@ -66,7 +67,7 @@ class importSudokuViewController: UIViewController {
                     self.hideIndicator()
                 }
             }
-            let no = UIAlertAction(title: "No", style: .destructive) { (action) in
+            let no = UIAlertAction(title: "No", style: .destructive) { _ in
                 self.hideIndicator()
             }
             alert.addAction(no)
@@ -131,31 +132,26 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             cell.importNum.text = ""
             cell.layer.borderWidth = 1
             cell.layer.borderColor = UIColor.black.cgColor
+            
             switch indexPath.row / 9  {
             case 0 :
                 cell.layer.addBorder([.top], color: UIColor.black, width: 4)
-                break
             case 3, 6 :
                 cell.layer.addBorder([.top], color: UIColor.black, width: 2)
-                break
             case 8 :
                 cell.layer.addBorder([.bottom], color: UIColor.black, width: 4)
-            default:
-                break
+            default: break
             }
+            
             switch indexPath.row % 9  {
             case 0 :
                 cell.layer.addBorder([.left], color: UIColor.black, width: 4)
-                break
             case 3, 6 :
                 cell.layer.addBorder([.left], color: UIColor.black, width: 2)
-                break
             case 8 :
                 cell.layer.addBorder([.right], color: UIColor.black, width: 4)
-            default:
-                break
+            default: break
             }
-            
             
             return cell
         } else {
@@ -172,10 +168,8 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             cell.layer.cornerRadius = cell.frame.width / 2
             cell.layer.backgroundColor = UIColor(red: 217/255, green: 217/255, blue: 217/255, alpha: 100/100).cgColor
             
-            
             return cell
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -188,12 +182,12 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = UIColor.black.cgColor
             }
-            guard let cell = collectionView.cellForItem(at: indexPath) as? sudokuCollectionViewCell else{
+            guard let cell = collectionView.cellForItem(at: indexPath) as? sudokuCollectionViewCell else {
                 fatalError()
             }
             cell.backgroundColor = UIColor(red: 107/255, green: 28/255, blue: 255/255, alpha: 60/100)
-            cell.layer.borderWidth = 2
-            cell.layer.borderColor = UIColor(red: 107/255, green: 28/255, blue: 255/255, alpha: 60/100).cgColor
+//            cell.layer.borderWidth = 2
+//            cell.layer.borderColor = UIColor(red: 107/255, green: 28/255, blue: 255/255, alpha: 60/100).cgColor
             selectNum = indexPath
         } else {
             guard let cell = buttonCollectionView.cellForItem(at: indexPath) as? buttonCollectionViewCell else {
@@ -208,10 +202,9 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     changeCell.importNum.text = ""
                     sudokuNum[selectNum.row] = 0
                 }
-                break
             case "Clean":
                 let alert = UIAlertController(title: "Clean Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "Yes", style: .default) { (action) in
+                let yes = UIAlertAction(title: "Yes", style: .default) { _ in
                     for i in 0..<81 {
                         guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                             fatalError()
@@ -224,7 +217,6 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                 alert.addAction(no)
                 alert.addAction(yes)
                 present(alert, animated: true, completion: nil)
-                break
             case "Solve":
                 if(selectNum != []) {
                     shootSolveSudoku()
@@ -234,7 +226,6 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     alert.addAction(yes)
                     present(alert, animated: true, completion: nil)
                 }
-                break
             default:
                 if(selectNum != []) {
                     guard let changeCell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell else{
@@ -243,7 +234,6 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     changeCell.importNum.text = cell.importButton.text
                     sudokuNum[selectNum.row] = Int(changeCell.importNum.text!) ?? 0
                 }
-                break
             }
             
         }

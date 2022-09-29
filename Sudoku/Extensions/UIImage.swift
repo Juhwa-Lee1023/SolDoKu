@@ -40,7 +40,7 @@ extension UIImage {
     func fixOrientation() -> UIImage {
         
         // 이미지의 방향이 올바를 경우 수정하지 않는다.
-        if ( self.imageOrientation == UIImage.Orientation.up ) {
+        if self.imageOrientation == UIImage.Orientation.up {
             return self
         }
         

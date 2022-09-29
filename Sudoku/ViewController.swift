@@ -36,9 +36,9 @@ class ViewController: UIViewController {
     }
 
     private func setButton() {
-        goPhotoView.layer.cornerRadius = 10
-        goPickerView.layer.cornerRadius = 10
-        goInsertView.layer.cornerRadius = 10
+        [goPhotoView, goPickerView, goInsertView].forEach {
+            $0.layer.cornerRadius = 10
+        }
     }
 }
 
