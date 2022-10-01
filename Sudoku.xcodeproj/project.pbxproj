@@ -19,10 +19,9 @@
 		D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619E28C77C070017D756 /* importSudokuViewController.swift */; };
 		D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58069B528E4A19300461CD8 /* CALayer+.swift */; };
 		D58069B828E5C96F00461CD8 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58069B728E5C96F00461CD8 /* UIColor+.swift */; };
-		D58C916228E1E9B500270282 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D58C916128E1E9B500270282 /* opencv2.framework */; };
+		D58069BF28E606F000461CD8 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D58069BE28E606F000461CD8 /* opencv2.framework */; };
 		D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */; };
 		D597D1D728CF765D00694D66 /* wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D597D1D628CF765D00694D66 /* wrapper.mm */; };
-		D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597D1DD28CF98FF00694D66 /* opencv2.framework */; };
 		D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E128CFBBCA00694D66 /* model_64.mlpackage */; };
 		D597D1E528D0DF3200694D66 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E428D0DF3200694D66 /* UIImage+.swift */; };
 		D5BBD65F28D205AE00747F15 /* pickerSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */; };
@@ -44,12 +43,11 @@
 		D53F619E28C77C070017D756 /* importSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importSudokuViewController.swift; sourceTree = "<group>"; };
 		D58069B528E4A19300461CD8 /* CALayer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+.swift"; sourceTree = "<group>"; };
 		D58069B728E5C96F00461CD8 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
-		D58C916128E1E9B500270282 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		D58069BE28E606F000461CD8 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sudokuCalculation.swift; sourceTree = "<group>"; };
 		D597D1D428CF765000694D66 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
 		D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sudoku-Bridging-Header.h"; sourceTree = "<group>"; };
 		D597D1D628CF765D00694D66 /* wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = wrapper.mm; sourceTree = "<group>"; };
-		D597D1DD28CF98FF00694D66 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		D597D1E128CFBBCA00694D66 /* model_64.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = model_64.mlpackage; sourceTree = "<group>"; };
 		D597D1E428D0DF3200694D66 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = pickerSudoku.storyboard; sourceTree = "<group>"; };
@@ -61,8 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D58C916228E1E9B500270282 /* opencv2.framework in Frameworks */,
-				D597D1DE28CF98FF00694D66 /* opencv2.framework in Frameworks */,
+				D58069BF28E606F000461CD8 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,8 +144,7 @@
 		D597D1C328CF703500694D66 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				D58C916128E1E9B500270282 /* opencv2.framework */,
-				D597D1DD28CF98FF00694D66 /* opencv2.framework */,
+				D58069BE28E606F000461CD8 /* opencv2.framework */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -421,7 +417,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.coin.SolDoKu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -462,7 +458,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.coin.SolDoKu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
