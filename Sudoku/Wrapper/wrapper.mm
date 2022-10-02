@@ -260,5 +260,81 @@ NSArray *pointToArray(std::vector<cv::Point> vect) {
     
     return result;
 }
-@end
 
+// 사각형 영역을 인식하여 좌표를 내보내는 함수 선언
++ (NSArray *) detectRect: (UIImage *)image {
+    @try
+    {
+        // UIImage를 opevCV에서 사용하는 Mat로 변환한다.
+        cv::Mat mat;
+        UIImageToMat(image, mat);
+        
+        // grayScale을 입힌다.
+        cv::Mat toGray;
+        cv::cvtColor(mat, toGray, CV_BGR2GRAY);
+
+        // threshold를 강조한다.
+        cv::Mat toThresh;
+        cv::adaptiveThreshold(toGray, toThresh, 255, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 31, 31);
+
+        // 테두리를 찾는다.
+        std::vector<std::vector<cv::Point>> contours;
+        std::vector<cv::Vec4i> hierarchy;
+        cv::findContours(toThresh, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+        if (contours.size() < 1)
+        {
+            //테두리가 없으면...
+            return nil;
+        }
+
+        // 제일 큰 테두리를 찾는다.
+        double maxArea = 0;
+        int maxContourIndex = 0;
+        for (int i = 0; i < contours.size(); i++)
+        {
+            double area = cv::contourArea(contours[i]);
+            if (area > maxArea)
+            {
+                maxArea = area;
+                maxContourIndex = i;
+            }
+        }
+        std::vector<cv::Point> maxContour = contours[maxContourIndex];
+
+        // 제일 큰 테두리에서 사각형을 찾는다.
+        std::vector<int> sumv, diffv;
+        for (int i = 0; i < maxContour.size(); i++)
+        {
+            cv::Point p = maxContour[i];
+            sumv.push_back(p.x + p.y);
+            diffv.push_back(p.x - p.y);
+        }
+        // c++의 distance를 이용해 테두리의 각 모서리를 찾는다.
+        auto mins = std::distance(std::begin(sumv), std::min_element(std::begin(sumv), std::end(sumv)));
+        auto maxs = std::distance(std::begin(sumv), std::max_element(std::begin(sumv), std::end(sumv)));
+        auto mind = std::distance(std::begin(diffv), std::min_element(std::begin(diffv), std::end(diffv)));
+        auto maxd = std::distance(std::begin(diffv), std::max_element(std::begin(diffv), std::end(diffv)));
+        std::vector<cv::Point> maxRect;
+        maxRect.push_back(maxContour[mins]); // 왼쪽 위 모서리
+        maxRect.push_back(maxContour[mind]); // 오른쪽 위 모서리
+        maxRect.push_back(maxContour[maxs]); // 오른쪽 아래 모서리
+        maxRect.push_back(maxContour[maxd]); // 왼쪽 아래 모서리
+
+        
+        // 구한 모서리를 이용해 각 모서리의 좌표를 구한다.
+        cv::Point tl = maxRect[0];
+        cv::Point tr = maxRect[1];
+        cv::Point br = maxRect[2];
+        cv::Point bl = maxRect[3];
+
+        NSArray *result = pointToArray(maxRect);
+        
+        return result;
+    }
+    @catch (...)
+    {
+        return nil;
+    }
+}
+
+@end

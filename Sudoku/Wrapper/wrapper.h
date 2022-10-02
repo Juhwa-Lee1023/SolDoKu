@@ -13,5 +13,7 @@
 + (NSMutableArray *) detectRectangle: (UIImage *)image;
 + (NSMutableArray *) sliceImages: (UIImage *)image imageSize: (int)imageSize cutOffset: (int)cutOffset;
 + (NSMutableArray *) getNumImage: (UIImage *)sourceImage imageSize: (int)imageSize;
++ (NSArray *) detectRect: (UIImage *)image;
+
 
 @end
