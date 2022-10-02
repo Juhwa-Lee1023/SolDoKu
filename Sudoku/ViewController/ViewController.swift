@@ -101,6 +101,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let row2 = (selectCoordinate[0] + 4) % 3
         let col1 = (selectCoordinate[1] + 2) % 3
         let col2 = (selectCoordinate[1] + 4) % 3
+        
             for i in 0..<81 {
                 guard let cell = mainSudokuCollectionView.cellForItem(at: [0, i]) as? mainSudokuCollectionViewCell else {
                     fatalError()
@@ -126,9 +127,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 if (row2 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell)
                 }
             }
+        
             guard let cell = collectionView.cellForItem(at: indexPath) as? mainSudokuCollectionViewCell else {
                 fatalError()
             }
+        
             UIView.animate(withDuration: 0.1,
                            animations: {
                 cell.transform = .init(scaleX: 0.90, y: 0.90)

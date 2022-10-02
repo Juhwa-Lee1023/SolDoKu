@@ -181,7 +181,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
     }
 
     // 셀을 변경 시키는 함수
-    func cellSet(cell: sudokuCollectionViewCell){
+    func cellColorSet(cell: sudokuCollectionViewCell){
         cell.backgroundColor = UIColor.sudokuColor(.sudokuLightPurple)
         if cell.importNum.text != "0" {
             selectSudoku = Int(cell.importNum.text!) ?? 0
@@ -212,13 +212,13 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = UIColor.black.cgColor
                 cell.alpha = 1
-                if cellCoordinateX == selectCoordinate[0] { cellSet(cell: cell) }
-                else if cellCoordinateY == selectCoordinate[1] { cellSet(cell: cell) }
+                if cellCoordinateX == selectCoordinate[0] { cellColorSet(cell: cell) }
+                else if cellCoordinateY == selectCoordinate[1] { cellColorSet(cell: cell) }
                 
-                if (row1 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellSet(cell: cell) }
-                if (row2 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellSet(cell: cell) }
-                if (row1 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellSet(cell: cell) }
-                if (row2 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellSet(cell: cell) }
+                if (row1 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                if (row2 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                if (row1 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                if (row2 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
                 
                 // 셀에 입력된 숫자가 있다면
                 if cellNum != "" {
@@ -242,16 +242,11 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                                 if cellCoordinateX == checkCellCoordinateX {
                                     cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
                                 } else if cellCoordinateY == checkCellCoordinateY {
-                                    cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
-                                }
-                                if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
-                                }
-                                if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
-                                }
-                                if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
-                                }
-                                if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
-                                }
+                                    cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
                             }
                         }
                     }
