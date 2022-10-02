@@ -84,8 +84,13 @@ class pickerSudokuViewController: UIViewController {
     }
     
     private func setbutton() {
-        photoPicker.layer.cornerRadius = 10
-        solSudoku.layer.cornerRadius = 10
+        [photoPicker, solSudoku].forEach {
+            $0.layer.cornerRadius = 10
+            $0.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
+            $0.titleLabel?.textColor = .white
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 30)
+            $0.titleLabel?.minimumScaleFactor = 0.5
+        }
     }
     
     private func showIndicator() {

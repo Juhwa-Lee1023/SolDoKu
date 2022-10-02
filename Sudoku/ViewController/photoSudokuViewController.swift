@@ -24,6 +24,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     private var check: Bool = false
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .black
@@ -31,6 +32,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         preparedSession()
         session?.startRunning()
         shooting.layer.cornerRadius = 10
+        setButton()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -53,6 +55,13 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         }
     }
     
+    private func setButton() {
+        shooting.layer.cornerRadius = 10
+        shooting.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
+        shooting.titleLabel?.textColor = .white
+        shooting.titleLabel?.font = .boldSystemFont(ofSize: 30)
+        shooting.titleLabel?.minimumScaleFactor = 0.5
+    }
     private func showIndicator() {
         activityIndicator.startAnimating()
         loadingView.isHidden = false
