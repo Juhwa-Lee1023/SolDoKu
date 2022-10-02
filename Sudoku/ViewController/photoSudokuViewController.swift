@@ -201,7 +201,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
         // 30프레임마다 영역의 크기가 일정 이상일때 숫자 인식 모델을 통해 숫자 인식
         if period >= 30 && abs(valueX) > 100 && abs(valueY) > 100 && abs(valueX2) > 100 && abs(valueY2) > 100 {
-            if let detectRectangle = wrapper.detectRectangle(capturedImage){
+            if let detectRectangle = wrapper.detectRectangle(capturedImage) {
                 recognizePresentNum(image: detectRectangle[1] as! UIImage)
             }
             period = 0
@@ -266,8 +266,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
             }
         }
-        guard let imsi = UIImage(named: "sudoku") else { return print("") }
-        showPresentNum(sudokuArray, imsi)
+        guard let image = UIImage(named: "sudoku") else { return print("") }
+        showPresentNum(sudokuArray, image)
     }
     
     private func recognizeNum(image: UIImage) {
