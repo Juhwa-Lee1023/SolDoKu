@@ -194,7 +194,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             valueY = Float(cg[0].y - cg[1].y)
             valueX2 = Float(cg[1].x - cg[2].x)
             valueY2 = Float(cg[2].y - cg[3].y)
-            drawing(rect: cg)
+            drawRectangle(rect: cg)
             cameraView.layer.addSublayer(particleLayer)
         }
         period += 1
@@ -209,7 +209,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
     }
     
-    func drawing(rect: [CGPoint]) {
+    func drawRectangle(rect: [CGPoint]) {
         // 카메라에서 인식한 좌표와 인식한 영역을 그리는 곳의 좌표가 달라서 좌표를 계산하기 위한 변수 선언
         let widthSize = cameraView.bounds.width / UIScreen.main.bounds.width
         let widthHeight = cameraView.bounds.height / UIScreen.main.bounds.height
@@ -237,10 +237,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
             let numImages = UIImgaeSliceArr[0] as! NSArray
             for i in 0..<numImages.count {
-                let numimg = numImages[i]
+                let numImg = numImages[i]
                 let col = i % 9
                 let row = Int(i / 9)
-                let img = numimg as! UIImage
+                let img = numImg as! UIImage
                 if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
                     // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
                     let numExist = (sliceNumImage[0] as! NSNumber).boolValue
@@ -266,7 +266,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
             }
         }
-        guard let image = UIImage(named: "sudoku") else { return print("") }
+        guard let image = UIImage(named: "sudoku") else { return }
         showPresentNum(sudokuArray, image)
     }
     
@@ -276,10 +276,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
             let numImages = UIImgaeSliceArr[0] as! NSArray
             for i in 0..<numImages.count {
-                let numimg = numImages[i]
+                let numImg = numImages[i]
                 let col = i % 9
                 let row = Int(i / 9)
-                let img = numimg as! UIImage
+                let img = numImg as! UIImage
                 if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
                     // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
                     let numExist = (sliceNumImage[0] as! NSNumber).boolValue
@@ -343,7 +343,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
+                    NSAttributedString.Key.font: UIFont(name: "System Font", size: fontSize)!,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
@@ -375,7 +375,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
+                    NSAttributedString.Key.font: UIFont(name: "System Font", size: fontSize)!,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
