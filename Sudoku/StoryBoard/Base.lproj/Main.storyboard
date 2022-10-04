@@ -69,7 +69,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="czE-th-jdc">
-                                <rect key="frame" x="7.6666666666666572" y="116" width="375" height="345"/>
+                                <rect key="frame" x="15" y="116" width="360" height="345"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="czE-th-jdc" secondAttribute="height" multiplier="1:1" id="1xH-Fk-pOj"/>
@@ -100,12 +100,12 @@
                             <constraint firstItem="czE-th-jdc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2hB-t7-skK"/>
                             <constraint firstItem="ZO3-Dj-WKM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="6Qw-Rx-Qcm"/>
                             <constraint firstItem="lhY-Iq-cRn" firstAttribute="top" secondItem="czE-th-jdc" secondAttribute="bottom" constant="25" id="8SC-nl-a9D"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="czE-th-jdc" secondAttribute="trailing" constant="7.5" id="HWA-f2-fIB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="czE-th-jdc" secondAttribute="trailing" constant="15" id="HWA-f2-fIB"/>
                             <constraint firstItem="jUL-xn-j9X" firstAttribute="top" secondItem="ZO3-Dj-WKM" secondAttribute="bottom" constant="20" id="Hrt-yR-vcZ"/>
                             <constraint firstItem="jUL-xn-j9X" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="Jo3-wN-ad3"/>
                             <constraint firstItem="ZO3-Dj-WKM" firstAttribute="top" secondItem="lhY-Iq-cRn" secondAttribute="bottom" constant="20" id="O2X-UL-ZSZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZO3-Dj-WKM" secondAttribute="trailing" constant="15" id="OIa-E6-VTh"/>
-                            <constraint firstItem="czE-th-jdc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="7.5" id="RFC-Lw-5BK"/>
+                            <constraint firstItem="czE-th-jdc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="RFC-Lw-5BK"/>
                             <constraint firstItem="lhY-Iq-cRn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="f2O-67-HsM"/>
                             <constraint firstItem="czE-th-jdc" firstAttribute="top" secondItem="rui-3j-fam" secondAttribute="bottom" constant="5" id="uxL-Gw-MaT"/>
                         </constraints>
