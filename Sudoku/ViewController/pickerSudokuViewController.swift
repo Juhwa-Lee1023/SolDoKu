@@ -23,6 +23,7 @@ class pickerSudokuViewController: UIViewController {
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     private var count:Int = 0
     private let picker = UIImagePickerController()
+    private var ignoreSolve: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +111,7 @@ class pickerSudokuViewController: UIViewController {
     private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
+        var sudokuNumbersCount: Int = 0
         if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
             let numImages = UIImgaeSliceArr[0] as! NSArray
             for i in 0..<numImages.count {
@@ -118,10 +120,11 @@ class pickerSudokuViewController: UIViewController {
                 let row = Int(i / 9)
                 let img = numimg as! UIImage
                 if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
-                    // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
+                    // 숫자가 있으면 true, 없으면 false 이다
                     let numExist = (sliceNumImage[0] as! NSNumber).boolValue
                     if numExist == true {
                         // 숫자가 존재 하는 경우 처리
+                        sudokuNumbersCount += 1
                         guard let buf = img.UIImageToPixelBuffer() else { return }
                         
                         let model = model_64()
@@ -143,8 +146,26 @@ class pickerSudokuViewController: UIViewController {
                     sudokuArray[row][col] = 0
                 }
             }
-            // sudoku 풀이
             
+            if !ignoreSolve {
+                if sudokuNumbersCount < 17 {
+                    let alert = UIAlertController(title: "Really want to Solve?", message: "Sudoku Solve requires more than 17 numbers.", preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                        self.hideIndicator()
+                        self.ignoreSolve.toggle()
+                        self.recognizeNum(image: image)
+                    }
+                    let no = UIAlertAction(title: "No", style: .destructive) { _ in
+                        self.hideIndicator()
+                    }
+                    alert.addAction(no)
+                    alert.addAction(yes)
+                    present(alert, animated: true, completion: nil)
+                    return
+                }
+            }
+            
+            // sudoku 풀이
             var solvedSudokuArray = sudokuArray
             count = 0
             let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
@@ -163,6 +184,7 @@ class pickerSudokuViewController: UIViewController {
             hideIndicator()
             // 풀어진 sudoku 표시
             showNum(solvedSudokuArray, sudokuArray, image)
+            ignoreSolve.toggle()
         }
     }
 
