@@ -22,6 +22,7 @@ class importSudokuViewController: UIViewController {
     var selectNum: IndexPath = []
     let setNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     var count: Int = 0
+    private var ignoreSolve: Bool = false
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     
     override func viewDidLoad() {
@@ -48,10 +49,31 @@ class importSudokuViewController: UIViewController {
     
     func solveSudoku() {
         var check: Int = 0
+        var numCount: Int = 0
         for i in 0..<9 {
             for j in 0..<9 {
+                if sudokuNum[check] != 0 {
+                    numCount += 1
+                }
                 solSudokuNum[i][j] = sudokuNum[check]
                 check += 1
+            }
+        }
+        if !ignoreSolve {
+            if numCount < 17 {
+                let alert = UIAlertController(title: "Really want to Solve?", message: "Sudoku Solve requires more than 17 numbers.", preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                    self.hideIndicator()
+                    self.ignoreSolve.toggle()
+                    self.solveSudoku()
+                }
+                let no = UIAlertAction(title: "No", style: .destructive) { _ in
+                    self.hideIndicator()
+                }
+                alert.addAction(no)
+                alert.addAction(yes)
+                present(alert, animated: true, completion: nil)
+                return
             }
         }
         count = 0
@@ -79,6 +101,7 @@ class importSudokuViewController: UIViewController {
         }
         hideIndicator()
         drawSudoku()
+        ignoreSolve.toggle()
     }
     
     private func drawSudoku() {

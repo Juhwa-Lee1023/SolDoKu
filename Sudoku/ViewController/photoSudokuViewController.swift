@@ -26,6 +26,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var count: Int = 0
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     private var check: Bool = false
+    private var ignoreSolve: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -273,6 +274,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
+        var sudokuNumbersCount: Int = 0
         if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
             let numImages = UIImgaeSliceArr[0] as! NSArray
             for i in 0..<numImages.count {
@@ -281,10 +283,11 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 let row = Int(i / 9)
                 let img = numImg as! UIImage
                 if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
-                    // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
+                    // 이미지 내에 숫자가 있으면 true, 없으면 false 이다
                     let numExist = (sliceNumImage[0] as! NSNumber).boolValue
                     if numExist == true {
                         // 숫자가 존재 하는 경우 처리
+                        sudokuNumbersCount += 1
                         guard let buf = img.UIImageToPixelBuffer() else { return }
                         let model = model_64()
                         guard let predList = try? model.prediction(x: buf) else {
@@ -304,6 +307,23 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                     sudokuArray[row][col] = 0
                 }
             }
+            if !ignoreSolve {
+                if sudokuNumbersCount < 17 {
+                    let alert = UIAlertController(title: "Really want to Solve?", message: "Sudoku Solve requires more than 17 numbers.", preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                        self.hideIndicator()
+                        self.ignoreSolve.toggle()
+                        self.recognizeNum(image: image)
+                    }
+                    let no = UIAlertAction(title: "No", style: .destructive) { _ in
+                        self.hideIndicator()
+                    }
+                    alert.addAction(no)
+                    alert.addAction(yes)
+                    present(alert, animated: true, completion: nil)
+                    return
+                }
+            }
             // sudoku 풀이
             
             var solvedSudokuArray = sudokuArray
@@ -321,6 +341,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             hideIndicator()
             // 풀어진 sudoku 표시
             solveShowNum(solvedSudokuArray, sudokuArray, image)
+            ignoreSolve.toggle()
         }
     }
     
