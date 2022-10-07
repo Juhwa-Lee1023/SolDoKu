@@ -18,23 +18,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rui-3j-fam">
-                                <rect key="frame" x="166" y="29" width="42" height="36"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Sol">
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="30"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhY-Iq-cRn">
-                                <rect key="frame" x="15" y="515" width="360" height="60"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhY-Iq-cRn">
+                                <rect key="frame" x="15" y="517" width="360" height="51.333333333333371"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.85098039215686272" green="0.85098039215686272" blue="0.85098039215686272" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="lhY-Iq-cRn" secondAttribute="height" multiplier="7:1" id="xmC-Dd-6be"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Take a Picture"/>
@@ -42,12 +29,10 @@
                                     <segue destination="YIg-W0-kja" kind="show" id="uow-ak-G3z"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZO3-Dj-WKM">
-                                <rect key="frame" x="15" y="615" width="360" height="74"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZO3-Dj-WKM">
+                                <rect key="frame" x="15" y="588.33333333333348" width="360" height="51.666666666666629"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="ZO3-Dj-WKM" secondAttribute="height" multiplier="7:1" id="S5Y-A5-cnH"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Import from Album"/>
@@ -55,12 +40,10 @@
                                     <segue destination="4J7-Sj-pAM" kind="show" id="78n-eW-zbd"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jUL-xn-j9X">
-                                <rect key="frame" x="15" y="715" width="360" height="74"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jUL-xn-j9X">
+                                <rect key="frame" x="15" y="660" width="360" height="51.333333333333371"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="jUL-xn-j9X" secondAttribute="height" multiplier="7:1" id="2cL-aB-hvV"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Regular" family="Apple SD Gothic Neo" pointSize="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Direct Input"/>
@@ -68,12 +51,10 @@
                                     <segue destination="Xcl-WB-Jdb" kind="show" id="6fY-vL-9Er"/>
                                 </connections>
                             </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="czE-th-jdc">
-                                <rect key="frame" x="15" y="116" width="360" height="345"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="czE-th-jdc">
+                                <rect key="frame" x="15" y="132" width="360" height="360"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="czE-th-jdc" secondAttribute="height" multiplier="1:1" id="1xH-Fk-pOj"/>
-                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="uvB-h1-sId">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -91,24 +72,21 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rui-3j-fam">
+                                <rect key="frame" x="164" y="91" width="42" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Sol">
+                                        <attributes>
+                                            <font key="NSFont" metaFont="system" size="30"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lhY-Iq-cRn" secondAttribute="trailing" constant="15" id="1KA-P2-AgX"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="jUL-xn-j9X" secondAttribute="trailing" constant="15" id="1jF-BS-ncM"/>
-                            <constraint firstItem="czE-th-jdc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2hB-t7-skK"/>
-                            <constraint firstItem="ZO3-Dj-WKM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="6Qw-Rx-Qcm"/>
-                            <constraint firstItem="lhY-Iq-cRn" firstAttribute="top" secondItem="czE-th-jdc" secondAttribute="bottom" constant="25" id="8SC-nl-a9D"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="czE-th-jdc" secondAttribute="trailing" constant="15" id="HWA-f2-fIB"/>
-                            <constraint firstItem="jUL-xn-j9X" firstAttribute="top" secondItem="ZO3-Dj-WKM" secondAttribute="bottom" constant="20" id="Hrt-yR-vcZ"/>
-                            <constraint firstItem="jUL-xn-j9X" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="Jo3-wN-ad3"/>
-                            <constraint firstItem="ZO3-Dj-WKM" firstAttribute="top" secondItem="lhY-Iq-cRn" secondAttribute="bottom" constant="20" id="O2X-UL-ZSZ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZO3-Dj-WKM" secondAttribute="trailing" constant="15" id="OIa-E6-VTh"/>
-                            <constraint firstItem="czE-th-jdc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="RFC-Lw-5BK"/>
-                            <constraint firstItem="lhY-Iq-cRn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="f2O-67-HsM"/>
-                            <constraint firstItem="czE-th-jdc" firstAttribute="top" secondItem="rui-3j-fam" secondAttribute="bottom" constant="5" id="uxL-Gw-MaT"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Qss-e1-LQI"/>
                     <connections>

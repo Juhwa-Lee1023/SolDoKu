@@ -6,11 +6,11 @@
 //
 
 import UIKit
+import SnapKit
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var goPhotoView: UIButton!
     @IBOutlet weak var goPickerView: UIButton!
     @IBOutlet weak var goInsertView: UIButton!
@@ -24,6 +24,7 @@ class ViewController: UIViewController {
         setButton()
         setTitleLabel()
         collectionViewLink()
+        setLayout()
 //        imageView.image = UIImage(named: "sudokuImage")
         // Do any additional setup after loading the view.
     }
@@ -52,6 +53,85 @@ class ViewController: UIViewController {
     private func collectionViewLink() {
         self.mainSudokuCollectionView.delegate = self
         self.mainSudokuCollectionView.dataSource = self
+    }
+    
+    private func setLayout() {
+        if ((bounds.width / bounds.height) <= 9/19) {
+            titleLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
+            }
+            
+            mainSudokuCollectionView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(titleLabel.snp.bottom).offset(bounds.height / 45)
+                make.leading.equalTo(self.view).offset(bounds.width/20)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/20))
+                make.size.width.height.equalTo(bounds.width * 0.9)
+            }
+            
+            goPhotoView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(mainSudokuCollectionView.snp.bottom).offset(bounds.height / 35)
+                make.leading.equalTo(self.view).offset(bounds.width/20)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/20))
+                make.size.height.equalTo((bounds.width * 0.9) * 1/6.5)
+            }
+            
+            goPickerView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(goPhotoView.snp.bottom).offset(bounds.height / 35)
+                make.leading.equalTo(self.view).offset(bounds.width/20)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/20))
+                make.size.height.equalTo((bounds.width * 0.9) * 1/6.5)
+            }
+            
+            goInsertView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(goPickerView.snp.bottom).offset(bounds.height / 35)
+                make.leading.equalTo(self.view).offset(bounds.width/20)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/20))
+                make.size.height.equalTo((bounds.width * 0.9) * 1/6.5)
+            }
+        } else {
+            titleLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(view.safeAreaLayoutGuide).offset(5)
+            }
+            
+            mainSudokuCollectionView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(titleLabel.snp.bottom).offset(bounds.height / 45)
+                make.leading.equalTo(self.view).offset(bounds.width/10)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
+                make.size.width.height.equalTo(bounds.width * 0.8)
+            }
+            
+            goPhotoView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(mainSudokuCollectionView.snp.bottom).offset(bounds.height / 35)
+                make.leading.equalTo(self.view).offset(bounds.width/10)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
+                make.size.height.equalTo((bounds.width * 0.8) * 1/6.5)
+            }
+            
+            goPickerView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(goPhotoView.snp.bottom).offset(bounds.height / 35)
+                make.leading.equalTo(self.view).offset(bounds.width/10)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
+                make.size.height.equalTo((bounds.width * 0.8) * 1/6.5)
+            }
+            
+            goInsertView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(goPickerView.snp.bottom).offset(bounds.height / 35)
+                make.leading.equalTo(self.view).offset(bounds.width/10)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
+                make.size.height.equalTo((bounds.width * 0.8) * 1/6.5)
+            }
+        }
+        
     }
 }
 

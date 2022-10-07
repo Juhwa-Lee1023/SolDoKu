@@ -12,6 +12,8 @@ import Vision
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
+    @IBOutlet weak var refinedViewLabel: UILabel!
+    @IBOutlet weak var cameraViewLabel: UILabel!
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var refinedView: UIImageView!
     @IBOutlet weak var shooting: UIButton!
@@ -27,6 +29,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     private var check: Bool = false
     private var ignoreSolve: Bool = false
+    private let bounds = UIScreen.main.bounds
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +40,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         shooting.layer.cornerRadius = 10
         setButton()
         refinedView.image = UIImage(named: "sudoku")
+        setLayout()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,6 +60,106 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
             cameraStop()
             check = true
+        }
+    }
+    
+    private func setLayout() {
+        if ((bounds.width / bounds.height) <= 9/19) {
+            cameraView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(1)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.075)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.075))
+                make.size.width.height.equalTo(bounds.width * 0.85)
+            }
+            
+            refinedView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(cameraView.snp.bottom).offset(3)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.075)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.075))
+                make.size.width.height.equalTo(bounds.width * 0.85)
+            }
+            
+            loadingView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(cameraView.snp.bottom).offset(3)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.075)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.075))
+                make.size.width.height.equalTo(bounds.width * 0.85)
+            }
+            
+            activityIndicator.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.45)
+            }
+            
+            cameraViewLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(cameraView.snp.top).offset(loadingView.frame.height * 0.45)
+            }
+            
+            refinedViewLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(refinedView.snp.top).offset(refinedView.frame.height * 0.7)
+            }
+            
+            shooting.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(refinedView.snp.bottom).offset(5)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.075)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.075))
+                make.size.width.equalTo(bounds.width * 0.85)
+                make.size.height.equalTo(bounds.width * 0.85 * 1/7)
+            }
+        } else {
+            cameraView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(1)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.125)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.125))
+                make.size.width.height.equalTo(bounds.width * 0.75)
+            }
+            
+            refinedView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(cameraView.snp.bottom).offset(3)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.125)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.125))
+                make.size.width.height.equalTo(bounds.width * 0.75)
+            }
+            
+            loadingView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(cameraView.snp.bottom).offset(3)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.125)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.125))
+                make.size.width.height.equalTo(bounds.width * 0.75)
+            }
+            
+            activityIndicator.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.45)
+            }
+            
+            cameraViewLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(cameraView.snp.top).offset(loadingView.frame.height * 0.45)
+            }
+            
+            refinedViewLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(refinedView.snp.top).offset(refinedView.frame.height * 0.7)
+            }
+            
+            shooting.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(refinedView.snp.bottom).offset(5)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.125)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.125))
+                make.size.width.height.equalTo(bounds.width * 0.75)
+                make.size.height.equalTo(bounds.width * 0.75 * 1/7)
+            }
         }
     }
     

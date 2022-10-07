@@ -4,6 +4,8 @@
 //
 //  Created by 이주화 on 2022/09/14.
 //
+import UIKit
+
 extension UIImage {
     // UIImage에 UIImage를 픽셀버퍼 타입으로 변환시키는 function 추가
     func UIImageToPixelBuffer() -> CVPixelBuffer? {
