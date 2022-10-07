@@ -4,6 +4,8 @@
 //
 //  Created by 이주화 on 2022/09/29.
 //
+import UIKit
+
 enum Colors {
     case sudokuLightPurple
     case sudokuDeepPurple

@@ -13,7 +13,9 @@ class importSudokuViewController: UIViewController {
     @IBOutlet weak var buttonCollectionView: UICollectionView!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var loadingLabel: UILabel!
     
+    let bounds = UIScreen.main.bounds
     var selectSudoku: Int = 0
     var selectSudokuArr: [Int] = []
     var sudokuNum = [Int](repeating: 0, count: 81)
@@ -29,6 +31,7 @@ class importSudokuViewController: UIViewController {
         super.viewDidLoad()
         collectionViewLink()
         hideIndicator()
+        setLayout()
     }
     
     private func showIndicator() {
@@ -41,6 +44,79 @@ class importSudokuViewController: UIViewController {
         loadingView.isHidden = true
     }
     
+    private func setLayout() {
+        if ((bounds.width / bounds.height) <= 9/19) {
+            sudokuCollectionView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.03)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+                make.size.width.height.equalTo(bounds.width * 0.9)
+            }
+            
+            buttonCollectionView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(sudokuCollectionView.snp.bottom).offset(bounds.height * 0.03)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+                make.size.width.height.equalTo(bounds.width * 0.9)
+            }
+
+            loadingView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.03)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+                make.size.width.height.equalTo(bounds.width * 0.9)
+            }
+
+            activityIndicator.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.45)
+            }
+
+            loadingLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.7)
+            }
+        } else {
+            sudokuCollectionView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.03)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.1)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.1))
+                make.size.width.height.equalTo(bounds.width * 0.8)
+            }
+            
+            buttonCollectionView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(sudokuCollectionView.snp.bottom).offset(bounds.height * 0.03)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.1)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.1))
+                make.size.width.height.equalTo(bounds.width * 0.8)
+            }
+
+            loadingView.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.03)
+                make.leading.equalTo(self.view).offset(bounds.width * 0.1)
+                make.trailing.equalTo(self.view).offset(-(bounds.width * 0.1))
+                make.size.width.height.equalTo(bounds.width * 0.8)
+            }
+
+            activityIndicator.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.45)
+            }
+
+            loadingLabel.snp.makeConstraints() { make in
+                make.centerX.equalToSuperview()
+                make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.7)
+            }
+        }
+        
+
+    }
     func shootSolveSudoku() {
         showIndicator()
         sudokuSolvingWorkItem = DispatchWorkItem(block: self.solveSudoku)
@@ -385,7 +461,7 @@ extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
         if collectionView == sudokuCollectionView {
             return 0
         } else {
-            return buttonCollectionView.frame.width / 15
+            return buttonCollectionView.frame.width / 20
         }
     }
     

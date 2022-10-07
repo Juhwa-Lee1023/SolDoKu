@@ -24,9 +24,23 @@
 		D597D1D728CF765D00694D66 /* wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D597D1D628CF765D00694D66 /* wrapper.mm */; };
 		D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E128CFBBCA00694D66 /* model_64.mlpackage */; };
 		D597D1E528D0DF3200694D66 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E428D0DF3200694D66 /* UIImage+.swift */; };
+		D5A7B5C828F08F0A007721B3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = D5A7B5C728F08F0A007721B3 /* SnapKit */; };
 		D5BBD65F28D205AE00747F15 /* pickerSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */; };
 		D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D5A7B5CC28F092EA007721B3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D53F618128C77AE20017D756 /* Sudoku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sudoku.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D58069BF28E606F000461CD8 /* opencv2.framework in Frameworks */,
+				D5A7B5C828F08F0A007721B3 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,12 +184,16 @@
 				D53F617D28C77AE20017D756 /* Sources */,
 				D53F617E28C77AE20017D756 /* Frameworks */,
 				D53F617F28C77AE20017D756 /* Resources */,
+				D5A7B5CC28F092EA007721B3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Sudoku;
+			packageProductDependencies = (
+				D5A7B5C728F08F0A007721B3 /* SnapKit */,
+			);
 			productName = Sudoku;
 			productReference = D53F618128C77AE20017D756 /* Sudoku.app */;
 			productType = "com.apple.product-type.application";
@@ -204,6 +223,9 @@
 				Base,
 			);
 			mainGroup = D53F617828C77AE20017D756;
+			packageReferences = (
+				D5A7B5C628F08F0A007721B3 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = D53F618228C77AE20017D756 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -274,6 +296,7 @@
 		D53F619328C77AE30017D756 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -307,6 +330,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -335,6 +359,7 @@
 		D53F619428C77AE30017D756 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -368,6 +393,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -417,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.coin.SolDoKu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -458,7 +484,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.coin.SolDoKu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -490,6 +516,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D5A7B5C628F08F0A007721B3 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 5.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D5A7B5C728F08F0A007721B3 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5A7B5C628F08F0A007721B3 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D53F617928C77AE20017D756 /* Project object */;
 }

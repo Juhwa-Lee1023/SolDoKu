@@ -14,7 +14,7 @@ class pickerSudokuViewController: UIViewController {
     
     @IBOutlet weak var photoPicker: UIButton!
     @IBOutlet weak var solSudoku: UIButton!
-    
+    @IBOutlet weak var loadingLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var pickerImage: UIImageView!
@@ -24,6 +24,7 @@ class pickerSudokuViewController: UIViewController {
     private var count:Int = 0
     private let picker = UIImagePickerController()
     private var ignoreSolve: Bool = false
+    private let bounds = UIScreen.main.bounds
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +32,7 @@ class pickerSudokuViewController: UIViewController {
         hideIndicator()
         picker.delegate = self
         setbutton()
+        setLayout()
         // Do any additional setup after loading the view.
     }
     
@@ -81,6 +83,52 @@ class pickerSudokuViewController: UIViewController {
             alert.addAction(no)
             alert.addAction(yes)
             present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func setLayout() {
+        pickerImage.snp.makeConstraints() { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.01)
+            make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+            make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+            make.size.width.height.equalTo(bounds.width * 0.9)
+        }
+        
+        loadingView.snp.makeConstraints() { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.03)
+            make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+            make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+            make.size.width.height.equalTo(bounds.width * 0.9)
+        }
+        
+        activityIndicator.snp.makeConstraints() { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.45)
+        }
+        
+        loadingLabel.snp.makeConstraints() { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(loadingView.snp.top).offset(loadingView.frame.height * 0.45)
+        }
+        
+        photoPicker.snp.makeConstraints() { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(pickerImage.snp.bottom).offset(bounds.height / 35)
+            make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+            make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+            make.size.width.equalTo(bounds.width * 0.9)
+            make.size.height.equalTo(bounds.width * 0.9 * 1/6)
+        }
+        
+        solSudoku.snp.makeConstraints() { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(photoPicker.snp.bottom).offset(bounds.height / 35)
+            make.leading.equalTo(self.view).offset(bounds.width * 0.05)
+            make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
+            make.size.width.equalTo(bounds.width * 0.9)
+            make.size.height.equalTo(bounds.width * 0.9 * 1/6)
         }
     }
     

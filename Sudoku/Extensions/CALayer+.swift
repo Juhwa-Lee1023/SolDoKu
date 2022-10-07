@@ -4,6 +4,8 @@
 //
 //  Created by 이주화 on 2022/09/29.
 //
+import UIKit
+
 extension CALayer {
     func addBorder(_ arrEdge: [UIRectEdge], color: UIColor, width: CGFloat) {
         for edge in arrEdge {
