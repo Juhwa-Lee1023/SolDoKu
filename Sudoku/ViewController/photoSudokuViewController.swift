@@ -27,7 +27,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var count: Int = 0
     private var sudokuSolvingWorkItem: DispatchWorkItem?
-    private var check: Bool = false
     private var ignoreSolve: Bool = false
     private let bounds = UIScreen.main.bounds
     
@@ -41,6 +40,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         setButton()
         refinedView.image = UIImage(named: "sudoku")
         setLayout()
+        addRefinedViewAction()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -51,18 +51,41 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     @IBAction func shootingAction(_ sender: Any) {
-        if check {
+        if shooting.titleLabel?.text == "Shoot Again" {
+            refinedView.image = UIImage(named: "sudoku")
             cameraStart()
-            check = false
-        }
-        else {
+            shooting.setTitle("Shooting Sudoku", for: .normal)
+        } else {
             sudokuSolvingWorkItem = DispatchWorkItem(block: sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
             cameraStop()
-            check = true
+            shooting.setTitle("Shoot Again", for: .normal)
         }
     }
     
+    @objc func imageTapped(sender: UITapGestureRecognizer) {
+        if shooting.titleLabel?.text == "Shoot Again" {
+            refinedView.image = UIImage(named: "sudoku")
+            session?.startRunning()
+            shooting.setTitle("Shooting Sudoku", for: .normal)
+        }
+        else {
+            let sessionStatus = session?.isRunning ?? false
+            if sessionStatus {
+                cameraViewLabel.isHidden = true
+                session?.stopRunning()
+            } else {
+                refinedView.image = UIImage(named: "sudoku")
+                session?.startRunning()
+            }
+        }
+    }
+    
+    private func addRefinedViewAction() {
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(self.imageTapped))
+        refinedView.addGestureRecognizer(tapGR)
+        refinedView.isUserInteractionEnabled = true
+    }
     private func setLayout() {
         if ((bounds.width / bounds.height) <= 9/19) {
             cameraView.snp.makeConstraints() { make in
@@ -164,6 +187,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     private func setButton() {
+        shooting.setTitle("Shooting Sudoku", for: .normal)
         shooting.layer.cornerRadius = 10
         shooting.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
         shooting.titleLabel?.textColor = .white
@@ -189,6 +213,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     private func cameraStop(){
+        cameraViewLabel.isHidden = true
         session?.stopRunning()
         showIndicator()
     }
@@ -324,16 +349,16 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         particleLayer.strokeColor = UIColor.red.cgColor
         particleLayer.lineWidth = 5
         particlePath.removeAllPoints()
-
-
+        
+        
         particlePath.move(to: CGPoint(x: rect[0].x / framesize, y: rect[0].y / framesize))
         particlePath.addLine(to: CGPoint(x: rect[1].x / framesize, y: rect[1].y / framesize))
         particlePath.addLine(to: CGPoint(x: rect[2].x / framesize, y: rect[2].y / framesize))
         particlePath.addLine(to: CGPoint(x: rect[3].x / framesize, y: rect[3].y / framesize))
         particlePath.close()
-
+        
         particleLayer.path = particlePath.cgPath
-
+        
     }
     
     private func recognizePresentNum(image: UIImage) {
@@ -421,6 +446,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                     }
                     let no = UIAlertAction(title: "No", style: .destructive) { _ in
                         self.hideIndicator()
+                        self.shooting.setTitle("Shooting Sudoku", for: .normal)
                     }
                     alert.addAction(no)
                     alert.addAction(yes)
