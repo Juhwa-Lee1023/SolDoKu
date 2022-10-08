@@ -37,8 +37,8 @@ class pickerSudokuViewController: UIViewController {
     }
     
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Select", message: nil, preferredStyle: .actionSheet)
-        let library = UIAlertAction(title: "Album", style: .default) { _ in
+        let alert = UIAlertController(title: "Select".localized, message: nil, preferredStyle: .actionSheet)
+        let library = UIAlertAction(title: "Album".localized, style: .default) { _ in
             if self.PhotoAuth() {
                 self.openLibrary()
             }
@@ -46,7 +46,7 @@ class pickerSudokuViewController: UIViewController {
                 self.AuthSettingOpen(AuthString: "Album")
             }
         }
-        let camera = UIAlertAction(title: "Camera", style: .default) { _ in
+        let camera = UIAlertAction(title: "Camera".localized, style: .default) { _ in
             if self.CameraAuth() {
                 self.openCamera()
             }
@@ -54,7 +54,7 @@ class pickerSudokuViewController: UIViewController {
                 self.AuthSettingOpen(AuthString: "Camera")
             }
         }
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
         
         alert.addAction(library)
         alert.addAction(camera)
@@ -69,8 +69,8 @@ class pickerSudokuViewController: UIViewController {
             sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
         } else {
-            let alert = UIAlertController(title: "Picture hasn't been Uploaded.", message: "Want to Upload a Picture?", preferredStyle: .alert)
-            let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+            let alert = UIAlertController(title: "Picture hasn't been Uploaded.".localized, message: "Want to Upload a Picture?".localized, preferredStyle: .alert)
+            let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                 if self.PhotoAuth() {
                     self.openLibrary()
                 }
@@ -79,7 +79,7 @@ class pickerSudokuViewController: UIViewController {
                 }
                     
             }
-            let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
+            let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
             alert.addAction(no)
             alert.addAction(yes)
             present(alert, animated: true, completion: nil)
@@ -87,6 +87,8 @@ class pickerSudokuViewController: UIViewController {
     }
     
     private func setLayout() {
+        loadingLabel.text = "Currently solving Sudoku".localized
+        
         pickerImage.snp.makeConstraints() { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.01)
@@ -97,7 +99,7 @@ class pickerSudokuViewController: UIViewController {
         
         loadingView.snp.makeConstraints() { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.03)
+            make.top.equalTo(self.view.safeAreaLayoutGuide).offset(bounds.height * 0.01)
             make.leading.equalTo(self.view).offset(bounds.width * 0.05)
             make.trailing.equalTo(self.view).offset(-(bounds.width * 0.05))
             make.size.width.height.equalTo(bounds.width * 0.9)
@@ -133,6 +135,9 @@ class pickerSudokuViewController: UIViewController {
     }
     
     private func setbutton() {
+        photoPicker.setTitle("Upload from Album".localized, for: .normal)
+        solSudoku.setTitle("Solving Sudoku".localized, for: .normal)
+        
         [photoPicker, solSudoku].forEach {
             $0.layer.cornerRadius = 10
             $0.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
@@ -197,13 +202,13 @@ class pickerSudokuViewController: UIViewController {
             
             if !ignoreSolve {
                 if sudokuNumbersCount < 17 {
-                    let alert = UIAlertController(title: "Really want to Solve?", message: "Sudoku Solve requires more than 17 numbers.", preferredStyle: .alert)
-                    let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                    let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                         self.hideIndicator()
                         self.ignoreSolve.toggle()
                         self.recognizeNum(image: image)
                     }
-                    let no = UIAlertAction(title: "No", style: .destructive) { _ in
+                    let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                         self.hideIndicator()
                     }
                     alert.addAction(no)
@@ -218,11 +223,11 @@ class pickerSudokuViewController: UIViewController {
             count = 0
             let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck {
-                let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Upload another Picture?", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                let alert = UIAlertController(title: "Cannot solve Sudoku.".localized, message: "Upload another Picture?".localized, preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                     self.openLibrary()
                 }
-                let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
+                let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
                 alert.addAction(no)
                 alert.addAction(yes)
                 present(alert, animated: true, completion: nil)
@@ -335,13 +340,13 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
     
     func AuthSettingOpen(AuthString: String) {
         if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
-            let message = "\(AppName) is not allowed access to \(AuthString). \r\n Do you want to go to the Setting Screen?"
-            let alert = UIAlertController(title: "Setting", message: message, preferredStyle: .alert)
+            let message = "Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?".localized
+            let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
             
-            let cancle = UIAlertAction(title: "Cancel", style: .default) { _ in
+            let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in
                 
             }
-            let confirm = UIAlertAction(title: "Confirm", style: .default) { (UIAlertAction) in
+            let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { (UIAlertAction) in
                 UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
             }
             alert.addAction(cancle)

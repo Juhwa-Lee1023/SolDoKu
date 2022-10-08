@@ -31,7 +31,7 @@ class ViewController: UIViewController {
 
     private func setTitleLabel() {
         self.view.addSubview(titleLabel)
-        titleLabel.text = "SolDoKu"
+        titleLabel.text = "SolDoKu".localized
         titleLabel.textColor = UIColor.sudokuColor(.sudokuDeepPurple)
         titleLabel.font = .boldSystemFont(ofSize: 60)
         titleLabel.minimumScaleFactor = 0.5
@@ -41,6 +41,9 @@ class ViewController: UIViewController {
     }
 
     private func setButton() {
+        goPhotoView.setTitle("Take a Picture".localized, for: .normal)
+        goPickerView.setTitle("Import from Album".localized, for: .normal)
+        goInsertView.setTitle("Direct Input".localized, for: .normal)
         [goPhotoView, goPickerView, goInsertView].forEach {
             $0.layer.cornerRadius = 10
             $0.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)

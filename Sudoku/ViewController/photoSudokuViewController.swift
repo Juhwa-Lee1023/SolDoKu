@@ -42,7 +42,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         setLayout()
         addRefinedViewAction()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !self.CameraAuth() {
@@ -51,23 +51,23 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     @IBAction func shootingAction(_ sender: Any) {
-        if shooting.titleLabel?.text == "Shoot Again" {
+        if shooting.titleLabel?.text == "Shoot Again".localized {
             refinedView.image = UIImage(named: "sudoku")
             cameraStart()
-            shooting.setTitle("Shooting Sudoku", for: .normal)
+            shooting.setTitle("Shooting Sudoku".localized, for: .normal)
         } else {
             sudokuSolvingWorkItem = DispatchWorkItem(block: sudokuSolvingQueue)
             DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
             cameraStop()
-            shooting.setTitle("Shoot Again", for: .normal)
+            shooting.setTitle("Shoot Again".localized, for: .normal)
         }
     }
     
     @objc func imageTapped(sender: UITapGestureRecognizer) {
-        if shooting.titleLabel?.text == "Shoot Again" {
+        if shooting.titleLabel?.text == "Shoot Again".localized {
             refinedView.image = UIImage(named: "sudoku")
             session?.startRunning()
-            shooting.setTitle("Shooting Sudoku", for: .normal)
+            shooting.setTitle("Shooting Sudoku".localized, for: .normal)
         }
         else {
             let sessionStatus = session?.isRunning ?? false
@@ -86,7 +86,11 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         refinedView.addGestureRecognizer(tapGR)
         refinedView.isUserInteractionEnabled = true
     }
+    
     private func setLayout() {
+        cameraViewLabel.text = "Please look where Sudoku is located".localized
+        refinedViewLabel.text = "Currently solving Sudoku".localized
+        
         if ((bounds.width / bounds.height) <= 9/19) {
             cameraView.snp.makeConstraints() { make in
                 make.centerX.equalToSuperview()
@@ -187,7 +191,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     private func setButton() {
-        shooting.setTitle("Shooting Sudoku", for: .normal)
+        shooting.setTitle("Shooting Sudoku".localized, for: .normal)
         shooting.layer.cornerRadius = 10
         shooting.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
         shooting.titleLabel?.textColor = .white
@@ -436,15 +440,15 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             }
             if !ignoreSolve {
                 if sudokuNumbersCount < 17 {
-                    let alert = UIAlertController(title: "Really want to Solve?", message: "Sudoku Solve requires more than 17 numbers.", preferredStyle: .alert)
-                    let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                    let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                         self.hideIndicator()
                         self.ignoreSolve.toggle()
                         self.recognizeNum(image: image)
                     }
-                    let no = UIAlertAction(title: "No", style: .destructive) { _ in
+                    let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                         self.hideIndicator()
-                        self.shooting.setTitle("Shooting Sudoku", for: .normal)
+                        self.shooting.setTitle("Shooting Sudoku".localized, for: .normal)
                     }
                     alert.addAction(no)
                     alert.addAction(yes)
@@ -458,8 +462,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             count = 0
             let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
             if !successCheck {
-                let alert = UIAlertController(title: "Fail.", message: "Take a Picture Again.", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "Yes", style: .default, handler: nil)
+                let alert = UIAlertController(title: "Fail.".localized, message: "Take a Picture Again.".localized, preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes".localized, style: .default, handler: nil)
                 alert.addAction(yes)
                 present(alert, animated: true, completion: nil)
                 session?.startRunning()
@@ -549,11 +553,11 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private func AuthSettingOpen(AuthString: String) {
         if !CameraAuth(){
             if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
-                let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?"
-                let alert = UIAlertController(title: "Setting", message: message, preferredStyle: .alert)
+                let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
+                let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
                 
-                let cancle = UIAlertAction(title: "Cancel", style: .default) { _ in }
-                let confirm = UIAlertAction(title: "Confirm", style: .default) { (UIAlertAction) in
+                let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in }
+                let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { (UIAlertAction) in
                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                 }
                 alert.addAction(cancle)
