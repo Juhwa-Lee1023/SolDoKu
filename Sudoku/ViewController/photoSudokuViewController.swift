@@ -249,7 +249,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         } catch {
             
         }
-        
     }
     
     // 비디오 프레임이 들어올 때마다 갱신됨
@@ -349,7 +348,6 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         particleLayer.strokeColor = UIColor.red.cgColor
         particleLayer.lineWidth = 5
         particlePath.removeAllPoints()
-        
         
         particlePath.move(to: CGPoint(x: rect[0].x / framesize, y: rect[0].y / framesize))
         particlePath.addLine(to: CGPoint(x: rect[1].x / framesize, y: rect[1].y / framesize))
