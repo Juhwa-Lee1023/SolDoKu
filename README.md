@@ -1,17 +1,18 @@
 # SolDoKu
 
-<img src= "https://user-images.githubusercontent.com/63584245/191351882-0b1a4173-1fe9-486b-ab42-eb7682e89957.png" width="300">
+<img src= "https://user-images.githubusercontent.com/63584245/194866955-f55e0f27-9643-456f-bc4a-0bf18599fdaa.jpeg" width="300">
 
  _**스도쿠 사진을 찍으면 스도쿠를 대신 풀어주는 앱입니다!**_ <br/>
  _**풀기 힘든 문제가 있다면 `솔더쿠`에게 부탁하세요!!**_
-
+ _**지원 언어 : 영어, 한글, 한자 간체, 한자 번체, 일본어, 프랑스어, 스페인어, 독일어, 이탈리아**_
 
 🔗App Store : <a href="https://apps.apple.com/kr/app/soldoku/id6443436449">SolDoKu</a>
 
+
 ---
 ### 동작화면
-![솔더쿠](https://user-images.githubusercontent.com/63584245/191350892-ffbc2802-2847-4a72-8fd0-1dfc4ccf46ed.gif)
-![솔더쿠2](https://user-images.githubusercontent.com/63584245/191350899-77975436-bbf7-4be5-aba0-b6f54dd57546.gif)
+<img src= "https://user-images.githubusercontent.com/63584245/194868092-6b418225-66e8-4955-8428-c999d884ab12.gif" width="296">
+<img src= "https://user-images.githubusercontent.com/63584245/191350899-77975436-bbf7-4be5-aba0-b6f54dd57546.gif" width="296">
 <img src= "https://user-images.githubusercontent.com/63584245/193111762-2ff77ca9-02d4-4d8a-a400-2a44daac1781.gif" width="296">
 
 
@@ -47,3 +48,5 @@
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/16">OpenCV와 coremltools를 이용하여 숫자 인식률 개선</a>
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/18">스도쿠를 풀이할 수 없는 사진일 경우 어플이 종료되는 경우</a>
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/20">정제된 이미지와 앨범에서 사진을 불러올 때 사진이 90도 회전해있는 경우</a>
+> * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/36">인식한 스도쿠 영역과 화면에 나타나는 영역이 다른경우</a>
+> * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/36">실시간으로 스도쿠 영역에서 숫자를 인식하다 앱이 종료되는 경우</a>
