@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5371F9D28F4246900753C36 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D5371F9F28F4246900753C36 /* InfoPlist.strings */; };
 		D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F618428C77AE20017D756 /* AppDelegate.swift */; };
 		D53F618728C77AE20017D756 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F618628C77AE20017D756 /* SceneDelegate.swift */; };
 		D53F618928C77AE20017D756 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F618828C77AE20017D756 /* ViewController.swift */; };
@@ -45,6 +46,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D5371F9E28F4246900753C36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D5371FA028F4257900753C36 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		D5371FA128F4257A00753C36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		D5371FA228F4257B00753C36 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D5371FA328F4257B00753C36 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D5371FA428F4257C00753C36 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D5371FA528F4257D00753C36 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D5371FA628F4257D00753C36 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D5371FA728F4257E00753C36 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D53F618128C77AE20017D756 /* Sudoku.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sudoku.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D53F618428C77AE20017D756 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D53F618628C77AE20017D756 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -192,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				D5A7B5D328F1F072007721B3 /* Localizable.strings */,
+				D5371F9F28F4246900753C36 /* InfoPlist.strings */,
 			);
 			path = Localizable;
 			sourceTree = "<group>";
@@ -271,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D53F619D28C77BF70017D756 /* importSudoku.storyboard in Resources */,
+				D5371F9D28F4246900753C36 /* InfoPlist.strings in Resources */,
 				D53F619128C77AE30017D756 /* LaunchScreen.storyboard in Resources */,
 				D53F618E28C77AE30017D756 /* Assets.xcassets in Resources */,
 				D5A7B5D128F1F072007721B3 /* Localizable.strings in Resources */,
@@ -306,6 +318,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		D5371F9F28F4246900753C36 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D5371F9E28F4246900753C36 /* en */,
+				D5371FA028F4257900753C36 /* zh-Hans */,
+				D5371FA128F4257A00753C36 /* zh-Hant */,
+				D5371FA228F4257B00753C36 /* fr */,
+				D5371FA328F4257B00753C36 /* it */,
+				D5371FA428F4257C00753C36 /* de */,
+				D5371FA528F4257D00753C36 /* ja */,
+				D5371FA628F4257D00753C36 /* ko */,
+				D5371FA728F4257E00753C36 /* es */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		D53F618A28C77AE20017D756 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -478,9 +506,9 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = SolDoKu;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Camera permission is required to use the application.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Camera permission is required to use the application.";
+				INFOPLIST_KEY_CFBundleDisplayName = CFBundleDisplayName;
+				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = NSPhotoLibraryUsageDescription;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -519,9 +547,9 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sudoku/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = SolDoKu;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Camera permission is required to use the application.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Camera permission is required to use the application.";
+				INFOPLIST_KEY_CFBundleDisplayName = CFBundleDisplayName;
+				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = NSPhotoLibraryUsageDescription;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

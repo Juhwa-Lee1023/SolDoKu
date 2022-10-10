@@ -1,4 +1,4 @@
-"SolDoKu" = "솔도쿠";
+"SolDoKu" = "SolDoku";
 "Take a Picture" = "카메라로 촬영";
 "Import from Album" = "앨범에서 업로드하기";
 "Direct Input" = "직접 입력하기";
@@ -33,4 +33,4 @@
 "Solving Sudoku" = "스도쿠 풀이";
 "Really want to Solve?" = "정말 풀이를 하시겠어요?";
 "Upload another Picture?" = "다른 사진을 업로드 하시겠어요?";
-"Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?" = "솔도쿠가 앨범 접근 허가가 되지 않았어요. \r\n 설정 페이지로 이동하시겠어요?";
+"Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?" = "SolDoKu가 앨범 접근 허가가 되지 않았어요. \r\n 설정 페이지로 이동하시겠어요?";

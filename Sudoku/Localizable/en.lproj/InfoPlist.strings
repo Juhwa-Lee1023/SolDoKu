@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Sudoku
+
+  Created by 이주화 on 2022/10/10.
+  
+*/
+
+"NSCameraUsageDescription" = "Camera permission is required for Sudoku Shooting";
+"NSPhotoLibraryUsageDescription" = "Library permission is required to retrieve Sudoku Photos.";
+"CFBundleDisplayName" = "SolDoKu";
