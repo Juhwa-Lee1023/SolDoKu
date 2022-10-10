@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Sudoku
+
+  Created by 이주화 on 2022/10/10.
+  
+*/
+
+"NSCameraUsageDescription" = "스도쿠 촬영을 위해서는 카메라 권한이 필요합니다.";
+"NSPhotoLibraryUsageDescription" = "스도쿠 사진을 불러오기 위해서는 앨범 권한이 필요합니다.";
+"CFBundleDisplayName" = "SolDoKu";

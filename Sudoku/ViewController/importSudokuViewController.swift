@@ -19,7 +19,7 @@ class importSudokuViewController: UIViewController {
     var selectSudoku: Int = 0
     var selectSudokuArr: [Int] = []
     var sudokuNum = [Int](repeating: 0, count: 81)
-    let buttonArr = ["1", "2", "3", "Clean", "4", "5", "6", "Delete", "7", "8", "9", "Solve"]
+    let buttonArr = ["1", "2", "3", "Clean".localized, "4", "5", "6", "Delete".localized, "7", "8", "9", "Solve".localized]
     var solSudokuNum: [[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
     var selectNum: IndexPath = []
     let setNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -45,6 +45,8 @@ class importSudokuViewController: UIViewController {
     }
     
     private func setLayout() {
+        loadingLabel.text = "Currently solving Sudoku".localized
+        
         if ((bounds.width / bounds.height) <= 9/19) {
             sudokuCollectionView.snp.makeConstraints() { make in
                 make.centerX.equalToSuperview()
@@ -137,13 +139,13 @@ class importSudokuViewController: UIViewController {
         }
         if !ignoreSolve {
             if numCount < 17 {
-                let alert = UIAlertController(title: "Really want to Solve?", message: "Sudoku Solve requires more than 17 numbers.", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+                let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                     self.hideIndicator()
                     self.ignoreSolve.toggle()
                     self.solveSudoku()
                 }
-                let no = UIAlertAction(title: "No", style: .destructive) { _ in
+                let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                     self.hideIndicator()
                 }
                 alert.addAction(no)
@@ -155,8 +157,8 @@ class importSudokuViewController: UIViewController {
         count = 0
         let successCheck  = sudokuCalculation(&solSudokuNum, 0, 0, &count)
         if !successCheck {
-            let alert = UIAlertController(title: "Cannot solve Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
-            let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+            let alert = UIAlertController(title: "Cannot solve Sudoku.".localized, message: "Do you want to re-enter Sudoku?".localized, preferredStyle: .alert)
+            let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                 for i in 0..<81 {
                     guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                         fatalError()
@@ -167,7 +169,7 @@ class importSudokuViewController: UIViewController {
                     self.hideIndicator()
                 }
             }
-            let no = UIAlertAction(title: "No", style: .destructive) { _ in
+            let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                 self.hideIndicator()
             }
             alert.addAction(no)
@@ -261,7 +263,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? buttonCollectionViewCell else { return UICollectionViewCell()}
             
             cell.importButton.text = buttonArr[indexPath.row]
-            if (cell.importButton.text == "Clean" || cell.importButton.text == "Delete" || cell.importButton.text == "Solve") {
+            if (cell.importButton.text == "Clean".localized || cell.importButton.text == "Delete".localized || cell.importButton.text == "Solve".localized) {
                 cell.importButton.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
                 cell.contentView.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
                 cell.importButton.textColor = .white
@@ -398,7 +400,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             }
             // 버튼에 입력된 값에 따라 다른 액션
             switch cell.importButton.text {
-            case "Delete":
+            case "Delete".localized:
                 if(selectNum != []) {
                     guard let changeCell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell else{
                         fatalError()
@@ -406,9 +408,9 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                     changeCell.importNum.text = ""
                     sudokuNum[selectNum.row] = 0
                 }
-            case "Clean":
-                let alert = UIAlertController(title: "Clean Sudoku.", message: "Do you want to re-enter Sudoku?", preferredStyle: .alert)
-                let yes = UIAlertAction(title: "Yes", style: .default) { _ in
+            case "Clean".localized:
+                let alert = UIAlertController(title: "Clean Sudoku.".localized, message: "Do you want to re-enter Sudoku?".localized, preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
                     for i in 0..<81 {
                         guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
                             fatalError()
@@ -417,17 +419,17 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
                         cell.importNum.text = ""
                     }
                 }
-                let no = UIAlertAction(title: "No", style: .destructive, handler: nil)
+                let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
                 alert.addAction(no)
                 alert.addAction(yes)
                 present(alert, animated: true, completion: nil)
-            case "Solve":
+            case "Solve".localized:
                 if(selectNum != []) {
                     shootSolveSudoku()
                 } else {
                     hideIndicator()
-                    let alert = UIAlertController(title: "Sudoku has not Entered.", message: "Please enter Sudoku.", preferredStyle: .alert)
-                    let yes = UIAlertAction(title: "Yes", style: .default)
+                    let alert = UIAlertController(title: "Sudoku has not Entered.".localized, message: "Please enter Sudoku.".localized, preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes".localized, style: .default)
                     alert.addAction(yes)
                     present(alert, animated: true, completion: nil)
                 }

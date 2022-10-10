@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Sudoku
+
+  Created by 이주화 on 2022/10/10.
+  
+*/
+
+"NSCameraUsageDescription" = "使用該應用程序需要攝像頭許可。";
+"NSPhotoLibraryUsageDescription" = "申請必須獲得圖書館的許可。";
+"CFBundleDisplayName" = "解決數獨";

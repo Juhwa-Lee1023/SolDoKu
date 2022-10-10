@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Sudoku
+
+  Created by 이주화 on 2022/10/10.
+  
+*/
+
+"NSCameraUsageDescription" = "アプリを利用するにはカメラの許可が必要です。";
+"NSPhotoLibraryUsageDescription" = "アプリケーションを使用するには、ライブラリの許可が必要です。";
+"CFBundleDisplayName" = "ソルナン";
