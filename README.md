@@ -13,7 +13,7 @@
 ### 동작화면
 <img src= "https://user-images.githubusercontent.com/63584245/194868092-6b418225-66e8-4955-8428-c999d884ab12.gif" width="296">
 <img src= "https://user-images.githubusercontent.com/63584245/191350899-77975436-bbf7-4be5-aba0-b6f54dd57546.gif" width="296">
-<img src= "https://user-images.githubusercontent.com/63584245/193111762-2ff77ca9-02d4-4d8a-a400-2a44daac1781.gif" width="296">
+<img src= "https://user-images.githubusercontent.com/63584245/194869326-73162aad-ad56-43c8-bcf3-cdc88d670313.gif" width="296">
 
 
 ---
