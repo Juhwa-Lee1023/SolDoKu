@@ -22,7 +22,7 @@
 * Objective-C
 * AVFoundation
 * OpenCV
-* PyTorch
+* TensorFlow
 * Coremltools
 
 ### 🛠 Development Environment
