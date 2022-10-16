@@ -8,6 +8,8 @@
 
 🔗App Store : <a href="https://apps.apple.com/kr/app/soldoku/id6443436449">SolDoKu</a>
 
+<img width="217" alt="image" src="https://user-images.githubusercontent.com/63584245/196044537-722e65a4-4562-42b5-983d-6f2ff3785529.png">
+
 
 ---
 ### 동작화면
