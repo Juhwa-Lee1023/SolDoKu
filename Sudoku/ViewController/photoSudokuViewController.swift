@@ -496,7 +496,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "System Font", size: fontSize)!,
+                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
@@ -528,7 +528,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "System Font", size: fontSize)!,
+                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
