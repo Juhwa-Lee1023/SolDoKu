@@ -1,6 +1,6 @@
 # SolDoKu
+<img src= "https://user-images.githubusercontent.com/63584245/198891853-04e66faf-76e5-4e01-b0a6-509eaa3c8fa7.png" width="900">
 
-<img src= "https://user-images.githubusercontent.com/63584245/194866955-f55e0f27-9643-456f-bc4a-0bf18599fdaa.jpeg" width="300">
 
  _**스도쿠 사진을 찍으면 스도쿠를 대신 풀어주는 앱입니다!**_ <br/>
  _**풀기 힘든 문제가 있다면 `솔더쿠`에게 부탁하세요!!**_
@@ -51,3 +51,4 @@
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/20">정제된 이미지와 앨범에서 사진을 불러올 때 사진이 90도 회전해있는 경우</a>
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/36">인식한 스도쿠 영역과 화면에 나타나는 영역이 다른경우</a>
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/36">실시간으로 스도쿠 영역에서 숫자를 인식하다 앱이 종료되는 경우</a>
+
