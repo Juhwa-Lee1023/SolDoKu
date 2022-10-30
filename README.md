@@ -1,5 +1,6 @@
+
 # SolDoKu
-<img src= "https://user-images.githubusercontent.com/63584245/198891853-04e66faf-76e5-4e01-b0a6-509eaa3c8fa7.png" width="900">
+![Frame 5](https://user-images.githubusercontent.com/63584245/198891933-9802142e-f07a-4cb0-a524-e2966e08ea75.svg)
 
 
  _**스도쿠 사진을 찍으면 스도쿠를 대신 풀어주는 앱입니다!**_ <br/>
