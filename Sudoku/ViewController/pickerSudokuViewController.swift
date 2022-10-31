@@ -260,7 +260,7 @@ class pickerSudokuViewController: UIViewController {
                 }
                 let num = String(sudoku[row][col])
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Arial", size: fontSize)!,
+                    NSAttributedString.Key.font: UIFont(name: "Helvetica", size: fontSize)!,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
