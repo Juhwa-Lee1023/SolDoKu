@@ -37,8 +37,8 @@
 > **OpenCV Wrapping**
 * UIKit는 swift를 기반으로 코딩되는데 OpenCV는 C,C++로 제작되어 직접 사용은 불가능하므로 Objective c++을 기반으로한 wrapper를 씌워 wrapper가 OpenCV를 호출하고 swift는 Objective c++로 작성된 wrapper를 부르는 방식으로 OpenCV를 사용하였습니다.
 
-> **PyTorch로 만든 모델을 Coremltools로 변환하여 사용**
-* 애플에서 제공하는 createML로 모델을 만들어 사용하니 정확성이 떨어져 PyTorch로 만든 모델을 Coremltools로 .mlmodel 로 변환하여 앱에서 사용하였다.
+> **TensorFlow로 만든 모델을 Coremltools로 변환하여 사용**
+* 애플에서 제공하는 createML로 모델을 만들어 사용하니 정확성이 떨어져 TensorFlow로 만든 모델을 Coremltools로 .mlmodel 로 변환하여 앱에서 사용하였다.
 
 
 ## Trouble Shooting
