@@ -1,6 +1,7 @@
 
 # SolDoKu
-![Frame 5](https://user-images.githubusercontent.com/63584245/198891933-9802142e-f07a-4cb0-a524-e2966e08ea75.svg)
+|![Frame 5](https://user-images.githubusercontent.com/63584245/198891933-9802142e-f07a-4cb0-a524-e2966e08ea75.svg)|<img width="217" alt="image" src="https://user-images.githubusercontent.com/63584245/196262442-78d3cd11-f7e0-4fb3-b399-47f0cc37e468.jpeg">|
+|:---:|:---:|
 
 
  _**스도쿠 사진을 찍으면 스도쿠를 대신 풀어주는 앱입니다!**_ <br/>
@@ -9,13 +10,13 @@
 
 🔗App Store : <a href="https://apps.apple.com/kr/app/soldoku/id6443436449">SolDoKu</a>
 
-<img width="217" alt="image" src="https://user-images.githubusercontent.com/63584245/196262442-78d3cd11-f7e0-4fb3-b399-47f0cc37e468.jpeg">
+
 
 ---
 ### 동작화면
-<img src= "https://user-images.githubusercontent.com/63584245/194868092-6b418225-66e8-4955-8428-c999d884ab12.gif" width="296">
-<img src= "https://user-images.githubusercontent.com/63584245/191350899-77975436-bbf7-4be5-aba0-b6f54dd57546.gif" width="296">
-<img src= "https://user-images.githubusercontent.com/63584245/194869326-73162aad-ad56-43c8-bcf3-cdc88d670313.gif" width="296">
+|Case 1. 후면 카메라 실시간 풀이|Case 2. 앨범 사진 기반 풀이|Case 3. 사용자 입력 기반 풀이|
+|:---:|:---:|:---:|
+|<img src= "https://user-images.githubusercontent.com/63584245/194868092-6b418225-66e8-4955-8428-c999d884ab12.gif" width="296">|<img src= "https://user-images.githubusercontent.com/63584245/191350899-77975436-bbf7-4be5-aba0-b6f54dd57546.gif" width="296">|<img src= "https://user-images.githubusercontent.com/63584245/194869326-73162aad-ad56-43c8-bcf3-cdc88d670313.gif" width="296">|
 
 
 ---
