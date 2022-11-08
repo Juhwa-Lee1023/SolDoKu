@@ -54,3 +54,6 @@
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/36">인식한 스도쿠 영역과 화면에 나타나는 영역이 다른경우</a>
 > * <a href="https://github.com/Juhwa-Lee1023/SolDoKu/pull/36">실시간으로 스도쿠 영역에서 숫자를 인식하다 앱이 종료되는 경우</a>
 
+### :lock_with_ink_pen: License
+
+[MIT](https://choosealicense.com/licenses/mit/)
