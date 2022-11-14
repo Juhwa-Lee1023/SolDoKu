@@ -105,39 +105,37 @@ class ViewController: UIViewController {
             mainSudokuCollectionView.snp.makeConstraints() { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(titleLabel.snp.bottom).offset(bounds.height / 45)
-                make.leading.equalTo(self.view).offset(bounds.width/10)
-                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
-                make.size.width.height.equalTo(bounds.width * 0.8)
+                make.leading.equalTo(self.view).offset(bounds.width/11)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/11))
+                make.size.width.height.equalTo(bounds.width * 9/11)
             }
             
             goPhotoView.snp.makeConstraints() { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(mainSudokuCollectionView.snp.bottom).offset(bounds.height / 35)
-                make.leading.equalTo(self.view).offset(bounds.width/10)
-                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
-                make.size.height.equalTo((bounds.width * 0.8) * 1/6.5)
+                make.leading.equalTo(self.view).offset(bounds.width/11)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/11))
+                make.size.height.equalTo((bounds.width * 9/11) * 1/6.5)
             }
             
             goPickerView.snp.makeConstraints() { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(goPhotoView.snp.bottom).offset(bounds.height / 35)
-                make.leading.equalTo(self.view).offset(bounds.width/10)
-                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
-                make.size.height.equalTo((bounds.width * 0.8) * 1/6.5)
+                make.leading.equalTo(self.view).offset(bounds.width/11)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/11))
+                make.size.height.equalTo((bounds.width * 9/11) * 1/6.5)
             }
             
             goInsertView.snp.makeConstraints() { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(goPickerView.snp.bottom).offset(bounds.height / 35)
-                make.leading.equalTo(self.view).offset(bounds.width/10)
-                make.trailing.equalTo(self.view).offset(-(bounds.width/10))
-                make.size.height.equalTo((bounds.width * 0.8) * 1/6.5)
+                make.leading.equalTo(self.view).offset(bounds.width/11)
+                make.trailing.equalTo(self.view).offset(-(bounds.width/11))
+                make.size.height.equalTo((bounds.width * 9/11) * 1/6.5)
             }
         }
-        
     }
 }
-
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -173,9 +171,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             
             return cell
     }
+    
     func cellSet(cell: UICollectionViewCell){
         cell.backgroundColor = UIColor.sudokuColor(.sudokuLightPurple)
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectCoordinate: [Int] = [indexPath.row / 9, indexPath.row % 9]
         let sectorRow: Int = 3 * Int(selectCoordinate[0] / 3)
@@ -201,14 +201,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 } else if cellCoordinate[1] == selectCoordinate[1] {
                     cellSet(cell: cell)
                 }
-                if (row1 + sectorRow) == cellCoordinate[0] && (col1 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell)
-                }
-                if (row2 + sectorRow) == cellCoordinate[0] && (col1 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell)
-                }
-                if (row1 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell)
-                }
-                if (row2 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell)
-                }
+                if (row1 + sectorRow) == cellCoordinate[0] && (col1 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell) }
+                if (row2 + sectorRow) == cellCoordinate[0] && (col1 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell) }
+                if (row1 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell) }
+                if (row2 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell) }
             }
         
             guard let cell = collectionView.cellForItem(at: indexPath) as? mainSudokuCollectionViewCell else {

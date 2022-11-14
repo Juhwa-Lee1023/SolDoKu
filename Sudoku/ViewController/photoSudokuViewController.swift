@@ -8,7 +8,6 @@
 import UIKit
 import AVFoundation
 import CoreML
-import Vision
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
