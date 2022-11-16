@@ -7,7 +7,6 @@
 import UIKit
 import AVFoundation
 import CoreML
-import Vision
 import Photos
 
 class pickerSudokuViewController: UIViewController {
