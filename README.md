@@ -9,6 +9,7 @@
  _**지원 언어 : 영어, 한글, 한자 간체, 한자 번체, 일본어, 프랑스어, 스페인어, 독일어, 이탈리아**_
 
 🔗App Store : <a href="https://apps.apple.com/kr/app/soldoku/id6443436449">SolDoKu</a>
+
 🔗시연 영상 : <a href="https://youtu.be/I0FhnwLulCs">Youtube</a>
 
 
