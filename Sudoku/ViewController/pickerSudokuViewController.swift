@@ -37,52 +37,54 @@ class pickerSudokuViewController: UIViewController {
     
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select".localized, message: nil, preferredStyle: .actionSheet)
-        let library = UIAlertAction(title: "Album".localized, style: .default) { _ in
-            if self.PhotoAuth() {
-                self.openLibrary()
-            }
-            else {
-                self.AuthSettingOpen(AuthString: "Album")
-            }
-        }
-        let camera = UIAlertAction(title: "Camera".localized, style: .default) { _ in
-            if self.CameraAuth() {
-                self.openCamera()
-            }
-            else {
-                self.AuthSettingOpen(AuthString: "Camera")
-            }
-        }
-        let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-        
-        alert.addAction(library)
-        alert.addAction(camera)
-        alert.addAction(cancel)
-        
-        present(alert, animated: true, completion: nil)
+                let library = UIAlertAction(title: "Album".localized, style: .default) { _ in
+                    self.requestPhotoAuth { isAuthorized in
+                        if isAuthorized {
+                            self.openLibrary()
+                        } else {
+                            self.authSettingOpen(authString: "Album")
+                        }
+                    }
+                }
+                let camera = UIAlertAction(title: "Camera".localized, style: .default) { _ in
+                    self.requestCameraAuth { isAuthorized in
+                        if isAuthorized {
+                            self.openCamera()
+                        } else {
+                            self.authSettingOpen(authString: "Camera")
+                        }
+                    }
+                }
+                let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
+                
+                alert.addAction(library)
+                alert.addAction(camera)
+                alert.addAction(cancel)
+                
+                present(alert, animated: true, completion: nil)
     }
     
     @IBAction func shootSolSudoku(_ sender: Any) {
         if pickerImage.image != nil {
-            showIndicator()
-            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
-        } else {
-            let alert = UIAlertController(title: "Picture hasn't been Uploaded.".localized, message: "Want to Upload a Picture?".localized, preferredStyle: .alert)
-            let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
-                if self.PhotoAuth() {
-                    self.openLibrary()
+                    showIndicator()
+                    sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
+                    DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
+                } else {
+                    let alert = UIAlertController(title: "Picture hasn't been Uploaded.".localized, message: "Want to Upload a Picture?".localized, preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
+                        self.requestPhotoAuth { isAuthorized in
+                            if isAuthorized {
+                                self.openLibrary()
+                            } else {
+                                self.authSettingOpen(authString: "Album")
+                            }
+                        }
+                    }
+                    let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
+                    alert.addAction(no)
+                    alert.addAction(yes)
+                    present(alert, animated: true, completion: nil)
                 }
-                else {
-                    self.AuthSettingOpen(AuthString: "Album")
-                }
-                    
-            }
-            let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
-            alert.addAction(no)
-            alert.addAction(yes)
-            present(alert, animated: true, completion: nil)
-        }
     }
     
     private func setLayout() {
@@ -337,22 +339,58 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
     }
     
     
-    func AuthSettingOpen(AuthString: String) {
-        if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
-            let message = "Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?".localized
+    func requestPhotoAuth(completion: @escaping (Bool) -> Void) {
+            let authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+            
+            switch authorizationStatus {
+            case .authorized, .limited:
+                completion(true)
+            case .denied, .restricted:
+                completion(false)
+            case .notDetermined:
+                PHPhotoLibrary.requestAuthorization { status in
+                    DispatchQueue.main.async {
+                        completion(status == .authorized || status == .limited)
+                    }
+                }
+            @unknown default:
+                completion(false)
+            }
+        }
+
+        func requestCameraAuth(completion: @escaping (Bool) -> Void) {
+            let authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+            
+            switch authorizationStatus {
+            case .authorized:
+                completion(true)
+            case .denied, .restricted:
+                completion(false)
+            case .notDetermined:
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    DispatchQueue.main.async {
+                        completion(granted)
+                    }
+                }
+            @unknown default:
+                completion(false)
+            }
+        }
+
+        func authSettingOpen(authString: String) {
+            let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
             let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
             
-            let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in
-                
+            let cancel = UIAlertAction(title: "Cancel".localized, style: .default)
+            let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
             }
-            let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { (UIAlertAction) in
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-            }
-            alert.addAction(cancle)
+            alert.addAction(cancel)
             alert.addAction(confirm)
             
             self.present(alert, animated: true, completion: nil)
         }
-    }
 }
 

@@ -44,11 +44,10 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.requestCameraAuth() { isAuthorized in
-            if isAuthorized {
-                //
-            } else {
-                self.AuthSettingOpen(AuthString: "Camera")
+        self.requestCameraAuth { [weak self] isAuthorized in
+            guard let self = self else { return }
+            if !isAuthorized {
+                self.authSettingOpen(AuthString: "Camera")
             }
         }
     }
@@ -558,38 +557,37 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         case .denied, .restricted:
             completion(false)
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { (granted) in
-                if granted {
-                    completion(true)
-                } else {
-                    completion(false)
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    completion(granted)
                 }
             }
-        default:
+        @unknown default:
             completion(false)
         }
     }
+
     
-    private func AuthSettingOpen(AuthString: String) {
-        self.requestCameraAuth() { isAuthorized in
-            if isAuthorized {
-                //
-            } else {
-                if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
-                    let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
-                    let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
-                    
-                    let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in }
-                    let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { (UIAlertAction) in
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+    private func authSettingOpen(AuthString: String) {
+        self.requestCameraAuth { isAuthorized in
+            if !isAuthorized {
+                let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "This app"
+                let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
+                let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
+                
+                let cancel = UIAlertAction(title: "Cancel".localized, style: .default)
+                let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }
-                    alert.addAction(cancle)
-                    alert.addAction(confirm)
-                    
-                    self.present(alert, animated: true, completion: nil)
                 }
+                alert.addAction(cancel)
+                alert.addAction(confirm)
+                
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
+    
 }
 

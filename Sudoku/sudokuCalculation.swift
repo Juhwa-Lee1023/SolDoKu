@@ -28,6 +28,18 @@ func isVerify(_ number: Int, _ sudoku: [[Int]], _ row: Int, _ col: Int) -> Bool 
     return true
 }
 
+// 가능한 숫자 목록을 반환
+func getPossibleNumbers(_ sudoku: [[Int]], _ row: Int, _ col: Int) -> [Int] {
+    var possibleNumbers: [Int] = []
+    for num in 1...9 {
+        if isVerify(num, sudoku, row, col) {
+            possibleNumbers.append(num)
+        }
+    }
+    return possibleNumbers
+}
+
+// 최소 남은 값 휴리스틱을 사용하여 빈 셀 찾기
 func findEmptyCellWithMinimumOptions(_ sudoku: [[Int]]) -> (Int, Int)? {
     var minOptions = 10
     var minCell: (Int, Int)? = nil
@@ -35,12 +47,7 @@ func findEmptyCellWithMinimumOptions(_ sudoku: [[Int]]) -> (Int, Int)? {
     for row in 0..<9 {
         for col in 0..<9 {
             if sudoku[row][col] == 0 {
-                var optionsCount = 0
-                for num in 1...9 {
-                    if isVerify(num, sudoku, row, col) {
-                        optionsCount += 1
-                    }
-                }
+                let optionsCount = getPossibleNumbers(sudoku, row, col).count
                 if optionsCount < minOptions {
                     minOptions = optionsCount
                     minCell = (row, col)
@@ -55,18 +62,17 @@ func findEmptyCellWithMinimumOptions(_ sudoku: [[Int]]) -> (Int, Int)? {
     return minCell
 }
 
+// 제한 시간을 설정하여 해결 시도
 func sudokuCalculation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check: inout Int) -> Bool {
-    if check >= 1000000 { return false }
+    if check >= 3000 { return false }
 
     // 빈 셀 찾기 (최소 남은 값 휴리스틱 사용)
     guard let (emptyRow, emptyCol) = findEmptyCellWithMinimumOptions(sudoku) else { return true }
 
-    // 가능한 숫자 목록
-    var possibleNumbers: [Int] = []
-    for num in 1...9 {
-        if isVerify(num, sudoku, emptyRow, emptyCol) {
-            possibleNumbers.append(num)
-        }
+    // 가능한 숫자 목록을 정렬하여 처리
+    var possibleNumbers = getPossibleNumbers(sudoku, emptyRow, emptyCol)
+    possibleNumbers.sort { a, b in
+        getPossibleNumbers(sudoku, emptyRow, emptyCol).count < getPossibleNumbers(sudoku, emptyRow, emptyCol).count
     }
 
     // 가능한 숫자들로 셀 채우기
@@ -82,3 +88,4 @@ func sudokuCalculation(_ sudoku: inout [[Int]], _ row: Int, _ col: Int, _ check:
 
     return false
 }
+
