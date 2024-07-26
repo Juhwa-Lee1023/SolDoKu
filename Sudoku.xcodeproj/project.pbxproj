@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D50130BC2C540F770051FAF9 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D50130BB2C540F770051FAF9 /* opencv2.framework */; };
 		D5371F9D28F4246900753C36 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D5371F9F28F4246900753C36 /* InfoPlist.strings */; };
 		D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F618428C77AE20017D756 /* AppDelegate.swift */; };
 		D53F618728C77AE20017D756 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F618628C77AE20017D756 /* SceneDelegate.swift */; };
@@ -20,7 +21,6 @@
 		D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F619E28C77C070017D756 /* importSudokuViewController.swift */; };
 		D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58069B528E4A19300461CD8 /* CALayer+.swift */; };
 		D58069B828E5C96F00461CD8 /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58069B728E5C96F00461CD8 /* UIColor+.swift */; };
-		D58069BF28E606F000461CD8 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D58069BE28E606F000461CD8 /* opencv2.framework */; };
 		D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */; };
 		D597D1D728CF765D00694D66 /* wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = D597D1D628CF765D00694D66 /* wrapper.mm */; };
 		D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D597D1E128CFBBCA00694D66 /* model_64.mlpackage */; };
@@ -46,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D50130BB2C540F770051FAF9 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Framework/opencv2.framework; sourceTree = SOURCE_ROOT; };
 		D5371F9E28F4246900753C36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D5371FA028F4257900753C36 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		D5371FA128F4257A00753C36 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -69,7 +70,6 @@
 		D53F619E28C77C070017D756 /* importSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = importSudokuViewController.swift; sourceTree = "<group>"; };
 		D58069B528E4A19300461CD8 /* CALayer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+.swift"; sourceTree = "<group>"; };
 		D58069B728E5C96F00461CD8 /* UIColor+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
-		D58069BE28E606F000461CD8 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		D597D1B928CDFFEA00694D66 /* sudokuCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sudokuCalculation.swift; sourceTree = "<group>"; };
 		D597D1D428CF765000694D66 /* wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrapper.h; sourceTree = "<group>"; };
 		D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Sudoku-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D58069BF28E606F000461CD8 /* opencv2.framework in Frameworks */,
+				D50130BC2C540F770051FAF9 /* opencv2.framework in Frameworks */,
 				D5A7B5C828F08F0A007721B3 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -182,7 +182,7 @@
 		D597D1C328CF703500694D66 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				D58069BE28E606F000461CD8 /* opencv2.framework */,
+				D50130BB2C540F770051FAF9 /* opencv2.framework */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -502,9 +502,11 @@
 				DEVELOPMENT_TEAM = 5N5TS7Y4MA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Framework/**",
 					"$(PROJECT_DIR)/Framework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Framework/opencv2/include/**";
 				INFOPLIST_FILE = Sudoku/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CFBundleDisplayName;
 				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;
@@ -543,9 +545,11 @@
 				DEVELOPMENT_TEAM = 5N5TS7Y4MA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Framework/**",
 					"$(PROJECT_DIR)/Framework",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Framework/opencv2/include/**";
 				INFOPLIST_FILE = Sudoku/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CFBundleDisplayName;
 				INFOPLIST_KEY_NSCameraUsageDescription = NSCameraUsageDescription;

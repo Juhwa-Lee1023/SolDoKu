@@ -176,7 +176,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.backgroundColor = UIColor.sudokuColor(.sudokuLightPurple)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectCoordinate: [Int] = [indexPath.row / 9, indexPath.row % 9]
         let sectorRow: Int = 3 * Int(selectCoordinate[0] / 3)
         let sectorCol: Int = 3 * Int(selectCoordinate[1] / 3)
@@ -184,18 +184,16 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         let row2 = (selectCoordinate[0] + 4) % 3
         let col1 = (selectCoordinate[1] + 2) % 3
         let col2 = (selectCoordinate[1] + 4) % 3
-        
-            for i in 0..<81 {
-                guard let cell = mainSudokuCollectionView.cellForItem(at: [0, i]) as? mainSudokuCollectionViewCell else {
-                    fatalError()
-                }
+
+        for i in 0..<81 {
+            if let cell = mainSudokuCollectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? mainSudokuCollectionViewCell {
                 let cellCoordinate: [Int] = [i / 9, i % 9]
-                
+
                 cell.backgroundColor = .white
                 cell.layer.borderWidth = 1
                 cell.layer.borderColor = UIColor.black.cgColor
                 cell.alpha = 1
-                
+
                 if cellCoordinate[0] == selectCoordinate[0] {
                     cellSet(cell: cell)
                 } else if cellCoordinate[1] == selectCoordinate[1] {
@@ -206,11 +204,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 if (row1 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell) }
                 if (row2 + sectorRow) == cellCoordinate[0] && (col2 + sectorCol) == cellCoordinate[1] { cellSet(cell: cell) }
             }
-        
-            guard let cell = collectionView.cellForItem(at: indexPath) as? mainSudokuCollectionViewCell else {
-                fatalError()
-            }
-        
+        }
+
+        if let cell = collectionView.cellForItem(at: indexPath) as? mainSudokuCollectionViewCell {
             UIView.animate(withDuration: 0.1,
                            animations: {
                 cell.transform = .init(scaleX: 0.90, y: 0.90)
@@ -222,7 +218,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             }
             cell.alpha = 1
             cell.backgroundColor = UIColor.sudokuColor(.sudokuPurple)
+        }
     }
+
 }
 
 extension ViewController: UICollectionViewDelegateFlowLayout {

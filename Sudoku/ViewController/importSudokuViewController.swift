@@ -229,41 +229,39 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // 스도쿠 영역
         if collectionView == sudokuCollectionView {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? sudokuCollectionViewCell else { return UICollectionViewCell()}
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? sudokuCollectionViewCell else { return UICollectionViewCell() }
             
             cell.importNum.text = ""
             cell.layer.borderWidth = 1
             cell.layer.borderColor = UIColor.black.cgColor
             
-            // 각 행, 렬에 따라 각기 다른 테두리 굵기를 가지게 하여 스도쿠의 영역을 표시
-            switch indexPath.row / 9  {
-            case 0 :
+            switch indexPath.row / 9 {
+            case 0:
                 cell.layer.addBorder([.top], color: UIColor.black, width: 4)
-            case 3, 6 :
+            case 3, 6:
                 cell.layer.addBorder([.top], color: UIColor.black, width: 2)
-            case 8 :
+            case 8:
                 cell.layer.addBorder([.bottom], color: UIColor.black, width: 4)
             default: break
             }
             
-            switch indexPath.row % 9  {
-            case 0 :
+            switch indexPath.row % 9 {
+            case 0:
                 cell.layer.addBorder([.left], color: UIColor.black, width: 4)
-            case 3, 6 :
+            case 3, 6:
                 cell.layer.addBorder([.left], color: UIColor.black, width: 2)
-            case 8 :
+            case 8:
                 cell.layer.addBorder([.right], color: UIColor.black, width: 4)
             default: break
             }
             
             return cell
-        } else { // 버튼 영역
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? buttonCollectionViewCell else { return UICollectionViewCell()}
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? buttonCollectionViewCell else { return UICollectionViewCell() }
             
             cell.importButton.text = buttonArr[indexPath.row]
-            if (cell.importButton.text == "Clean".localized || cell.importButton.text == "Delete".localized || cell.importButton.text == "Solve".localized) {
+            if cell.importButton.text == "Clean".localized || cell.importButton.text == "Delete".localized || cell.importButton.text == "Solve".localized {
                 cell.importButton.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
                 cell.contentView.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
                 cell.importButton.textColor = .white
@@ -281,6 +279,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
         }
     }
 
+
     // 셀을 변경 시키는 함수
     func cellColorSet(cell: sudokuCollectionViewCell){
         cell.backgroundColor = UIColor.sudokuColor(.sudokuLightPurple)
@@ -292,7 +291,7 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
     
     // 셀을 클릭하였을때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView == sudokuCollectionView { // 클릭한 셀이 스도쿠 영역이라면
+        if collectionView == sudokuCollectionView {
             selectSudokuArr.removeAll()
             let selectCoordinate: [Int] = [indexPath.row / 9, indexPath.row % 9]
             let sectorRow: Int = 3 * Int(selectCoordinate[0] / 3)
@@ -302,52 +301,51 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             let col1 = (selectCoordinate[1] + 2) % 3
             let col2 = (selectCoordinate[1] + 4) % 3
             for i in 0..<81 {
-                guard let cell = sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
-                    fatalError()
-                }
-                let cellNum: String = cell.importNum.text ?? ""
-                let cellCoordinateX = i / 9
-                let cellCoordinateY = i % 9
-                // 셀 색상 초기화
-                cell.backgroundColor = .white
-                cell.layer.borderWidth = 1
-                cell.layer.borderColor = UIColor.black.cgColor
-                cell.alpha = 1
-                if cellCoordinateX == selectCoordinate[0] { cellColorSet(cell: cell) }
-                else if cellCoordinateY == selectCoordinate[1] { cellColorSet(cell: cell) }
-                
-                if (row1 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
-                if (row2 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
-                if (row1 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
-                if (row2 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
-                
-                // 셀에 입력된 숫자가 있다면
-                if cellNum != "" {
-                    let cellSectorRow: Int = 3 * Int(cellCoordinateX / 3)
-                    let cellSectorCol: Int = 3 * Int(cellCoordinateY / 3)
-                    let cellRow1 = (cellCoordinateX + 2) % 3
-                    let cellRow2 = (cellCoordinateX + 4) % 3
-                    let cellCol1 = (cellCoordinateY + 2) % 3
-                    let cellCol2 = (cellCoordinateY + 4) % 3
-                    // 다른 셀들을 확인
-                    for j in 0..<81 {
-                        guard let checkCell = sudokuCollectionView.cellForItem(at: [0, j]) as? sudokuCollectionViewCell else {
-                            fatalError()
-                        }
-                        // 셀의 값이 다른 셀의 값과 같다면
-                        if cellNum == checkCell.importNum.text {
-                            let checkCellCoordinateX = j / 9
-                            let checkCellCoordinateY = j % 9
-                            // 해당하는 숫자가 그곳이 있어도 되는지 확인하여 있으면 안되는 곳이라면 셀의 색상을 변경한다.
-                            if cellCoordinateX != checkCellCoordinateX || cellCoordinateY != checkCellCoordinateY {
-                                if cellCoordinateX == checkCellCoordinateX {
-                                    cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
-                                } else if cellCoordinateY == checkCellCoordinateY {
-                                    cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
-                                if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
-                                if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
-                                if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
-                                if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                if let cell = sudokuCollectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? sudokuCollectionViewCell {
+                    let cellNum: String = cell.importNum.text ?? ""
+                    let cellCoordinateX = i / 9
+                    let cellCoordinateY = i % 9
+                    // 셀 색상 초기화
+                    cell.backgroundColor = .white
+                    cell.layer.borderWidth = 1
+                    cell.layer.borderColor = UIColor.black.cgColor
+                    cell.alpha = 1
+                    if cellCoordinateX == selectCoordinate[0] { cellColorSet(cell: cell) }
+                    else if cellCoordinateY == selectCoordinate[1] { cellColorSet(cell: cell) }
+                    
+                    if (row1 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                    if (row2 + sectorRow) == cellCoordinateX && (col1 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                    if (row1 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                    if (row2 + sectorRow) == cellCoordinateX && (col2 + sectorCol) == cellCoordinateY { cellColorSet(cell: cell) }
+                    
+                    // 셀에 입력된 숫자가 있다면
+                    if cellNum != "" {
+                        let cellSectorRow: Int = 3 * Int(cellCoordinateX / 3)
+                        let cellSectorCol: Int = 3 * Int(cellCoordinateY / 3)
+                        let cellRow1 = (cellCoordinateX + 2) % 3
+                        let cellRow2 = (cellCoordinateX + 4) % 3
+                        let cellCol1 = (cellCoordinateY + 2) % 3
+                        let cellCol2 = (cellCoordinateY + 4) % 3
+                        // 다른 셀들을 확인
+                        for j in 0..<81 {
+                            if let checkCell = sudokuCollectionView.cellForItem(at: IndexPath(row: j, section: 0)) as? sudokuCollectionViewCell {
+                                // 셀의 값이 다른 셀의 값과 같다면
+                                if cellNum == checkCell.importNum.text {
+                                    let checkCellCoordinateX = j / 9
+                                    let checkCellCoordinateY = j % 9
+                                    // 해당하는 숫자가 그곳이 있어도 되는지 확인하여 있으면 안되는 곳이라면 셀의 색상을 변경한다.
+                                    if cellCoordinateX != checkCellCoordinateX || cellCoordinateY != checkCellCoordinateY {
+                                        if cellCoordinateX == checkCellCoordinateX {
+                                            cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
+                                        } else if cellCoordinateY == checkCellCoordinateY {
+                                            cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed)
+                                        }
+                                        if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                        if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol1 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                        if (cellRow1 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                        if (cellRow2 + cellSectorRow) == checkCellCoordinateX && (cellCol2 + cellSectorCol) == checkCellCoordinateY { cell.backgroundColor = UIColor.sudokuColor(.sudokuLightRed) }
+                                    }
+                                }
                             }
                         }
                     }
@@ -355,95 +353,90 @@ extension importSudokuViewController: UICollectionViewDelegate, UICollectionView
             }
             // 들어가면 안되는 숫자 버튼 색 변경
             for i in 0..<buttonArr.count {
-                guard let cell = buttonCollectionView.cellForItem(at: [0, i]) as? buttonCollectionViewCell else {
-                    fatalError()
-                }
-                cell.contentView.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
-                for j in 0..<selectSudokuArr.count {
-                    if cell.importButton.text == String(selectSudokuArr[j]) {
-                        cell.contentView.backgroundColor = UIColor.sudokuColor(.sudokuButton)
+                if let cell = buttonCollectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? buttonCollectionViewCell {
+                    cell.contentView.backgroundColor = UIColor.sudokuColor(.sudokuDeepButton)
+                    for j in 0..<selectSudokuArr.count {
+                        if cell.importButton.text == String(selectSudokuArr[j]) {
+                            cell.contentView.backgroundColor = UIColor.sudokuColor(.sudokuButton)
+                        }
                     }
                 }
             }
             
             // 클릭된 셀 애니메이션 추가
-            guard let cell = collectionView.cellForItem(at: indexPath) as? sudokuCollectionViewCell else {
-                fatalError()
-            }
-            UIView.animate(withDuration: 0.1,
-                           animations: {
-                cell.transform = .init(scaleX: 0.90, y: 0.90)
-            }) { (completed) in
+            if let cell = collectionView.cellForItem(at: indexPath) as? sudokuCollectionViewCell {
                 UIView.animate(withDuration: 0.1,
                                animations: {
-                    cell.transform = .init(scaleX: 1, y: 1)
-                })
+                    cell.transform = .init(scaleX: 0.90, y: 0.90)
+                }) { (completed) in
+                    UIView.animate(withDuration: 0.1,
+                                   animations: {
+                        cell.transform = .init(scaleX: 1, y: 1)
+                    })
+                }
+                
+                cell.backgroundColor = UIColor.sudokuColor(.sudokuPurple)
+                selectNum = indexPath
             }
-            
-            cell.backgroundColor = UIColor.sudokuColor(.sudokuPurple)
-            selectNum = indexPath
-        } else { // 클릭한 셀이 버튼 영역이라면
-            guard let cell = buttonCollectionView.cellForItem(at: indexPath) as? buttonCollectionViewCell else {
-                fatalError()
-            }
-            // 선택된 셀에 버튼처럼 애니메이션 추가
-            UIView.animate(withDuration: 0.2,
-                           animations: {
-                cell.transform = .init(scaleX: 0.90, y: 0.90)
-                cell.alpha = 0.5
-            }) { (completed) in
+        } else {
+            if let cell = buttonCollectionView.cellForItem(at: indexPath) as? buttonCollectionViewCell {
+                // 선택된 셀에 버튼처럼 애니메이션 추가
                 UIView.animate(withDuration: 0.2,
                                animations: {
-                    cell.alpha = 1
-                    cell.transform = .init(scaleX: 1, y: 1)
-                })
-            }
-            // 버튼에 입력된 값에 따라 다른 액션
-            switch cell.importButton.text {
-            case "Delete".localized:
-                if(selectNum != []) {
-                    guard let changeCell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell else{
-                        fatalError()
-                    }
-                    changeCell.importNum.text = ""
-                    sudokuNum[selectNum.row] = 0
+                    cell.transform = .init(scaleX: 0.90, y: 0.90)
+                    cell.alpha = 0.5
+                }) { (completed) in
+                    UIView.animate(withDuration: 0.2,
+                                   animations: {
+                        cell.alpha = 1
+                        cell.transform = .init(scaleX: 1, y: 1)
+                    })
                 }
-            case "Clean".localized:
-                let alert = UIAlertController(title: "Clean Sudoku.".localized, message: "Do you want to re-enter Sudoku?".localized, preferredStyle: .alert)
-                let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
-                    for i in 0..<81 {
-                        guard let cell = self.sudokuCollectionView.cellForItem(at: [0, i]) as? sudokuCollectionViewCell else {
-                            fatalError()
+                // 버튼에 입력된 값에 따라 다른 액션
+                switch cell.importButton.text {
+                case "Delete".localized:
+                    if selectNum != [] {
+                        if let changeCell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell {
+                            changeCell.importNum.text = ""
+                            sudokuNum[selectNum.row] = 0
                         }
-                        self.sudokuNum[i] = 0
-                        cell.importNum.text = ""
                     }
-                }
-                let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
-                alert.addAction(no)
-                alert.addAction(yes)
-                present(alert, animated: true, completion: nil)
-            case "Solve".localized:
-                if(selectNum != []) {
-                    shootSolveSudoku()
-                } else {
-                    hideIndicator()
-                    let alert = UIAlertController(title: "Sudoku has not Entered.".localized, message: "Please enter Sudoku.".localized, preferredStyle: .alert)
-                    let yes = UIAlertAction(title: "Yes".localized, style: .default)
+                case "Clean".localized:
+                    let alert = UIAlertController(title: "Clean Sudoku.".localized, message: "Do you want to re-enter Sudoku?".localized, preferredStyle: .alert)
+                    let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
+                        for i in 0..<81 {
+                            if let cell = self.sudokuCollectionView.cellForItem(at: IndexPath(row: i, section: 0)) as? sudokuCollectionViewCell {
+                                self.sudokuNum[i] = 0
+                                cell.importNum.text = ""
+                            }
+                        }
+                    }
+                    let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
+                    alert.addAction(no)
                     alert.addAction(yes)
                     present(alert, animated: true, completion: nil)
-                }
-            default:
-                if(selectNum != []) {
-                    guard let changeCell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell else{
-                        fatalError()
+                case "Solve".localized:
+                    if selectNum != [] {
+                        shootSolveSudoku()
+                    } else {
+                        hideIndicator()
+                        let alert = UIAlertController(title: "Sudoku has not Entered.".localized, message: "Please enter Sudoku.".localized, preferredStyle: .alert)
+                        let yes = UIAlertAction(title: "Yes".localized, style: .default)
+                        alert.addAction(yes)
+                        present(alert, animated: true, completion: nil)
                     }
-                    changeCell.importNum.text = cell.importButton.text
-                    sudokuNum[selectNum.row] = Int(changeCell.importNum.text!) ?? 0
+                default:
+                    if selectNum != [] {
+                        if let changeCell = sudokuCollectionView.cellForItem(at: selectNum) as? sudokuCollectionViewCell {
+                            changeCell.importNum.text = cell.importButton.text
+                            sudokuNum[selectNum.row] = Int(changeCell.importNum.text!) ?? 0
+                        }
+                    }
                 }
             }
         }
     }
+
 }
 
 extension importSudokuViewController: UICollectionViewDelegateFlowLayout {
