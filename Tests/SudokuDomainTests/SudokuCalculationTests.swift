@@ -2,6 +2,15 @@ import XCTest
 @testable import SudokuDomain
 
 final class SudokuCalculationTests: XCTestCase {
+    func testSudokuSolverRejectsInvalidBoard() {
+        let solver = SudokuSolver()
+        let invalidBoard = Array(repeating: Array(repeating: 1, count: 9), count: 9)
+
+        let result = solver.solve(invalidBoard)
+
+        XCTAssertEqual(result, .failure(.invalidBoard))
+    }
+
     func testInvalidFilledGridIsRejected() {
         var board = Array(repeating: Array(repeating: 1, count: 9), count: 9)
         var check = 0

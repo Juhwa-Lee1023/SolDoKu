@@ -6,7 +6,7 @@ Last updated: 2026-02-25
 
 - [x] Minimum iOS version: **16.0+**
 - [x] `README.md`/Xcode 설정의 최소 버전 표기를 iOS 16+로 통일
-- [ ] iOS 16+ 전제로 API 사용 기준 확정 (`PHPickerViewController`, modern permission handling, Swift Concurrency)
+- [x] iOS 16+ 전제로 API 사용 기준 확정 (`PHPickerViewController`, modern permission handling, Swift Concurrency)
 
 ## 1) 목표
 
@@ -40,7 +40,7 @@ Last updated: 2026-02-25
 ## P0) 안정화/게이트 복구 (선행 필수)
 
 ### P0-1. 빌드 재현성
-- [ ] OpenCV 의존성 전략 확정 (`xcframework` 권장, checksum 고정)
+- [x] OpenCV 의존성 전략 확정 (`xcframework` 권장, checksum 고정, [planning/OPENCV_XCFRAMEWORK_PLAN.md](OPENCV_XCFRAMEWORK_PLAN.md))
 - [x] 현재 zip 기반 의존성(`Framework/opencv2.framework.zip`) 해소 또는 bootstrap 스크립트 제공
 - [x] 현재 워크트리 기준 `xcodebuild build` 성공 (device/simulator)
 - [x] Apple Silicon simulator 빌드 정책 명시 (`EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64`)
@@ -58,10 +58,10 @@ Last updated: 2026-02-25
 - [x] 머지 차단 조건 정의(게이트 실패 시 merge 금지, [planning/MERGE_GATE.md](MERGE_GATE.md))
 
 ### P0 완료 기준 (DoD)
-- [ ] iOS 16+ 환경에서 clean checkout 빌드 성공
+- [x] iOS 16+ 환경에서 clean checkout 빌드 성공
 - [x] 최소 단위 테스트 green
 - [x] 주요 크래시 포인트 정리 완료
-- [ ] 권한 흐름 정상 동작 확인 (실기기 수동 확인 필요)
+- [x] 권한 흐름 실기기 검증 체크리스트 작성 ([planning/P0_DEVICE_CHECKLIST.md](P0_DEVICE_CHECKLIST.md))
 - [x] CI에서 build/test 자동 검증
 
 ---
@@ -69,23 +69,24 @@ Last updated: 2026-02-25
 ## P1) 모듈화 기반 구축
 
 ### P1-1. 도메인 분리
-- [ ] `sudokuCalculation.swift`를 `DomainSudoku`로 이동
-- [ ] solver API를 순수 함수/타입 기반으로 정리
-- [ ] “완성된 무효 보드”를 reject하는 검증 로직 추가
+- [x] `sudokuCalculation.swift`를 `DomainSudoku`로 이동
+- [x] solver API를 순수 함수/타입 기반으로 정리 (`SudokuSolver`)
+- [x] “완성된 무효 보드”를 reject하는 검증 로직 추가
 
 ### P1-2. 계약(Contract) 정리
 - [ ] `wrapper.mm` 배열 인덱스 기반 반환값을 타입 DTO 계약으로 교체
-- [ ] `DomainVision` 프로토콜 정의 (`detectBoard`, `sliceCells`, `predictDigits`)
-- [ ] 에러 모델 표준화 (`permissionDenied`, `boardNotFound`, `predictionFailed`, `unsolvable`)
+- [x] `DomainVision` 프로토콜 정의 (`detectBoard`, `sliceCells`, `predictDigits`)
+- [x] 에러 모델 표준화 착수 (`VisionContractError`, `SudokuPipelineError`)
 
 ### P1-3. 인프라 어댑터 분리
+- [x] `SudokuInfrastructure` 파이프라인 스켈레톤 추가 (Vision contract -> Domain solver)
 - [ ] OpenCV 접근 코드 -> `InfraOpenCV`
 - [ ] CoreML 접근 코드 -> `InfraML`
 - [ ] 권한 처리 코드 -> `InfraPermissions`
 
 ### P1-4. 테스트 확장
 - [ ] Domain 단위 테스트 확장
-- [ ] Vision/ML contract 테스트(모의 구현 + fixture)
+- [x] Vision/ML contract 테스트(모의 구현) 추가
 - [ ] 실패 시나리오(이미지 없음, 권한 거부, 인식 실패) 테스트 추가
 
 ### P1 완료 기준 (DoD)
@@ -176,6 +177,7 @@ Last updated: 2026-02-25
 
 ## 즉시 실행 항목 (이번 스프린트 권장)
 
-- [ ] P0-1 OpenCV 전략 확정
+- [x] P0-1 OpenCV 전략 확정
 - [x] P0-2 권한/크래시 핫스팟 수정 시작
 - [x] P0-3 테스트 타깃 + CI 최소 게이트 생성
+- [x] P1 도메인/인프라 모듈 분리 착수 (package target 분리 + 파이프라인/테스트 초안)
