@@ -92,6 +92,14 @@ final class CameraSolveViewModel: ObservableObject {
         startSolve(ignoreMinimumDigits: true, sourceImage: pendingSolveImage)
     }
 
+    func cancelSolveAndResumeCamera() {
+        invalidateSolveToken()
+        isSolving = false
+        primaryButtonMode = .shoot
+        pendingSolveImage = nil
+        configureAndStartCamera()
+    }
+
     func openSettings() {
         guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(settingURL)

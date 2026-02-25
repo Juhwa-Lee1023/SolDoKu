@@ -139,7 +139,9 @@ struct CameraSolveView: View {
                 primaryButton: .default(Text(L10n.Common.yes.localized)) {
                     viewModel.solveIgnoringMinimumDigits()
                 },
-                secondaryButton: .destructive(Text(L10n.Common.no.localized))
+                secondaryButton: .destructive(Text(L10n.Common.no.localized)) {
+                    viewModel.cancelSolveAndResumeCamera()
+                }
             )
 
         case .solveFailed:

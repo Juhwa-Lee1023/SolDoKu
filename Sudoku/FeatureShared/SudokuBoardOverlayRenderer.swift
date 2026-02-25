@@ -12,7 +12,7 @@ enum SudokuBoardOverlayRenderer {
         let cellHeight = boardSize.height / 9
 
         let renderer = UIGraphicsImageRenderer(size: boardSize)
-        return renderer.image { context in
+        return renderer.image { _ in
             image.draw(in: CGRect(origin: .zero, size: boardSize))
 
             for row in 0..<9 {
