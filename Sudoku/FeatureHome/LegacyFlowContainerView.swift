@@ -47,9 +47,7 @@ protocol LegacyFlowViewControllerBuilding {
 final class LegacyFlowViewControllerFactory: LegacyFlowViewControllerBuilding {
     func makeViewController(for flow: LegacyFlow) -> UIViewController {
         let storyboard = UIStoryboard(name: flow.storyboardName, bundle: nil)
-        let viewController = storyboard.instantiateViewController(withIdentifier: flow.storyboardIdentifier)
-        viewController.title = flow.title
-        return viewController
+        return storyboard.instantiateViewController(withIdentifier: flow.storyboardIdentifier)
     }
 }
 
