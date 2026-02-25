@@ -44,7 +44,16 @@ struct HomeView: View {
 
     @ViewBuilder
     private func flowNavigationButton(for flow: LegacyFlow) -> some View {
-        if flow.isStoryboardAvailable {
+        if flow == .manual {
+            NavigationLink {
+                ManualSolveView()
+                    .navigationTitle(flow.title.localized)
+                    .navigationBarTitleDisplayMode(.inline)
+            } label: {
+                Text(flow.title.localized)
+            }
+            .buttonStyle(DSPrimaryButtonStyle())
+        } else if flow.isStoryboardAvailable {
             NavigationLink {
                 LegacyFlowContainerView(flow: flow, factory: flowFactory)
                     .navigationTitle(flow.title.localized)
