@@ -2,9 +2,11 @@ import SwiftUI
 
 struct CameraSolveView: View {
     @StateObject private var viewModel: CameraSolveViewModel
+    @ObservedObject private var cameraManager: CameraSessionManager
 
     init(viewModel: CameraSolveViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _cameraManager = ObservedObject(wrappedValue: viewModel.cameraManager)
     }
 
     var body: some View {
@@ -63,8 +65,20 @@ struct CameraSolveView: View {
 
     private var cameraPreview: some View {
         ZStack {
-            CameraPreviewView(session: viewModel.cameraManager.session)
+            CameraPreviewView(session: cameraManager.session)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+            if viewModel.solvedImage == nil {
+                GeometryReader { geometry in
+                    CameraDetectedRectangleOverlay(
+                        corners: cameraManager.latestDetectedCorners,
+                        sourceImageSize: cameraManager.latestFrame?.size,
+                        canvasSize: geometry.size
+                    )
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .allowsHitTesting(false)
+            }
 
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .stroke(DSColor.gridBorder, lineWidth: 2)
@@ -87,6 +101,12 @@ struct CameraSolveView: View {
 
             if let solvedImage = viewModel.solvedImage {
                 Image(uiImage: solvedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .padding(8)
+            } else if let recognizedPreviewImage = viewModel.recognizedPreviewImage {
+                Image(uiImage: recognizedPreviewImage)
                     .resizable()
                     .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -151,5 +171,37 @@ struct CameraSolveView: View {
                 dismissButton: .default(Text(L10n.Common.confirm.localized))
             )
         }
+    }
+}
+
+private struct CameraDetectedRectangleOverlay: View {
+    let corners: [CGPoint]
+    let sourceImageSize: CGSize?
+    let canvasSize: CGSize
+
+    var body: some View {
+        guard corners.count >= 4,
+              let sourceImageSize,
+              sourceImageSize.width > 0,
+              sourceImageSize.height > 0 else {
+            return AnyView(EmptyView())
+        }
+
+        let scaleX = canvasSize.width / sourceImageSize.width
+        let scaleY = canvasSize.height / sourceImageSize.height
+        let scaledPoints = corners.prefix(4).map { point in
+            CGPoint(x: point.x * scaleX, y: point.y * scaleY)
+        }
+
+        return AnyView(
+            Path { path in
+                path.move(to: scaledPoints[0])
+                path.addLine(to: scaledPoints[1])
+                path.addLine(to: scaledPoints[2])
+                path.addLine(to: scaledPoints[3])
+                path.closeSubpath()
+            }
+            .stroke(Color.red, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
+        )
     }
 }

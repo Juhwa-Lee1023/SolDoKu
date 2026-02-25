@@ -2,9 +2,11 @@ import SwiftUI
 
 struct ManualSolveView: View {
     @StateObject private var viewModel: ManualSolveViewModel
+    @State private var pressedCellIndex: Int?
 
     init(viewModel: ManualSolveViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _pressedCellIndex = State(initialValue: nil)
     }
 
     var body: some View {
@@ -15,9 +17,10 @@ struct ManualSolveView: View {
                     selectedIndex: viewModel.selectedIndex,
                     highlightedIndices: viewModel.highlightedIndices,
                     conflictingIndices: viewModel.conflictingIndices,
+                    pressedIndex: pressedCellIndex,
                     onTapCell: { index in
                         if !viewModel.isSolving {
-                            viewModel.selectCell(at: index)
+                            handleCellTap(index)
                         }
                     }
                 )
@@ -104,6 +107,21 @@ struct ManualSolveView: View {
             )
         }
     }
+
+    private func handleCellTap(_ index: Int) {
+        viewModel.selectCell(at: index)
+
+        withAnimation(.easeOut(duration: 0.1)) {
+            pressedCellIndex = index
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            guard pressedCellIndex == index else { return }
+            withAnimation(.easeOut(duration: 0.1)) {
+                pressedCellIndex = nil
+            }
+        }
+    }
 }
 
 private struct ManualSudokuGrid: View {
@@ -111,6 +129,7 @@ private struct ManualSudokuGrid: View {
     let selectedIndex: Int?
     let highlightedIndices: Set<Int>
     let conflictingIndices: Set<Int>
+    let pressedIndex: Int?
     let onTapCell: (Int) -> Void
 
     var body: some View {
@@ -132,6 +151,7 @@ private struct ManualSudokuGrid: View {
                                 .background(backgroundColor(for: index))
                         }
                         .buttonStyle(.plain)
+                        .scaleEffect(pressedIndex == index ? 0.9 : 1.0)
                     }
                 }
 
