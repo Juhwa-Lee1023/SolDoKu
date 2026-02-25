@@ -7,7 +7,6 @@
 
 import UIKit
 import AVFoundation
-import CoreML
 import SnapKit
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -25,7 +24,13 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var particlePath = UIBezierPath()
     private var session: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
-    private var count: Int = 0
+    private let permissionAuthorizer: PermissionAuthorizing = SystemPermissionAuthorizer()
+    private let visionProcessor: SudokuVisionProcessing = OpenCVSudokuVisionAdapter()
+    private let boardSolver: SudokuBoardSolving = LegacySudokuBoardSolver()
+    private lazy var puzzleRecognizer: SudokuPuzzleRecognizing = SudokuPuzzleRecognizer(
+        visionProcessor: visionProcessor,
+        digitPredictor: CoreMLDigitPredictor()
+    )
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     private let solveStateQueue = DispatchQueue(label: "com.soldoku.photo.solve-state")
     private var _ignoreSolve: Bool = false
@@ -384,8 +389,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         var valueX2: Float = 0
         var valueY2: Float = 0
         
-        if let detectRect = wrapper.detectRect(capturedImage) as? [NSValue], detectRect.count >= 4 {
-            let cg = detectRect.map { $0.cgPointValue } // OpenCV로 인식한 스도쿠 영역의 좌표
+        if let cg = visionProcessor.detectCorners(in: capturedImage), cg.count >= 4 {
             valueX = Float(cg[0].x - cg[3].x)
             valueY = Float(cg[0].y - cg[1].y)
             valueX2 = Float(cg[1].x - cg[2].x)
@@ -397,11 +401,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
         // 30프레임마다 영역의 크기가 일정 이상일때 숫자 인식 모델을 통해 숫자 인식
         if period >= 30 && abs(valueX) > 100 && abs(valueY) > 100 && abs(valueX2) > 100 && abs(valueY2) > 100 {
-            if let detectRectangle = wrapper.detectRectangle(capturedImage),
-               detectRectangle.count > 1,
-               let refined = detectRectangle[1] as? UIImage {
+            if let detectedRectangle = visionProcessor.detectRectangle(in: capturedImage) {
                 DispatchQueue.global(qos: .userInitiated).async {
-                    self.recognizePresentNum(image: refined)
+                    self.recognizePresentNum(image: detectedRectangle.warpedImage)
                 }
             }
             period = 0
@@ -431,101 +433,25 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     private func recognizePresentNum(image: UIImage) {
-        // get sudoku number images
-        var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
-        if let imageSliceArray = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0),
-           let numImages = imageSliceArray.firstObject as? [UIImage] {
-            for (i, img) in numImages.enumerated() {
-                let col = i % 9
-                let row = i / 9
-                guard row < 9, col < 9 else { continue }
-
-                guard let sliceNumImage = wrapper.getNumImage(img, imageSize: 64),
-                      let numExist = (sliceNumImage.firstObject as? NSNumber)?.boolValue else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-
-                if numExist {
-                    guard let buf = img.UIImageToPixelBuffer() else {
-                        sudokuArray[row][col] = 0
-                        continue
-                    }
-                    let model = model_64()
-                    guard let predList = try? model.prediction(x: buf) else {
-                        sudokuArray[row][col] = 0
-                        continue
-                    }
-                    let predListLength = predList.y.count
-                    let doublePtr = predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
-                    let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
-                    let predArr = Array(doubleBuffer)
-                    guard let predArrMax = predArr.max(),
-                          let result = predArr.firstIndex(of: predArrMax) else {
-                        sudokuArray[row][col] = 0
-                        continue
-                    }
-                    sudokuArray[row][col] = result
-                } else {
-                    sudokuArray[row][col] = 0
-                }
-            }
+        guard let recognitionResult = puzzleRecognizer.recognizeBoard(from: image, imageSize: 64, cutOffset: 0) else {
+            return
         }
         guard let image = UIImage(named: "sudoku") else { return }
         DispatchQueue.main.async {
-            self.showPresentNum(sudokuArray, image)
+            self.showPresentNum(recognitionResult.board, image)
         }
     }
     
     private func recognizeNum(image: UIImage) {
-        // get sudoku number images
-        var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
-        var sudokuNumbersCount: Int = 0
-        guard let imageSliceArray = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0),
-              let numImages = imageSliceArray.firstObject as? [UIImage] else {
+        guard let recognitionResult = puzzleRecognizer.recognizeBoard(from: image, imageSize: 64, cutOffset: 0) else {
             DispatchQueue.main.async {
                 self.hideIndicator()
             }
             finishSolving()
             return
         }
-
-        for (i, img) in numImages.enumerated() {
-            let col = i % 9
-            let row = i / 9
-            guard row < 9, col < 9 else { continue }
-
-            guard let sliceNumImage = wrapper.getNumImage(img, imageSize: 64),
-                  let numExist = (sliceNumImage.firstObject as? NSNumber)?.boolValue else {
-                sudokuArray[row][col] = 0
-                continue
-            }
-
-            if numExist {
-                sudokuNumbersCount += 1
-                guard let buf = img.UIImageToPixelBuffer() else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-                let model = model_64()
-                guard let predList = try? model.prediction(x: buf) else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-                let predListLength = predList.y.count
-                let doublePtr = predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
-                let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
-                let predArr = Array(doubleBuffer)
-                guard let predArrMax = predArr.max(),
-                      let result = predArr.firstIndex(of: predArrMax) else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-                sudokuArray[row][col] = result
-            } else {
-                sudokuArray[row][col] = 0
-            }
-        }
+        let sudokuArray = recognitionResult.board
+        let sudokuNumbersCount = recognitionResult.recognizedCount
 
         if !ignoreSolve && sudokuNumbersCount < 17 {
             DispatchQueue.main.async {
@@ -548,11 +474,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             }
             return
         }
-        // sudoku 풀이
-        var solvedSudokuArray = sudokuArray
-        count = 0
-        let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
-        if !successCheck {
+
+        let solvedSudokuArray: [[Int]]
+        switch boardSolver.solve(board: sudokuArray, iterationLimit: 1_000_000) {
+        case .success(let solvedBoard):
+            solvedSudokuArray = solvedBoard
+        case .failure:
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Fail.".localized, message: "Take a Picture Again.".localized, preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes".localized, style: .default, handler: nil)
@@ -564,6 +491,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             }
             return
         }
+
         DispatchQueue.main.async {
             self.hideIndicator()
             self.solveShowNum(solvedSudokuArray, sudokuArray, image)
@@ -643,21 +571,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      */
     
     private func requestCameraPermission(_ completion: @escaping (Bool) -> Void) {
-        let status = AVCaptureDevice.authorizationStatus(for: .video)
-        switch status {
-        case .authorized:
-            completion(true)
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                DispatchQueue.main.async {
-                    completion(granted)
-                }
-            }
-        case .denied, .restricted:
-            completion(false)
-        @unknown default:
-            completion(false)
-        }
+        permissionAuthorizer.requestCameraAccess(completion)
     }
     
     private func AuthSettingOpen(AuthString: String) {

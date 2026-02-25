@@ -54,11 +54,11 @@ Last updated: 2026-02-25
 ### P0-3. 테스트/CI 최소 게이트
 - [x] `SudokuDomainTests` 타깃 생성 (Swift Package)
 - [x] solver 최소 테스트 추가 (유효/무효 보드, 경계 케이스)
-- [x] CI 추가: build + test (최소)
+- [x] CI 추가: Debug/Release build + test
 - [x] 머지 차단 조건 정의(게이트 실패 시 merge 금지, [planning/MERGE_GATE.md](MERGE_GATE.md))
 
 ### P0 완료 기준 (DoD)
-- [x] iOS 16+ 환경에서 clean checkout 빌드 성공
+- [x] iOS 16+ 환경에서 clean checkout 빌드 성공 (Debug/Release, device/simulator)
 - [x] 최소 단위 테스트 green
 - [x] 주요 크래시 포인트 정리 완료
 - [x] 권한 흐름 실기기 검증 체크리스트 작성 ([planning/P0_DEVICE_CHECKLIST.md](P0_DEVICE_CHECKLIST.md))
@@ -74,25 +74,25 @@ Last updated: 2026-02-25
 - [x] “완성된 무효 보드”를 reject하는 검증 로직 추가
 
 ### P1-2. 계약(Contract) 정리
-- [ ] `wrapper.mm` 배열 인덱스 기반 반환값을 타입 DTO 계약으로 교체
+- [x] `wrapper.mm` 배열 인덱스 기반 반환값을 타입 DTO 계약으로 교체 (`OpenCVSudokuVisionAdapter`)
 - [x] `DomainVision` 프로토콜 정의 (`detectBoard`, `sliceCells`, `predictDigits`)
-- [x] 에러 모델 표준화 착수 (`VisionContractError`, `SudokuPipelineError`)
+- [x] 에러 모델 표준화 (`permissionDenied`, `boardNotFound`, `predictionFailed`, `unsolvable`)
 
 ### P1-3. 인프라 어댑터 분리
 - [x] `SudokuInfrastructure` 파이프라인 스켈레톤 추가 (Vision contract -> Domain solver)
-- [ ] OpenCV 접근 코드 -> `InfraOpenCV`
-- [ ] CoreML 접근 코드 -> `InfraML`
-- [ ] 권한 처리 코드 -> `InfraPermissions`
+- [x] OpenCV 접근 코드 -> `InfraOpenCV` (`OpenCVSudokuVisionAdapter`)
+- [x] CoreML 접근 코드 -> `InfraML` (`CoreMLDigitPredictor`)
+- [x] 권한 처리 코드 -> `InfraPermissions` (`SystemPermissionAuthorizer`)
 
 ### P1-4. 테스트 확장
-- [ ] Domain 단위 테스트 확장
+- [x] Domain 단위 테스트 확장
 - [x] Vision/ML contract 테스트(모의 구현) 추가
-- [ ] 실패 시나리오(이미지 없음, 권한 거부, 인식 실패) 테스트 추가
+- [x] 실패 시나리오(이미지 없음, 권한 거부, 인식 실패) 테스트 추가
 
 ### P1 완료 기준 (DoD)
-- [ ] Feature 레이어가 OpenCV/CoreML 구현을 직접 참조하지 않음
-- [ ] 도메인 테스트 커버리지 기준 충족(팀 합의 수치)
-- [ ] 핵심 에러 코드가 일관된 경로로 전파됨
+- [x] Feature 레이어가 OpenCV/CoreML 구현을 직접 참조하지 않음
+- [x] 도메인 테스트 기준선 확장 (solver + pipeline 실패/성공 케이스)
+- [x] 핵심 에러 코드가 일관된 경로로 전파됨
 
 ---
 

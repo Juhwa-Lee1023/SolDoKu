@@ -3,8 +3,10 @@ import DomainVision
 import SudokuDomain
 
 public enum SudokuPipelineError: Error, Equatable {
+    case permissionDenied
     case invalidImage
     case boardNotFound
+    case predictionFailed
     case invalidCellCount(expected: Int, actual: Int)
     case invalidPredictionCount(expected: Int, actual: Int)
     case insufficientDigits(minimum: Int, actual: Int)
@@ -92,12 +94,14 @@ public struct SudokuImageSolvePipeline {
         }
 
         switch contractError {
+        case .permissionDenied:
+            return .permissionDenied
         case .invalidImage:
             return .invalidImage
         case .boardNotFound:
             return .boardNotFound
         case .predictionFailed:
-            return .processingFailed("predictionFailed")
+            return .predictionFailed
         case .unexpected(let message):
             return .processingFailed(message)
         }

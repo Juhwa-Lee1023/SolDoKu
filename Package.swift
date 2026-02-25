@@ -49,7 +49,10 @@ let package = Package(
                 "SudokuInfrastructure",
                 "DomainVision",
             ],
-            path: "Tests/SudokuInfrastructureTests"
+            path: "Tests/SudokuInfrastructureTests",
+            resources: [
+                .process("Fixtures"),
+            ]
         ),
     ]
 )

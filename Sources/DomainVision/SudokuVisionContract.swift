@@ -21,6 +21,7 @@ public struct SudokuBoardDetection: Equatable {
 }
 
 public enum VisionContractError: Error, Equatable {
+    case permissionDenied
     case invalidImage
     case boardNotFound
     case predictionFailed
