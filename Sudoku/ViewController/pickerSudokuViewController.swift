@@ -8,6 +8,7 @@ import UIKit
 import AVFoundation
 import CoreML
 import Photos
+import SnapKit
 
 class pickerSudokuViewController: UIViewController {
     
@@ -24,6 +25,12 @@ class pickerSudokuViewController: UIViewController {
     private let picker = UIImagePickerController()
     private var ignoreSolve: Bool = false
     private let bounds = UIScreen.main.bounds
+
+    private func runSudokuSolvingTask(_ task: @escaping () -> Void) {
+        sudokuSolvingWorkItem = DispatchWorkItem(block: task)
+        guard let workItem = sudokuSolvingWorkItem else { return }
+        DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,19 +45,21 @@ class pickerSudokuViewController: UIViewController {
     @IBAction func shootPhotoPicker(_ sender: UIButton) {
         let alert = UIAlertController(title: "Select".localized, message: nil, preferredStyle: .actionSheet)
         let library = UIAlertAction(title: "Album".localized, style: .default) { _ in
-            if self.PhotoAuth() {
-                self.openLibrary()
-            }
-            else {
-                self.AuthSettingOpen(AuthString: "Album")
+            self.requestPhotoPermission { granted in
+                if granted {
+                    self.openLibrary()
+                } else {
+                    self.AuthSettingOpen(AuthString: "Album")
+                }
             }
         }
         let camera = UIAlertAction(title: "Camera".localized, style: .default) { _ in
-            if self.CameraAuth() {
-                self.openCamera()
-            }
-            else {
-                self.AuthSettingOpen(AuthString: "Camera")
+            self.requestCameraPermission { granted in
+                if granted {
+                    self.openCamera()
+                } else {
+                    self.AuthSettingOpen(AuthString: "Camera")
+                }
             }
         }
         let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
@@ -65,18 +74,17 @@ class pickerSudokuViewController: UIViewController {
     @IBAction func shootSolSudoku(_ sender: Any) {
         if pickerImage.image != nil {
             showIndicator()
-            sudokuSolvingWorkItem = DispatchWorkItem(block: self.sudokuSolvingQueue)
-            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
+            runSudokuSolvingTask(self.sudokuSolvingQueue)
         } else {
             let alert = UIAlertController(title: "Picture hasn't been Uploaded.".localized, message: "Want to Upload a Picture?".localized, preferredStyle: .alert)
             let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
-                if self.PhotoAuth() {
-                    self.openLibrary()
+                self.requestPhotoPermission { granted in
+                    if granted {
+                        self.openLibrary()
+                    } else {
+                        self.AuthSettingOpen(AuthString: "Album")
+                    }
                 }
-                else {
-                    self.AuthSettingOpen(AuthString: "Album")
-                }
-                    
             }
             let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
             alert.addAction(no)
@@ -157,86 +165,119 @@ class pickerSudokuViewController: UIViewController {
     }
     
     private func sudokuSolvingQueue() {
-        self.recognizeNum(image: pickerImage.image!)
+        guard let image = pickerImage.image else {
+            DispatchQueue.main.async {
+                self.hideIndicator()
+            }
+            return
+        }
+        self.recognizeNum(image: image)
     }
     
     private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
         var sudokuNumbersCount: Int = 0
-        if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
-            let numImages = UIImgaeSliceArr[0] as! NSArray
-            for i in 0..<numImages.count {
-                let numimg = numImages[i]
-                let col = i % 9
-                let row = Int(i / 9)
-                let img = numimg as! UIImage
-                if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
-                    // 숫자가 있으면 true, 없으면 false 이다
-                    let numExist = (sliceNumImage[0] as! NSNumber).boolValue
-                    if numExist == true {
-                        // 숫자가 존재 하는 경우 처리
-                        sudokuNumbersCount += 1
-                        guard let buf = img.UIImageToPixelBuffer() else { return }
-                        
-                        let model = model_64()
-                        guard let predList = try? model.prediction(x: buf) else {
-                            break
-                        }
-                        let predListLength = predList.y.count
-                        let doublePtr =  predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
-                        let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
-                        let predArr = Array(doubleBuffer)
-                        let predArrMax = predArr.max()
-                        let result = predArr.firstIndex(of: predArrMax!)
-                        
-                        sudokuArray[row][col] = result ?? 0
-                    } else {
-                        sudokuArray[row][col] = 0
-                    }
-                } else {
-                    sudokuArray[row][col] = 0
-                }
+        guard let imageSliceArray = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0),
+              let numImages = imageSliceArray.firstObject as? [UIImage] else {
+            DispatchQueue.main.async {
+                self.hideIndicator()
+                self.ignoreSolve = false
             }
-            
-            if !ignoreSolve {
-                if sudokuNumbersCount < 17 {
-                    let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
-                    let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
-                        self.hideIndicator()
-                        self.ignoreSolve.toggle()
+            return
+        }
+
+        for (i, img) in numImages.enumerated() {
+            let col = i % 9
+            let row = i / 9
+            guard row < 9, col < 9 else { continue }
+
+            guard let sliceNumImage = wrapper.getNumImage(img, imageSize: 64),
+                  let numExist = (sliceNumImage.firstObject as? NSNumber)?.boolValue else {
+                sudokuArray[row][col] = 0
+                continue
+            }
+
+            if numExist {
+                sudokuNumbersCount += 1
+                guard let buf = img.UIImageToPixelBuffer() else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+
+                let model = model_64()
+                guard let predList = try? model.prediction(x: buf) else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+
+                let predListLength = predList.y.count
+                let doublePtr = predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
+                let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
+                let predArr = Array(doubleBuffer)
+
+                guard let predArrMax = predArr.max(),
+                      let result = predArr.firstIndex(of: predArrMax) else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+
+                sudokuArray[row][col] = result
+            } else {
+                sudokuArray[row][col] = 0
+            }
+        }
+
+        if !ignoreSolve && sudokuNumbersCount < 17 {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
+                    self.hideIndicator()
+                    self.ignoreSolve = true
+                    self.runSudokuSolvingTask {
                         self.recognizeNum(image: image)
                     }
-                    let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
-                        self.hideIndicator()
-                    }
-                    alert.addAction(no)
-                    alert.addAction(yes)
-                    present(alert, animated: true, completion: nil)
-                    return
                 }
+                let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
+                    self.hideIndicator()
+                    self.ignoreSolve = false
+                }
+                alert.addAction(no)
+                alert.addAction(yes)
+                self.present(alert, animated: true, completion: nil)
             }
-            
-            // sudoku 풀이
-            var solvedSudokuArray = sudokuArray
-            count = 0
-            let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
-            if !successCheck {
+            return
+        }
+
+        // sudoku 풀이
+        var solvedSudokuArray = sudokuArray
+        count = 0
+        let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
+        if !successCheck {
+            DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Cannot solve Sudoku.".localized, message: "Upload another Picture?".localized, preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
-                    self.openLibrary()
+                    self.requestPhotoPermission { granted in
+                        if granted {
+                            self.openLibrary()
+                        } else {
+                            self.AuthSettingOpen(AuthString: "Album")
+                        }
+                    }
                 }
                 let no = UIAlertAction(title: "No".localized, style: .destructive, handler: nil)
                 alert.addAction(no)
                 alert.addAction(yes)
-                present(alert, animated: true, completion: nil)
-                hideIndicator()
-                return
+                self.present(alert, animated: true, completion: nil)
+                self.hideIndicator()
+                self.ignoreSolve = false
             }
-            hideIndicator()
-            // 풀어진 sudoku 표시
-            showNum(solvedSudokuArray, sudokuArray, image)
-            ignoreSolve.toggle()
+            return
+        }
+        DispatchQueue.main.async {
+            self.hideIndicator()
+            self.showNum(solvedSudokuArray, sudokuArray, image)
+            self.ignoreSolve = false
         }
     }
 
@@ -258,8 +299,9 @@ class pickerSudokuViewController: UIViewController {
                     fontColor = UIColor.sudokuColor(.sudokuEmpty)
                 }
                 let num = String(sudoku[row][col])
+                let font = UIFont(name: "Helvetica", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize)
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Helvetica", size: fontSize)!,
+                    NSAttributedString.Key.font: font,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
@@ -285,14 +327,21 @@ class pickerSudokuViewController: UIViewController {
 
 extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private func openLibrary() {
-        picker.sourceType = .photoLibrary
-        
-        self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            self.picker.sourceType = .photoLibrary
+            self.present(self.picker, animated: true, completion: nil)
+        }
     }
     
     private func openCamera() {
-        picker.sourceType = .camera
-        self.present(picker, animated: true, completion: nil)
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            AuthSettingOpen(AuthString: "Camera")
+            return
+        }
+        DispatchQueue.main.async {
+            self.picker.sourceType = .camera
+            self.present(self.picker, animated: true, completion: nil)
+        }
     }
     
     internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -302,57 +351,84 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
         }
         let fixOrientationImage = image.fixOrientation()
         
-        if let detectRectangle = wrapper.detectRectangle(fixOrientationImage) {
-            pickerImage.image = detectRectangle[1] as? UIImage
+        if let detectRectangle = wrapper.detectRectangle(fixOrientationImage),
+           detectRectangle.count > 1,
+           let refinedImage = detectRectangle[1] as? UIImage {
+            pickerImage.image = refinedImage
         }
         picker.dismiss(animated: true)
     }
     
-    func PhotoAuth() -> Bool {
-        // 포토 라이브러리 접근 권한
-        let authorizationStatus = PHPhotoLibrary.authorizationStatus()
-        
-        var isAuth = false
-        
+    private func requestPhotoPermission(_ completion: @escaping (Bool) -> Void) {
+        let authorizationStatus: PHAuthorizationStatus
+        if #available(iOS 14, *) {
+            authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        } else {
+            authorizationStatus = PHPhotoLibrary.authorizationStatus()
+        }
+
         switch authorizationStatus {
-        case .authorized: return true // 사용자가 앱에 사진 라이브러리에 대한 액세스 권한을 명시 적으로 부여했습니다.
-        case .denied: break // 사용자가 사진 라이브러리에 대한 앱 액세스를 명시 적으로 거부했습니다.
-        case .limited: break // ?
-        case .notDetermined: // 사진 라이브러리 액세스에는 명시적인 사용자 권한이 필요하지만 사용자가 아직 이러한 권한을 부여하거나 거부하지 않았습니다
-            PHPhotoLibrary.requestAuthorization { (state) in
-                if state == .authorized {
-                    isAuth = true
+        case .authorized, .limited:
+            completion(true)
+        case .notDetermined:
+            if #available(iOS 14, *) {
+                PHPhotoLibrary.requestAuthorization(for: .readWrite) { state in
+                    DispatchQueue.main.async {
+                        completion(state == .authorized || state == .limited)
+                    }
+                }
+            } else {
+                PHPhotoLibrary.requestAuthorization { state in
+                    DispatchQueue.main.async {
+                        completion(state == .authorized)
+                    }
                 }
             }
-            return isAuth
-        case .restricted: break // 앱이 사진 라이브러리에 액세스 할 수있는 권한이 없으며 사용자는 이러한 권한을 부여 할 수 없습니다.
-        default: break
+        case .denied, .restricted:
+            completion(false)
+        @unknown default:
+            completion(false)
         }
-        
-        return false;
     }
     
-    func CameraAuth() -> Bool {
-        return AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.authorized
+    private func requestCameraPermission(_ completion: @escaping (Bool) -> Void) {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch status {
+        case .authorized:
+            completion(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    completion(granted)
+                }
+            }
+        case .denied, .restricted:
+            completion(false)
+        @unknown default:
+            completion(false)
+        }
     }
     
     
     func AuthSettingOpen(AuthString: String) {
-        if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
-            let message = "Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?".localized
-            let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
-            
-            let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in
-                
-            }
-            let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { (UIAlertAction) in
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-            }
-            alert.addAction(cancle)
-            alert.addAction(confirm)
-            
+        let message: String
+        if AuthString == "Camera" {
+            message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
+        } else {
+            message = "Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?".localized
+        }
+
+        let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
+        let cancle = UIAlertAction(title: "Cancel".localized, style: .default)
+        let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
+            guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            UIApplication.shared.open(settingURL)
+        }
+        alert.addAction(cancle)
+        alert.addAction(confirm)
+
+        DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
     }
 }
-
