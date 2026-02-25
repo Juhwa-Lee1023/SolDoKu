@@ -32,7 +32,25 @@
 
 ### 🛠 Development Environment
 
-<img width="77" alt="스크린샷 2021-11-19 오후 3 52 02" src="https://img.shields.io/badge/iOS-15.0+-silver"> <img width="95" alt="스크린샷 2021-11-19 오후 3 52 02" src="https://img.shields.io/badge/Xcode-13.3-blue">
+<img width="77" alt="iOS badge" src="https://img.shields.io/badge/iOS-16.0+-silver"> <img width="95" alt="Xcode badge" src="https://img.shields.io/badge/Xcode-15.0+-blue">
+
+## 개발 시작 (P0 Bootstrap)
+
+### 필수 요구사항
+* iOS 16.0+
+* Xcode 15.0+
+* git-lfs
+
+### 최초 실행
+```bash
+cd "$(git rev-parse --show-toplevel)"
+./scripts/bootstrap_opencv.sh
+xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+swift test
+```
+
+> 참고: 현재 OpenCV 프레임워크 제약으로 시뮬레이터 빌드는 `x86_64` 아키텍처로 수행되도록 `EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64` 설정이 적용되어 있습니다.
 
 
 ## 기술적 도전

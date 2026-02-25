@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import CoreML
+import SnapKit
 
 final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
@@ -26,15 +27,49 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var count: Int = 0
     private var sudokuSolvingWorkItem: DispatchWorkItem?
-    private var ignoreSolve: Bool = false
+    private let solveStateQueue = DispatchQueue(label: "com.soldoku.photo.solve-state")
+    private var _ignoreSolve: Bool = false
+    private var _isSolving: Bool = false
+    private var ignoreSolve: Bool {
+        get { solveStateQueue.sync { _ignoreSolve } }
+        set { solveStateQueue.sync { _ignoreSolve = newValue } }
+    }
+    private var isSolving: Bool {
+        solveStateQueue.sync { _isSolving }
+    }
     private let bounds = UIScreen.main.bounds
+
+    private func runSudokuSolvingTask(_ task: @escaping () -> Void) {
+        sudokuSolvingWorkItem = DispatchWorkItem(block: task)
+        guard let workItem = sudokuSolvingWorkItem else { return }
+        DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
+    }
+
+    @discardableResult
+    private func beginSolvingIfPossible() -> Bool {
+        solveStateQueue.sync {
+            if _isSolving {
+                return false
+            }
+            _isSolving = true
+            return true
+        }
+    }
+
+    private func finishSolving() {
+        solveStateQueue.sync {
+            _isSolving = false
+            _ignoreSolve = false
+        }
+        DispatchQueue.main.async {
+            self.shooting.isEnabled = true
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.tintColor = .black
         hideIndicator()
-        preparedSession()
-        session?.startRunning()
         shooting.layer.cornerRadius = 10
         setButton()
         refinedView.image = UIImage(named: "sudoku")
@@ -44,25 +79,35 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if !self.CameraAuth() {
-            self.AuthSettingOpen(AuthString: "Camera")
+        requestCameraPermission { granted in
+            guard granted else {
+                self.AuthSettingOpen(AuthString: "Camera")
+                return
+            }
+            self.preparedSession()
+            self.cameraStart()
         }
     }
     
     @IBAction func shootingAction(_ sender: Any) {
+        if isSolving { return }
+
         if shooting.titleLabel?.text == "Shoot Again".localized {
             refinedView.image = UIImage(named: "sudoku")
             cameraStart()
             shooting.setTitle("Shooting Sudoku".localized, for: .normal)
         } else {
-            sudokuSolvingWorkItem = DispatchWorkItem(block: sudokuSolvingQueue)
-            DispatchQueue.main.async(execute: sudokuSolvingWorkItem!)
+            guard beginSolvingIfPossible() else { return }
+            shooting.isEnabled = false
+            runSudokuSolvingTask(sudokuSolvingQueue)
             cameraStop()
             shooting.setTitle("Shoot Again".localized, for: .normal)
         }
     }
     
     @objc func imageTapped(sender: UITapGestureRecognizer) {
+        if isSolving { return }
+
         if shooting.titleLabel?.text == "Shoot Again".localized {
             refinedView.image = UIImage(named: "sudoku")
             session?.startRunning()
@@ -208,11 +253,23 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     private func sudokuSolvingQueue() {
-        self.recognizeNum(image: refinedView.image!)
+        guard let image = refinedView.image else {
+            DispatchQueue.main.async {
+                self.hideIndicator()
+            }
+            finishSolving()
+            return
+        }
+        self.recognizeNum(image: image)
     }
     
     private func cameraStart(){
-        session?.startRunning()
+        if session == nil {
+            preparedSession()
+        }
+        if session?.isRunning == false {
+            session?.startRunning()
+        }
     }
     
     private func cameraStop(){
@@ -222,9 +279,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     private func preparedSession() {
-        let camera = AVCaptureDevice.default(for: AVMediaType.video)
+        if session != nil { return }
+        guard let camera = AVCaptureDevice.default(for: AVMediaType.video) else {
+            return
+        }
         do {
-            let cameraInput = try AVCaptureDeviceInput(device: camera!)
+            let cameraInput = try AVCaptureDeviceInput(device: camera)
             
             session = AVCaptureSession()
             session?.sessionPreset = AVCaptureSession.Preset.hd1280x720
@@ -237,20 +297,23 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
              */
             
             //픽셀버퍼 핸들링을 용이하게 하기위해 BGRA타입으로 변환
-            videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: NSNumber(value: kCVPixelFormatType_32BGRA)]
+            videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: NSNumber(value: kCVPixelFormatType_32BGRA)]
             
             let sessionQueue = DispatchQueue(label: "camera")
             videoOutput.setSampleBufferDelegate(self, queue: sessionQueue)
             session?.addOutput(videoOutput)
             
-            previewLayer = AVCaptureVideoPreviewLayer(session: session!)
+            guard let captureSession = session else { return }
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
             
             previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
             previewLayer?.frame = cameraView.bounds
-            cameraView.layer.addSublayer(previewLayer!)
+            if let previewLayer {
+                cameraView.layer.addSublayer(previewLayer)
+            }
         } catch {
-            
+            return
         }
     }
     
@@ -275,8 +338,11 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
          CVPixelBufferLockBaseAddress:
          https://developer.apple.com/documentation/corevideo/1457128-cvpixelbufferlockbaseaddress
          픽셀의 주소를 고정시켜준다.
-         */
+        */
         CVPixelBufferLockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
+        defer {
+            CVPixelBufferUnlockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
+        }
         //이미지의 넓이 구하기
         let width = CVPixelBufferGetWidth(CVimageBuffer)
         let height = CVPixelBufferGetHeight(CVimageBuffer)
@@ -297,20 +363,18 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         let bitmap = CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
         let context = CGContext(data: imageAddress, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesRow, space:  colorSpace, bitmapInfo: bitmap)
         if let newContext = context {
-            let frame = newContext.makeImage()
+            guard let frame = newContext.makeImage() else { return }
             DispatchQueue.main.async {
-                let img = UIImage(cgImage: frame!)
+                let img = UIImage(cgImage: frame)
                 // crop
                 let w = img.size.width
                 let y = (img.size.height - w) / 2
                 let rect = CGRect(x: 0, y: y, width: w, height: w)
-                let imgCrop = img.cgImage?.cropping(to: rect)
-                let refinedImage = UIImage(cgImage: imgCrop!)
+                guard let imgCrop = img.cgImage?.cropping(to: rect) else { return }
+                let refinedImage = UIImage(cgImage: imgCrop)
                 self.toRefinedView(refinedImage)
             }
         }
-        //사용했던 픽셀 주소의 고정을 풀고 재사용이 가능하도록 한다.
-        CVPixelBufferUnlockBaseAddress(CVimageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
     }
     
     private func toRefinedView(_ capturedImage: UIImage) {
@@ -320,8 +384,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         var valueX2: Float = 0
         var valueY2: Float = 0
         
-        if let detectRect = wrapper.detectRect(capturedImage){
-            let cg: [CGPoint] = detectRect as! [CGPoint] // OpenCV로 인식한 스도쿠 영역의 좌표
+        if let detectRect = wrapper.detectRect(capturedImage) as? [NSValue], detectRect.count >= 4 {
+            let cg = detectRect.map { $0.cgPointValue } // OpenCV로 인식한 스도쿠 영역의 좌표
             valueX = Float(cg[0].x - cg[3].x)
             valueY = Float(cg[0].y - cg[1].y)
             valueX2 = Float(cg[1].x - cg[2].x)
@@ -333,8 +397,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         
         // 30프레임마다 영역의 크기가 일정 이상일때 숫자 인식 모델을 통해 숫자 인식
         if period >= 30 && abs(valueX) > 100 && abs(valueY) > 100 && abs(valueX2) > 100 && abs(valueY2) > 100 {
-            if let detectRectangle = wrapper.detectRectangle(capturedImage) {
-                recognizePresentNum(image: detectRectangle[1] as! UIImage)
+            if let detectRectangle = wrapper.detectRectangle(capturedImage),
+               detectRectangle.count > 1,
+               let refined = detectRectangle[1] as? UIImage {
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.recognizePresentNum(image: refined)
+                }
             }
             period = 0
         }
@@ -365,117 +433,144 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private func recognizePresentNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
-        if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
-            let numImages = UIImgaeSliceArr[0] as! NSArray
-            for i in 0..<numImages.count {
-                let numImg = numImages[i]
+        if let imageSliceArray = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0),
+           let numImages = imageSliceArray.firstObject as? [UIImage] {
+            for (i, img) in numImages.enumerated() {
                 let col = i % 9
-                let row = Int(i / 9)
-                let img = numImg as! UIImage
-                if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
-                    // r3[0]는 64x64 크기의 이미지 내에 숫자가 있으면 true, 없으면 false 이다
-                    let numExist = (sliceNumImage[0] as! NSNumber).boolValue
-                    if numExist == true {
-                        // 숫자가 존재 하는 경우 처리
-                        guard let buf = img.UIImageToPixelBuffer() else { return }
-                        let model = model_64()
-                        guard let predList = try? model.prediction(x: buf) else {
-                            break
-                        }
-                        let predListLength = predList.y.count
-                        let doublePtr =  predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
-                        let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
-                        let predArr = Array(doubleBuffer)
-                        let predArrMax = predArr.max()
-                        let result = predArr.firstIndex(of: predArrMax!)
-                        sudokuArray[row][col] = result ?? 0
-                    } else {
+                let row = i / 9
+                guard row < 9, col < 9 else { continue }
+
+                guard let sliceNumImage = wrapper.getNumImage(img, imageSize: 64),
+                      let numExist = (sliceNumImage.firstObject as? NSNumber)?.boolValue else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+
+                if numExist {
+                    guard let buf = img.UIImageToPixelBuffer() else {
                         sudokuArray[row][col] = 0
+                        continue
                     }
+                    let model = model_64()
+                    guard let predList = try? model.prediction(x: buf) else {
+                        sudokuArray[row][col] = 0
+                        continue
+                    }
+                    let predListLength = predList.y.count
+                    let doublePtr = predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
+                    let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
+                    let predArr = Array(doubleBuffer)
+                    guard let predArrMax = predArr.max(),
+                          let result = predArr.firstIndex(of: predArrMax) else {
+                        sudokuArray[row][col] = 0
+                        continue
+                    }
+                    sudokuArray[row][col] = result
                 } else {
                     sudokuArray[row][col] = 0
                 }
             }
         }
         guard let image = UIImage(named: "sudoku") else { return }
-        showPresentNum(sudokuArray, image)
+        DispatchQueue.main.async {
+            self.showPresentNum(sudokuArray, image)
+        }
     }
     
     private func recognizeNum(image: UIImage) {
         // get sudoku number images
         var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
         var sudokuNumbersCount: Int = 0
-        if let UIImgaeSliceArr = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0) {
-            let numImages = UIImgaeSliceArr[0] as! NSArray
-            for i in 0..<numImages.count {
-                let numImg = numImages[i]
-                let col = i % 9
-                let row = Int(i / 9)
-                let img = numImg as! UIImage
-                if let sliceNumImage = wrapper.getNumImage(img, imageSize: 64) {
-                    // 이미지 내에 숫자가 있으면 true, 없으면 false 이다
-                    let numExist = (sliceNumImage[0] as! NSNumber).boolValue
-                    if numExist == true {
-                        // 숫자가 존재 하는 경우 처리
-                        sudokuNumbersCount += 1
-                        guard let buf = img.UIImageToPixelBuffer() else { return }
-                        let model = model_64()
-                        guard let predList = try? model.prediction(x: buf) else {
-                            break
-                        }
-                        let predListLength = predList.y.count
-                        let doublePtr =  predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
-                        let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
-                        let predArr = Array(doubleBuffer)
-                        let predArrMax = predArr.max()
-                        let result = predArr.firstIndex(of: predArrMax!)
-                        sudokuArray[row][col] = result ?? 0
-                    } else {
-                        sudokuArray[row][col] = 0
-                    }
-                } else {
-                    sudokuArray[row][col] = 0
-                }
+        guard let imageSliceArray = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0),
+              let numImages = imageSliceArray.firstObject as? [UIImage] else {
+            DispatchQueue.main.async {
+                self.hideIndicator()
             }
-            if !ignoreSolve {
-                if sudokuNumbersCount < 17 {
-                    let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
-                    let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
-                        self.hideIndicator()
-                        self.ignoreSolve.toggle()
+            finishSolving()
+            return
+        }
+
+        for (i, img) in numImages.enumerated() {
+            let col = i % 9
+            let row = i / 9
+            guard row < 9, col < 9 else { continue }
+
+            guard let sliceNumImage = wrapper.getNumImage(img, imageSize: 64),
+                  let numExist = (sliceNumImage.firstObject as? NSNumber)?.boolValue else {
+                sudokuArray[row][col] = 0
+                continue
+            }
+
+            if numExist {
+                sudokuNumbersCount += 1
+                guard let buf = img.UIImageToPixelBuffer() else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+                let model = model_64()
+                guard let predList = try? model.prediction(x: buf) else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+                let predListLength = predList.y.count
+                let doublePtr = predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
+                let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
+                let predArr = Array(doubleBuffer)
+                guard let predArrMax = predArr.max(),
+                      let result = predArr.firstIndex(of: predArrMax) else {
+                    sudokuArray[row][col] = 0
+                    continue
+                }
+                sudokuArray[row][col] = result
+            } else {
+                sudokuArray[row][col] = 0
+            }
+        }
+
+        if !ignoreSolve && sudokuNumbersCount < 17 {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Really want to Solve?".localized, message: "Sudoku Solve requires more than 17 numbers.".localized, preferredStyle: .alert)
+                let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
+                    self.hideIndicator()
+                    self.ignoreSolve = true
+                    self.runSudokuSolvingTask {
                         self.recognizeNum(image: image)
                     }
-                    let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
-                        self.hideIndicator()
-                        self.shooting.setTitle("Shooting Sudoku".localized, for: .normal)
-                    }
-                    alert.addAction(no)
-                    alert.addAction(yes)
-                    present(alert, animated: true, completion: nil)
-                    return
                 }
+                let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
+                    self.hideIndicator()
+                    self.shooting.setTitle("Shooting Sudoku".localized, for: .normal)
+                    self.finishSolving()
+                }
+                alert.addAction(no)
+                alert.addAction(yes)
+                self.present(alert, animated: true, completion: nil)
             }
-            // sudoku 풀이
-            
-            var solvedSudokuArray = sudokuArray
-            count = 0
-            let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
-            if !successCheck {
+            return
+        }
+        // sudoku 풀이
+        var solvedSudokuArray = sudokuArray
+        count = 0
+        let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
+        if !successCheck {
+            DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Fail.".localized, message: "Take a Picture Again.".localized, preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes".localized, style: .default, handler: nil)
                 alert.addAction(yes)
-                present(alert, animated: true, completion: nil)
-                session?.startRunning()
-                hideIndicator()
-                return
+                self.present(alert, animated: true, completion: nil)
+                self.session?.startRunning()
+                self.hideIndicator()
+                self.finishSolving()
             }
-            hideIndicator()
-            // 풀어진 sudoku 표시
-            solveShowNum(solvedSudokuArray, sudokuArray, image)
-            ignoreSolve.toggle()
+            return
+        }
+        DispatchQueue.main.async {
+            self.hideIndicator()
+            self.solveShowNum(solvedSudokuArray, sudokuArray, image)
+            self.finishSolving()
         }
     }
-    
+
     private func showPresentNum(_ sudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
@@ -494,8 +589,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                     fontColor = UIColor.sudokuColor(.sudokuEmpty)
                 }
                 let num = String(sudoku[row][col])
+                let font = UIFont(name: "Helvetica", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize)
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Helvetica", size: fontSize)!,
+                    NSAttributedString.Key.font: font,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
@@ -526,8 +622,9 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                     fontColor = UIColor.sudokuColor(.sudokuEmpty)
                 }
                 let num = String(sudoku[row][col])
+                let font = UIFont(name: "Helvetica", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize)
                 let textFontAttributes = [
-                    NSAttributedString.Key.font: UIFont(name: "Helvetica", size: fontSize)!,
+                    NSAttributedString.Key.font: font,
                     NSAttributedString.Key.foregroundColor: fontColor,
                 ] as [NSAttributedString.Key : Any]
                 let numSize = num.size(withAttributes: textFontAttributes)
@@ -545,26 +642,38 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
      참고
      */
     
-    func CameraAuth() -> Bool {
-        return AVCaptureDevice.authorizationStatus(for: .video) == AVAuthorizationStatus.authorized
+    private func requestCameraPermission(_ completion: @escaping (Bool) -> Void) {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch status {
+        case .authorized:
+            completion(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    completion(granted)
+                }
+            }
+        case .denied, .restricted:
+            completion(false)
+        @unknown default:
+            completion(false)
+        }
     }
     
     private func AuthSettingOpen(AuthString: String) {
-        if !CameraAuth(){
-            if let AppName = Bundle.main.infoDictionary!["CFBundleName"] as? String {
-                let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
-                let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
-                
-                let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in }
-                let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { (UIAlertAction) in
-                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
-                }
-                alert.addAction(cancle)
-                alert.addAction(confirm)
-                
-                self.present(alert, animated: true, completion: nil)
-            }
+        let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
+        let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
+
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .default) { _ in }
+        let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
+            guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            UIApplication.shared.open(settingURL)
+        }
+        alert.addAction(cancel)
+        alert.addAction(confirm)
+
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }
-

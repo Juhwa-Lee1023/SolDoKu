@@ -16,15 +16,18 @@ extension UIImage {
         let attrs = [kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue, kCVPixelBufferCGBitmapContextCompatibilityKey: kCFBooleanTrue] as CFDictionary
         var pixelBuffer: CVPixelBuffer?
         let status = CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32ARGB, attrs, &pixelBuffer)
-        guard status == kCVReturnSuccess else {
+        guard status == kCVReturnSuccess, let pixelBuffer else {
             return nil
         }
         
-        CVPixelBufferLockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
-        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer!)
+        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        defer {
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+        }
+        let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer)
         
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        guard let context = CGContext(data: pixelData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer!), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else {
+        guard let context = CGContext(data: pixelData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer), space: rgbColorSpace, bitmapInfo: CGImageAlphaInfo.noneSkipFirst.rawValue) else {
             return nil
         }
         
@@ -34,7 +37,6 @@ extension UIImage {
         UIGraphicsPushContext(context)
         self.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
         UIGraphicsPopContext()
-        CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
         
         return pixelBuffer
     }
@@ -70,10 +72,20 @@ extension UIImage {
         }
         
         // 이미지 변환용 값 선언
-        let cgValue: CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height),
-                                           bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0,
-                                           space: self.cgImage!.colorSpace!,
-                                           bitmapInfo: self.cgImage!.bitmapInfo.rawValue)!
+        guard let cgImage = self.cgImage, let colorSpace = cgImage.colorSpace else {
+            return self
+        }
+        guard let cgValue: CGContext = CGContext(
+            data: nil,
+            width: Int(self.size.width),
+            height: Int(self.size.height),
+            bitsPerComponent: cgImage.bitsPerComponent,
+            bytesPerRow: 0,
+            space: colorSpace,
+            bitmapInfo: cgImage.bitmapInfo.rawValue
+        ) else {
+            return self
+        }
 
         cgValue.concatenate(transform)
         
@@ -81,11 +93,12 @@ extension UIImage {
              self.imageOrientation == UIImage.Orientation.leftMirrored ||
              self.imageOrientation == UIImage.Orientation.right ||
              self.imageOrientation == UIImage.Orientation.rightMirrored ) {
-            cgValue.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
+            cgValue.draw(cgImage, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
         } else {
-            cgValue.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+            cgValue.draw(cgImage, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
         }
         
-        return UIImage(cgImage: cgValue.makeImage()!)
+        guard let outputImage = cgValue.makeImage() else { return self }
+        return UIImage(cgImage: outputImage)
     }
 }

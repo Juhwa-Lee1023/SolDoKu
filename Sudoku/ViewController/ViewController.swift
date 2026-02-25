@@ -187,7 +187,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         
             for i in 0..<81 {
                 guard let cell = mainSudokuCollectionView.cellForItem(at: [0, i]) as? mainSudokuCollectionViewCell else {
-                    fatalError()
+                    continue
                 }
                 let cellCoordinate: [Int] = [i / 9, i % 9]
                 
@@ -208,7 +208,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             }
         
             guard let cell = collectionView.cellForItem(at: indexPath) as? mainSudokuCollectionViewCell else {
-                fatalError()
+                return
             }
         
             UIView.animate(withDuration: 0.1,
@@ -249,4 +249,3 @@ class mainSudokuCollectionViewCell: UICollectionViewCell {
     
 
 }
-
