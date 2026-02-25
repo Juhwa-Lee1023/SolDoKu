@@ -34,6 +34,11 @@
 		ADD35F8812894B7682087DFD /* AppCompositionRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A68014A1C3743FC8FBE6D78 /* AppCompositionRoot.swift */; };
 		7195192E125E4EB2BA79BA7F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A32C9C89994B8EB042895F /* HomeView.swift */; };
 		EA0CF3C74F10472AB150953A /* LegacyFlowContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E714D572C729490D979D5E31 /* LegacyFlowContainerView.swift */; };
+		1F291A2BBE6941D59DAC9131 /* DSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A116D07B6854133B294B574 /* DSColor.swift */; };
+		B3FE65FB668149CC9B26D41F /* DSTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610D4220EF7D411FA21CA32D /* DSTypography.swift */; };
+		3ECA5D66BFDD4D8A81081C53 /* DSPrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8A99487DCB44D687C9CF86 /* DSPrimaryButtonStyle.swift */; };
+		FF1F087E93434CD39F03802D /* DSAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132E7996574B49F6AA113A3E /* DSAlert.swift */; };
+		E32331A2A15A4DDEA2BA1F7B /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C15AB40A434EEBB2482E73 /* L10n.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -96,6 +101,11 @@
 		8A68014A1C3743FC8FBE6D78 /* AppCompositionRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCompositionRoot.swift; sourceTree = "<group>"; };
 		47A32C9C89994B8EB042895F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		E714D572C729490D979D5E31 /* LegacyFlowContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyFlowContainerView.swift; sourceTree = "<group>"; };
+		6A116D07B6854133B294B574 /* DSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSColor.swift; sourceTree = "<group>"; };
+		610D4220EF7D411FA21CA32D /* DSTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSTypography.swift; sourceTree = "<group>"; };
+		DE8A99487DCB44D687C9CF86 /* DSPrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		132E7996574B49F6AA113A3E /* DSAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSAlert.swift; sourceTree = "<group>"; };
+		E1C15AB40A434EEBB2482E73 /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +143,8 @@
 			children = (
 				10F06A296FD34C2AB79FF443 /* App */,
 				68CF7C85CF4B45D3AAC10ED7 /* FeatureHome */,
+				14A493F629E44E9D89228F81 /* DesignSystem */,
+				6A94DB75402B4CA496598B40 /* Localization */,
 				D5A7B5CE28F1F033007721B3 /* Localizable */,
 				D58069BD28E5D13B00461CD8 /* StoryBoard */,
 				D58069BC28E5D10D00461CD8 /* ViewController */,
@@ -148,6 +160,25 @@
 				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
 			);
 			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		14A493F629E44E9D89228F81 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				6A116D07B6854133B294B574 /* DSColor.swift */,
+				610D4220EF7D411FA21CA32D /* DSTypography.swift */,
+				DE8A99487DCB44D687C9CF86 /* DSPrimaryButtonStyle.swift */,
+				132E7996574B49F6AA113A3E /* DSAlert.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		6A94DB75402B4CA496598B40 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				E1C15AB40A434EEBB2482E73 /* L10n.swift */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		10F06A296FD34C2AB79FF443 /* App */ = {
@@ -331,14 +362,19 @@
 				D58069B828E5C96F00461CD8 /* UIColor+.swift in Sources */,
 				D597D1D728CF765D00694D66 /* wrapper.mm in Sources */,
 				EA0CF3C74F10472AB150953A /* LegacyFlowContainerView.swift in Sources */,
+				FF1F087E93434CD39F03802D /* DSAlert.swift in Sources */,
 				D597D1E528D0DF3200694D66 /* UIImage+.swift in Sources */,
+				1F291A2BBE6941D59DAC9131 /* DSColor.swift in Sources */,
 				D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */,
+				E32331A2A15A4DDEA2BA1F7B /* L10n.swift in Sources */,
+				B3FE65FB668149CC9B26D41F /* DSTypography.swift in Sources */,
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
 				206FF9097CC54F3793D53F05 /* SudokuApp.swift in Sources */,
 				D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */,
 				7195192E125E4EB2BA79BA7F /* HomeView.swift in Sources */,
 				D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */,
 				ADD35F8812894B7682087DFD /* AppCompositionRoot.swift in Sources */,
+				3ECA5D66BFDD4D8A81081C53 /* DSPrimaryButtonStyle.swift in Sources */,
 				D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */,
 				D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */,
 				D5A7B5DD28F1F1AB007721B3 /* String+.swift in Sources */,
