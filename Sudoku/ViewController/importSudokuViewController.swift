@@ -25,13 +25,41 @@ class importSudokuViewController: UIViewController {
     var selectNum: IndexPath = []
     let setNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     var count: Int = 0
-    private var ignoreSolve: Bool = false
+    private let solveStateQueue = DispatchQueue(label: "com.soldoku.import.solve-state")
+    private var _ignoreSolve: Bool = false
+    private var _isSolving: Bool = false
+    private var ignoreSolve: Bool {
+        get { solveStateQueue.sync { _ignoreSolve } }
+        set { solveStateQueue.sync { _ignoreSolve = newValue } }
+    }
     private var sudokuSolvingWorkItem: DispatchWorkItem?
 
     private func runSudokuSolvingTask(_ task: @escaping () -> Void) {
         sudokuSolvingWorkItem = DispatchWorkItem(block: task)
         guard let workItem = sudokuSolvingWorkItem else { return }
         DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
+    }
+
+    @discardableResult
+    private func beginSolvingIfPossible() -> Bool {
+        solveStateQueue.sync {
+            if _isSolving {
+                return false
+            }
+            _isSolving = true
+            return true
+        }
+    }
+
+    private func finishSolving() {
+        solveStateQueue.sync {
+            _isSolving = false
+            _ignoreSolve = false
+        }
+        DispatchQueue.main.async {
+            self.buttonCollectionView.isUserInteractionEnabled = true
+            self.sudokuCollectionView.isUserInteractionEnabled = true
+        }
     }
     
     override func viewDidLoad() {
@@ -127,6 +155,9 @@ class importSudokuViewController: UIViewController {
 
     }
     func shootSolveSudoku() {
+        guard beginSolvingIfPossible() else { return }
+        buttonCollectionView.isUserInteractionEnabled = false
+        sudokuCollectionView.isUserInteractionEnabled = false
         showIndicator()
         runSudokuSolvingTask(self.solveSudoku)
     }
@@ -153,7 +184,7 @@ class importSudokuViewController: UIViewController {
                 }
                 let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                     self.hideIndicator()
-                    self.ignoreSolve = false
+                    self.finishSolving()
                 }
                 alert.addAction(no)
                 alert.addAction(yes)
@@ -179,18 +210,18 @@ class importSudokuViewController: UIViewController {
                 }
                 let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                     self.hideIndicator()
+                    self.finishSolving()
                 }
                 alert.addAction(no)
                 alert.addAction(yes)
                 self.present(alert, animated: true, completion: nil)
-                self.ignoreSolve = false
             }
             return
         }
         DispatchQueue.main.async {
             self.hideIndicator()
             self.drawSudoku()
-            self.ignoreSolve = false
+            self.finishSolving()
         }
     }
     

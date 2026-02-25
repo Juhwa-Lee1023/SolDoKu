@@ -23,13 +23,40 @@ class pickerSudokuViewController: UIViewController {
     private var sudokuSolvingWorkItem: DispatchWorkItem?
     private var count:Int = 0
     private let picker = UIImagePickerController()
-    private var ignoreSolve: Bool = false
+    private let solveStateQueue = DispatchQueue(label: "com.soldoku.picker.solve-state")
+    private var _ignoreSolve: Bool = false
+    private var _isSolving: Bool = false
+    private var ignoreSolve: Bool {
+        get { solveStateQueue.sync { _ignoreSolve } }
+        set { solveStateQueue.sync { _ignoreSolve = newValue } }
+    }
     private let bounds = UIScreen.main.bounds
 
     private func runSudokuSolvingTask(_ task: @escaping () -> Void) {
         sudokuSolvingWorkItem = DispatchWorkItem(block: task)
         guard let workItem = sudokuSolvingWorkItem else { return }
         DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
+    }
+
+    @discardableResult
+    private func beginSolvingIfPossible() -> Bool {
+        solveStateQueue.sync {
+            if _isSolving {
+                return false
+            }
+            _isSolving = true
+            return true
+        }
+    }
+
+    private func finishSolving() {
+        solveStateQueue.sync {
+            _isSolving = false
+            _ignoreSolve = false
+        }
+        DispatchQueue.main.async {
+            self.solSudoku.isEnabled = true
+        }
     }
     
     override func viewDidLoad() {
@@ -73,6 +100,8 @@ class pickerSudokuViewController: UIViewController {
     
     @IBAction func shootSolSudoku(_ sender: Any) {
         if pickerImage.image != nil {
+            guard beginSolvingIfPossible() else { return }
+            solSudoku.isEnabled = false
             showIndicator()
             runSudokuSolvingTask(self.sudokuSolvingQueue)
         } else {
@@ -169,6 +198,7 @@ class pickerSudokuViewController: UIViewController {
             DispatchQueue.main.async {
                 self.hideIndicator()
             }
+            finishSolving()
             return
         }
         self.recognizeNum(image: image)
@@ -182,8 +212,8 @@ class pickerSudokuViewController: UIViewController {
               let numImages = imageSliceArray.firstObject as? [UIImage] else {
             DispatchQueue.main.async {
                 self.hideIndicator()
-                self.ignoreSolve = false
             }
+            finishSolving()
             return
         }
 
@@ -240,7 +270,7 @@ class pickerSudokuViewController: UIViewController {
                 }
                 let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                     self.hideIndicator()
-                    self.ignoreSolve = false
+                    self.finishSolving()
                 }
                 alert.addAction(no)
                 alert.addAction(yes)
@@ -270,14 +300,14 @@ class pickerSudokuViewController: UIViewController {
                 alert.addAction(yes)
                 self.present(alert, animated: true, completion: nil)
                 self.hideIndicator()
-                self.ignoreSolve = false
+                self.finishSolving()
             }
             return
         }
         DispatchQueue.main.async {
             self.hideIndicator()
             self.showNum(solvedSudokuArray, sudokuArray, image)
-            self.ignoreSolve = false
+            self.finishSolving()
         }
     }
 
@@ -360,28 +390,15 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
     }
     
     private func requestPhotoPermission(_ completion: @escaping (Bool) -> Void) {
-        let authorizationStatus: PHAuthorizationStatus
-        if #available(iOS 14, *) {
-            authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        } else {
-            authorizationStatus = PHPhotoLibrary.authorizationStatus()
-        }
+        let authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 
         switch authorizationStatus {
         case .authorized, .limited:
             completion(true)
         case .notDetermined:
-            if #available(iOS 14, *) {
-                PHPhotoLibrary.requestAuthorization(for: .readWrite) { state in
-                    DispatchQueue.main.async {
-                        completion(state == .authorized || state == .limited)
-                    }
-                }
-            } else {
-                PHPhotoLibrary.requestAuthorization { state in
-                    DispatchQueue.main.async {
-                        completion(state == .authorized)
-                    }
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { state in
+                DispatchQueue.main.async {
+                    completion(state == .authorized || state == .limited)
                 }
             }
         case .denied, .restricted:
@@ -419,12 +436,12 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
         }
 
         let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
-        let cancle = UIAlertAction(title: "Cancel".localized, style: .default)
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .default)
         let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
             guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
             UIApplication.shared.open(settingURL)
         }
-        alert.addAction(cancle)
+        alert.addAction(cancel)
         alert.addAction(confirm)
 
         DispatchQueue.main.async {

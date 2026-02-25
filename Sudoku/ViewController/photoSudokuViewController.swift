@@ -27,13 +27,43 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var count: Int = 0
     private var sudokuSolvingWorkItem: DispatchWorkItem?
-    private var ignoreSolve: Bool = false
+    private let solveStateQueue = DispatchQueue(label: "com.soldoku.photo.solve-state")
+    private var _ignoreSolve: Bool = false
+    private var _isSolving: Bool = false
+    private var ignoreSolve: Bool {
+        get { solveStateQueue.sync { _ignoreSolve } }
+        set { solveStateQueue.sync { _ignoreSolve = newValue } }
+    }
+    private var isSolving: Bool {
+        solveStateQueue.sync { _isSolving }
+    }
     private let bounds = UIScreen.main.bounds
 
     private func runSudokuSolvingTask(_ task: @escaping () -> Void) {
         sudokuSolvingWorkItem = DispatchWorkItem(block: task)
         guard let workItem = sudokuSolvingWorkItem else { return }
         DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
+    }
+
+    @discardableResult
+    private func beginSolvingIfPossible() -> Bool {
+        solveStateQueue.sync {
+            if _isSolving {
+                return false
+            }
+            _isSolving = true
+            return true
+        }
+    }
+
+    private func finishSolving() {
+        solveStateQueue.sync {
+            _isSolving = false
+            _ignoreSolve = false
+        }
+        DispatchQueue.main.async {
+            self.shooting.isEnabled = true
+        }
     }
     
     override func viewDidLoad() {
@@ -60,11 +90,15 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     @IBAction func shootingAction(_ sender: Any) {
+        if isSolving { return }
+
         if shooting.titleLabel?.text == "Shoot Again".localized {
             refinedView.image = UIImage(named: "sudoku")
             cameraStart()
             shooting.setTitle("Shooting Sudoku".localized, for: .normal)
         } else {
+            guard beginSolvingIfPossible() else { return }
+            shooting.isEnabled = false
             runSudokuSolvingTask(sudokuSolvingQueue)
             cameraStop()
             shooting.setTitle("Shoot Again".localized, for: .normal)
@@ -72,6 +106,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
     }
     
     @objc func imageTapped(sender: UITapGestureRecognizer) {
+        if isSolving { return }
+
         if shooting.titleLabel?.text == "Shoot Again".localized {
             refinedView.image = UIImage(named: "sudoku")
             session?.startRunning()
@@ -221,6 +257,7 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
             DispatchQueue.main.async {
                 self.hideIndicator()
             }
+            finishSolving()
             return
         }
         self.recognizeNum(image: image)
@@ -448,8 +485,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
               let numImages = imageSliceArray.firstObject as? [UIImage] else {
             DispatchQueue.main.async {
                 self.hideIndicator()
-                self.ignoreSolve = false
             }
+            finishSolving()
             return
         }
 
@@ -502,8 +539,8 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 }
                 let no = UIAlertAction(title: "No".localized, style: .destructive) { _ in
                     self.hideIndicator()
-                    self.ignoreSolve = false
                     self.shooting.setTitle("Shooting Sudoku".localized, for: .normal)
+                    self.finishSolving()
                 }
                 alert.addAction(no)
                 alert.addAction(yes)
@@ -523,17 +560,17 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
                 self.present(alert, animated: true, completion: nil)
                 self.session?.startRunning()
                 self.hideIndicator()
-                self.ignoreSolve = false
+                self.finishSolving()
             }
             return
         }
         DispatchQueue.main.async {
             self.hideIndicator()
             self.solveShowNum(solvedSudokuArray, sudokuArray, image)
-            self.ignoreSolve = false
+            self.finishSolving()
         }
     }
-    
+
     private func showPresentNum(_ sudoku: [[Int]], _ image: UIImage) {
         UIGraphicsBeginImageContext(refinedView.bounds.size)
         image.draw(in: CGRect(origin: CGPoint.zero, size: refinedView.bounds.size))
@@ -627,12 +664,12 @@ final class photoSudokuViewController: UIViewController, AVCaptureVideoDataOutpu
         let message = "If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?".localized
         let alert = UIAlertController(title: "Setting".localized, message: message, preferredStyle: .alert)
 
-        let cancle = UIAlertAction(title: "Cancel".localized, style: .default) { _ in }
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .default) { _ in }
         let confirm = UIAlertAction(title: "Confirm".localized, style: .default) { _ in
             guard let settingURL = URL(string: UIApplication.openSettingsURLString) else { return }
             UIApplication.shared.open(settingURL)
         }
-        alert.addAction(cancle)
+        alert.addAction(cancel)
         alert.addAction(confirm)
 
         DispatchQueue.main.async {

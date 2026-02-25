@@ -43,7 +43,7 @@
 
 ### 최초 실행
 ```bash
-cd /Users/1004896/Documents/SolDoKu
+cd "$(git rev-parse --show-toplevel)"
 ./scripts/bootstrap_opencv.sh
 xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
