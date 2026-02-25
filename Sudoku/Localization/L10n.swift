@@ -38,6 +38,29 @@ enum L10n {
         static let sudokuNotEntered = L10nToken("Sudoku has not Entered.")
     }
 
+    enum Camera {
+        static let shootAgain = L10nToken("Shoot Again")
+        static let shootingSudoku = L10nToken("Shooting Sudoku")
+        static let cameraGuide = L10nToken("Please look where Sudoku is located")
+        static let solvingSudoku = L10nToken("Currently solving Sudoku")
+        static let retryTitle = L10nToken("Fail.")
+        static let retryMessage = L10nToken("Take a Picture Again.")
+        static let permissionDeniedMessage = L10nToken("If didn't allow the camera permission, \r\n Would like to go to the Setting Screen?")
+    }
+
+    enum Image {
+        static let uploadFromAlbum = L10nToken("Upload from Album")
+        static let solvingSudoku = L10nToken("Solving Sudoku")
+        static let imageMissingTitle = L10nToken("Picture hasn't been Uploaded.")
+        static let imageMissingMessage = L10nToken("Want to Upload a Picture?")
+        static let retryMessage = L10nToken("Upload another Picture?")
+        static let albumPermissionDeniedMessage = L10nToken("Soldoku is not allowed access to Album. \r\n Do you want to go to the Setting Screen?")
+    }
+
+    enum Settings {
+        static let title = L10nToken("Setting")
+    }
+
     enum Common {
         static let yes = L10nToken("Yes")
         static let no = L10nToken("No")
