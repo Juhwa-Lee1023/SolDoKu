@@ -50,6 +50,23 @@ final class AppShellRouteConfigTests: XCTestCase {
         XCTAssertFalse(source.contains("importSudoku.storyboard in Resources"))
     }
 
+    func testCameraInsufficientDigitsNoActionResumesPreview() throws {
+        let cameraViewPath = repositoryRootURL()
+            .appendingPathComponent("Sudoku")
+            .appendingPathComponent("FeatureCameraSolve")
+            .appendingPathComponent("CameraSolveView.swift")
+        let cameraViewSource = try String(contentsOf: cameraViewPath, encoding: .utf8)
+        XCTAssertTrue(cameraViewSource.contains("viewModel.cancelSolveAndResumeCamera()"))
+
+        let cameraViewModelPath = repositoryRootURL()
+            .appendingPathComponent("Sudoku")
+            .appendingPathComponent("FeatureCameraSolve")
+            .appendingPathComponent("CameraSolveViewModel.swift")
+        let cameraViewModelSource = try String(contentsOf: cameraViewModelPath, encoding: .utf8)
+        XCTAssertTrue(cameraViewModelSource.contains("func cancelSolveAndResumeCamera()"))
+        XCTAssertTrue(cameraViewModelSource.contains("configureAndStartCamera()"))
+    }
+
     private func repositoryRootURL(filePath: StaticString = #filePath) -> URL {
         URL(fileURLWithPath: "\(filePath)")
             .deletingLastPathComponent() // AppShellTests
