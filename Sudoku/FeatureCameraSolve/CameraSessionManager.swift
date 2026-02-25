@@ -7,12 +7,24 @@ final class CameraSessionManager: NSObject, ObservableObject {
     let session = AVCaptureSession()
 
     @Published private(set) var latestFrame: UIImage?
+    @Published private(set) var latestDetectedCorners: [CGPoint]
 
     private var isConfigured = false
     private let configurationQueue = DispatchQueue(label: "com.soldoku.camera.configure")
     private let sampleBufferQueue = DispatchQueue(label: "com.soldoku.camera.sample-buffer")
+    private let cornerDetectionQueue = DispatchQueue(label: "com.soldoku.camera.corner-detection")
     private var lastFrameTimestamp: CFTimeInterval = 0
     private let frameThrottleInterval: CFTimeInterval = 0.12
+    private let cornerDetectionSemaphore = DispatchSemaphore(value: 1)
+    private var consecutiveCornerDetectionFailures = 0
+    private let cornerFailureResetThreshold = 3
+    private let visionProcessor: SudokuVisionProcessing
+
+    init(visionProcessor: SudokuVisionProcessing = OpenCVSudokuVisionAdapter()) {
+        self.visionProcessor = visionProcessor
+        self.latestDetectedCorners = []
+        self.latestFrame = nil
+    }
 
     func configureIfNeeded(completion: @escaping (Bool) -> Void) {
         configurationQueue.async {
@@ -112,8 +124,31 @@ extension CameraSessionManager: AVCaptureVideoDataOutputSampleBufferDelegate {
         let frameImage = UIImage(cgImage: cgImage)
         let square = cropToCenterSquare(frameImage)
 
+        detectCornersIfPossible(from: square)
+
         DispatchQueue.main.async {
             self.latestFrame = square
+        }
+    }
+
+    private func detectCornersIfPossible(from image: UIImage) {
+        guard cornerDetectionSemaphore.wait(timeout: .now()) == .success else { return }
+        cornerDetectionQueue.async {
+            defer {
+                self.cornerDetectionSemaphore.signal()
+            }
+            let corners = self.visionProcessor.detectCorners(in: image)
+            DispatchQueue.main.async {
+                guard let corners, corners.count >= 4 else {
+                    self.consecutiveCornerDetectionFailures += 1
+                    if self.consecutiveCornerDetectionFailures >= self.cornerFailureResetThreshold {
+                        self.latestDetectedCorners = []
+                    }
+                    return
+                }
+                self.consecutiveCornerDetectionFailures = 0
+                self.latestDetectedCorners = Array(corners.prefix(4))
+            }
         }
     }
 
