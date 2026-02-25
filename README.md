@@ -47,10 +47,13 @@ cd "$(git rev-parse --show-toplevel)"
 ./scripts/bootstrap_opencv.sh
 xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Release -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 swift test
 ```
 
 > 참고: 현재 OpenCV 프레임워크 제약으로 시뮬레이터 빌드는 `x86_64` 아키텍처로 수행되도록 `EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64` 설정이 적용되어 있습니다.
+> `bootstrap_opencv.sh`는 `Framework/opencv2.framework.zip.sha256` 기반으로 아카이브 체크섬을 검증합니다.
 
 
 ## 기술적 도전

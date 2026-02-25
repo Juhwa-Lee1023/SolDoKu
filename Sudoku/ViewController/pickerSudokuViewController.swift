@@ -5,9 +5,6 @@
 //  Created by 이주화 on 2022/09/14.
 //
 import UIKit
-import AVFoundation
-import CoreML
-import Photos
 import SnapKit
 
 class pickerSudokuViewController: UIViewController {
@@ -21,7 +18,13 @@ class pickerSudokuViewController: UIViewController {
     
     
     private var sudokuSolvingWorkItem: DispatchWorkItem?
-    private var count:Int = 0
+    private let permissionAuthorizer: PermissionAuthorizing = SystemPermissionAuthorizer()
+    private let visionProcessor: SudokuVisionProcessing = OpenCVSudokuVisionAdapter()
+    private let boardSolver: SudokuBoardSolving = LegacySudokuBoardSolver()
+    private lazy var puzzleRecognizer: SudokuPuzzleRecognizing = SudokuPuzzleRecognizer(
+        visionProcessor: visionProcessor,
+        digitPredictor: CoreMLDigitPredictor()
+    )
     private let picker = UIImagePickerController()
     private let solveStateQueue = DispatchQueue(label: "com.soldoku.picker.solve-state")
     private var _ignoreSolve: Bool = false
@@ -205,58 +208,15 @@ class pickerSudokuViewController: UIViewController {
     }
     
     private func recognizeNum(image: UIImage) {
-        // get sudoku number images
-        var sudokuArray:[[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
-        var sudokuNumbersCount: Int = 0
-        guard let imageSliceArray = wrapper.sliceImages(image, imageSize: 64, cutOffset: 0),
-              let numImages = imageSliceArray.firstObject as? [UIImage] else {
+        guard let recognitionResult = puzzleRecognizer.recognizeBoard(from: image, imageSize: 64, cutOffset: 0) else {
             DispatchQueue.main.async {
                 self.hideIndicator()
             }
             finishSolving()
             return
         }
-
-        for (i, img) in numImages.enumerated() {
-            let col = i % 9
-            let row = i / 9
-            guard row < 9, col < 9 else { continue }
-
-            guard let sliceNumImage = wrapper.getNumImage(img, imageSize: 64),
-                  let numExist = (sliceNumImage.firstObject as? NSNumber)?.boolValue else {
-                sudokuArray[row][col] = 0
-                continue
-            }
-
-            if numExist {
-                sudokuNumbersCount += 1
-                guard let buf = img.UIImageToPixelBuffer() else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-
-                let model = model_64()
-                guard let predList = try? model.prediction(x: buf) else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-
-                let predListLength = predList.y.count
-                let doublePtr = predList.y.dataPointer.bindMemory(to: Double.self, capacity: predListLength)
-                let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: predListLength)
-                let predArr = Array(doubleBuffer)
-
-                guard let predArrMax = predArr.max(),
-                      let result = predArr.firstIndex(of: predArrMax) else {
-                    sudokuArray[row][col] = 0
-                    continue
-                }
-
-                sudokuArray[row][col] = result
-            } else {
-                sudokuArray[row][col] = 0
-            }
-        }
+        let sudokuArray = recognitionResult.board
+        let sudokuNumbersCount = recognitionResult.recognizedCount
 
         if !ignoreSolve && sudokuNumbersCount < 17 {
             DispatchQueue.main.async {
@@ -279,11 +239,11 @@ class pickerSudokuViewController: UIViewController {
             return
         }
 
-        // sudoku 풀이
-        var solvedSudokuArray = sudokuArray
-        count = 0
-        let successCheck = sudokuCalculation(&solvedSudokuArray, 0, 0, &count)
-        if !successCheck {
+        let solvedSudokuArray: [[Int]]
+        switch boardSolver.solve(board: sudokuArray, iterationLimit: 1_000_000) {
+        case .success(let solvedBoard):
+            solvedSudokuArray = solvedBoard
+        case .failure:
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Cannot solve Sudoku.".localized, message: "Upload another Picture?".localized, preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in
@@ -381,49 +341,18 @@ extension pickerSudokuViewController: UIImagePickerControllerDelegate, UINavigat
         }
         let fixOrientationImage = image.fixOrientation()
         
-        if let detectRectangle = wrapper.detectRectangle(fixOrientationImage),
-           detectRectangle.count > 1,
-           let refinedImage = detectRectangle[1] as? UIImage {
-            pickerImage.image = refinedImage
+        if let detectedRectangle = visionProcessor.detectRectangle(in: fixOrientationImage) {
+            pickerImage.image = detectedRectangle.warpedImage
         }
         picker.dismiss(animated: true)
     }
     
     private func requestPhotoPermission(_ completion: @escaping (Bool) -> Void) {
-        let authorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-
-        switch authorizationStatus {
-        case .authorized, .limited:
-            completion(true)
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization(for: .readWrite) { state in
-                DispatchQueue.main.async {
-                    completion(state == .authorized || state == .limited)
-                }
-            }
-        case .denied, .restricted:
-            completion(false)
-        @unknown default:
-            completion(false)
-        }
+        permissionAuthorizer.requestPhotoLibraryReadWrite(completion)
     }
     
     private func requestCameraPermission(_ completion: @escaping (Bool) -> Void) {
-        let status = AVCaptureDevice.authorizationStatus(for: .video)
-        switch status {
-        case .authorized:
-            completion(true)
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                DispatchQueue.main.async {
-                    completion(granted)
-                }
-            }
-        case .denied, .restricted:
-            completion(false)
-        @unknown default:
-            completion(false)
-        }
+        permissionAuthorizer.requestCameraAccess(completion)
     }
     
     

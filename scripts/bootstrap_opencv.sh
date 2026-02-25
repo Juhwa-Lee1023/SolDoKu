@@ -3,12 +3,24 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ZIP_PATH="$ROOT_DIR/Framework/opencv2.framework.zip"
+CHECKSUM_PATH="$ROOT_DIR/Framework/opencv2.framework.zip.sha256"
 FRAMEWORK_DIR="$ROOT_DIR/Framework/opencv2.framework"
 
 if [[ ! -f "$ZIP_PATH" ]]; then
   echo "error: missing $ZIP_PATH"
   exit 1
 fi
+
+if [[ ! -f "$CHECKSUM_PATH" ]]; then
+  echo "error: missing checksum file $CHECKSUM_PATH"
+  exit 1
+fi
+
+echo "Verifying OpenCV archive checksum..."
+(
+  cd "$ROOT_DIR/Framework"
+  shasum -a 256 -c "$(basename "$CHECKSUM_PATH")"
+)
 
 if [[ -d "$FRAMEWORK_DIR" ]]; then
   echo "opencv2.framework already exists: $FRAMEWORK_DIR"

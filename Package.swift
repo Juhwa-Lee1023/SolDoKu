@@ -12,17 +12,47 @@ let package = Package(
             name: "SudokuDomain",
             targets: ["SudokuDomain"]
         ),
+        .library(
+            name: "DomainVision",
+            targets: ["DomainVision"]
+        ),
+        .library(
+            name: "SudokuInfrastructure",
+            targets: ["SudokuInfrastructure"]
+        ),
     ],
     targets: [
         .target(
             name: "SudokuDomain",
-            path: "Sources/SudokuDomain",
-            sources: ["sudokuCalculation.swift"]
+            path: "Sources/SudokuDomain"
+        ),
+        .target(
+            name: "DomainVision",
+            path: "Sources/DomainVision"
+        ),
+        .target(
+            name: "SudokuInfrastructure",
+            dependencies: [
+                "SudokuDomain",
+                "DomainVision",
+            ],
+            path: "Sources/SudokuInfrastructure"
         ),
         .testTarget(
             name: "SudokuDomainTests",
             dependencies: ["SudokuDomain"],
             path: "Tests/SudokuDomainTests"
+        ),
+        .testTarget(
+            name: "SudokuInfrastructureTests",
+            dependencies: [
+                "SudokuInfrastructure",
+                "DomainVision",
+            ],
+            path: "Tests/SudokuInfrastructureTests",
+            resources: [
+                .process("Fixtures"),
+            ]
         ),
     ]
 )

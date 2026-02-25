@@ -24,7 +24,7 @@ class importSudokuViewController: UIViewController {
     var solSudokuNum: [[Int]] = Array(repeating: Array(repeating: 0, count: 9), count: 9)
     var selectNum: IndexPath = []
     let setNumArray = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    var count: Int = 0
+    private let boardSolver: SudokuBoardSolving = LegacySudokuBoardSolver()
     private let solveStateQueue = DispatchQueue(label: "com.soldoku.import.solve-state")
     private var _ignoreSolve: Bool = false
     private var _isSolving: Bool = false
@@ -192,9 +192,11 @@ class importSudokuViewController: UIViewController {
             }
             return
         }
-        count = 0
-        let successCheck  = sudokuCalculation(&solSudokuNum, 0, 0, &count)
-        if !successCheck {
+        let solveResult = boardSolver.solve(board: solSudokuNum, iterationLimit: 1_000_000)
+        switch solveResult {
+        case .success(let solvedBoard):
+            solSudokuNum = solvedBoard
+        case .failure:
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Cannot solve Sudoku.".localized, message: "Do you want to re-enter Sudoku?".localized, preferredStyle: .alert)
                 let yes = UIAlertAction(title: "Yes".localized, style: .default) { _ in

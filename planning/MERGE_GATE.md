@@ -6,8 +6,8 @@ Last updated: 2026-02-25
 
 - `iOS CI / build-and-test` must pass on every pull request.
 - Required check must include:
-  - iOS generic device build
-  - iOS simulator build
+  - iOS generic device build (Debug + Release)
+  - iOS simulator build (Debug + Release)
   - domain unit tests (`swift test`)
 
 ## Branch Protection Policy (`main`)
@@ -26,5 +26,5 @@ Last updated: 2026-02-25
 
 ## Owner Checklist
 
-- [ ] Repository settings updated with rules above.
-- [ ] `iOS CI / build-and-test` is marked as required status check.
+- [x] Repository settings updated with rules above.
+- [x] `iOS CI / build-and-test` is marked as required status check.

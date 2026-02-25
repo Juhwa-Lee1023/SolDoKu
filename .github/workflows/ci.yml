@@ -24,5 +24,11 @@ jobs:
       - name: Build (iOS Simulator)
         run: xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 
+      - name: Build Release (iOS Generic Device)
+        run: xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+
+      - name: Build Release (iOS Simulator)
+        run: xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Release -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+
       - name: Run Domain Tests
         run: swift test
