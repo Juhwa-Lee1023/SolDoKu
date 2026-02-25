@@ -30,6 +30,10 @@
 		D5A7B5DD28F1F1AB007721B3 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7B5DC28F1F1AB007721B3 /* String+.swift */; };
 		D5BBD65F28D205AE00747F15 /* pickerSudoku.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */; };
 		D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */; };
+		206FF9097CC54F3793D53F05 /* SudokuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A6F9DDC9A7412C921F3A55 /* SudokuApp.swift */; };
+		ADD35F8812894B7682087DFD /* AppCompositionRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A68014A1C3743FC8FBE6D78 /* AppCompositionRoot.swift */; };
+		7195192E125E4EB2BA79BA7F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A32C9C89994B8EB042895F /* HomeView.swift */; };
+		EA0CF3C74F10472AB150953A /* LegacyFlowContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E714D572C729490D979D5E31 /* LegacyFlowContainerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,6 +92,10 @@
 		D5A7B5DC28F1F1AB007721B3 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		D5BBD65E28D205AE00747F15 /* pickerSudoku.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = pickerSudoku.storyboard; sourceTree = "<group>"; };
 		D5BBD66028D205C900747F15 /* pickerSudokuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pickerSudokuViewController.swift; sourceTree = "<group>"; };
+		56A6F9DDC9A7412C921F3A55 /* SudokuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuApp.swift; sourceTree = "<group>"; };
+		8A68014A1C3743FC8FBE6D78 /* AppCompositionRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCompositionRoot.swift; sourceTree = "<group>"; };
+		47A32C9C89994B8EB042895F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		E714D572C729490D979D5E31 /* LegacyFlowContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyFlowContainerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +131,8 @@
 		D53F618328C77AE20017D756 /* Sudoku */ = {
 			isa = PBXGroup;
 			children = (
+				10F06A296FD34C2AB79FF443 /* App */,
+				68CF7C85CF4B45D3AAC10ED7 /* FeatureHome */,
 				D5A7B5CE28F1F033007721B3 /* Localizable */,
 				D58069BD28E5D13B00461CD8 /* StoryBoard */,
 				D58069BC28E5D10D00461CD8 /* ViewController */,
@@ -138,6 +148,24 @@
 				D597D1D528CF765D00694D66 /* Sudoku-Bridging-Header.h */,
 			);
 			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		10F06A296FD34C2AB79FF443 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				56A6F9DDC9A7412C921F3A55 /* SudokuApp.swift */,
+				8A68014A1C3743FC8FBE6D78 /* AppCompositionRoot.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		68CF7C85CF4B45D3AAC10ED7 /* FeatureHome */ = {
+			isa = PBXGroup;
+			children = (
+				47A32C9C89994B8EB042895F /* HomeView.swift */,
+				E714D572C729490D979D5E31 /* LegacyFlowContainerView.swift */,
+			);
+			path = FeatureHome;
 			sourceTree = "<group>";
 		};
 		D58069B928E5D0BD00461CD8 /* DL */ = {
@@ -302,11 +330,15 @@
 				D5BBD66128D205C900747F15 /* pickerSudokuViewController.swift in Sources */,
 				D58069B828E5C96F00461CD8 /* UIColor+.swift in Sources */,
 				D597D1D728CF765D00694D66 /* wrapper.mm in Sources */,
+				EA0CF3C74F10472AB150953A /* LegacyFlowContainerView.swift in Sources */,
 				D597D1E528D0DF3200694D66 /* UIImage+.swift in Sources */,
 				D597D1BA28CDFFEA00694D66 /* sudokuCalculation.swift in Sources */,
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
+				206FF9097CC54F3793D53F05 /* SudokuApp.swift in Sources */,
 				D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */,
+				7195192E125E4EB2BA79BA7F /* HomeView.swift in Sources */,
 				D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */,
+				ADD35F8812894B7682087DFD /* AppCompositionRoot.swift in Sources */,
 				D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */,
 				D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */,
 				D5A7B5DD28F1F1AB007721B3 /* String+.swift in Sources */,
@@ -511,7 +543,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = NSPhotoLibraryUsageDescription;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
@@ -552,7 +583,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = NSPhotoLibraryUsageDescription;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;

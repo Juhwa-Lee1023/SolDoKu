@@ -99,23 +99,23 @@ Last updated: 2026-02-25
 ## P2) SwiftUI 앱 셸 전환
 
 ### P2-1. 진입점 전환
-- [ ] Storyboard 기반 진입점 제거/축소
-- [ ] SwiftUI `@main App` 구성
-- [ ] Composition Root에서 의존성 주입 연결
+- [x] Storyboard 기반 진입점 제거/축소
+- [x] SwiftUI `@main App` 구성
+- [x] Composition Root에서 의존성 주입 연결
 
 ### P2-2. 홈 화면 전환
-- [ ] Home 화면을 SwiftUI로 구현
-- [ ] 기존 3개 플로우 라우팅을 SwiftUI Navigation으로 연결
-- [ ] 필요 시 임시 `UIViewControllerRepresentable` 브리지 사용
+- [x] Home 화면을 SwiftUI로 구현
+- [x] 기존 3개 플로우 라우팅을 SwiftUI Navigation으로 연결
+- [x] 필요 시 임시 `UIViewControllerRepresentable` 브리지 사용
 
 ### P2-3. 공통 UI 체계
 - [ ] `DesignSystem`에 컬러/타이포/버튼/알럿 컴포넌트 정리
 - [ ] 로컬라이제이션 키 사용 일관화
 
 ### P2 완료 기준 (DoD)
-- [ ] 앱 루트 네비게이션이 SwiftUI에서 동작
+- [x] 앱 루트 네비게이션이 SwiftUI에서 동작
 - [ ] 기존 기능 진입 동작 유지
-- [ ] Storyboard 의존성이 루트에서는 제거됨
+- [x] Storyboard 의존성이 루트에서는 제거됨
 
 ---
 
