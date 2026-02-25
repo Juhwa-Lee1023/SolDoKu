@@ -54,5 +54,9 @@ let package = Package(
                 .process("Fixtures"),
             ]
         ),
+        .testTarget(
+            name: "AppShellTests",
+            path: "Tests/AppShellTests"
+        ),
     ]
 )

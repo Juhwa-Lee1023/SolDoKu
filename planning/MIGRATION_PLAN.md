@@ -22,14 +22,14 @@ Last updated: 2026-02-25
 
 ## 3) 목표 아키텍처 (모듈)
 
-- [ ] `App` (SwiftUI entry + DI composition root)
-- [ ] `DesignSystem` (색상/타이포/공통 컴포넌트)
+- [x] `App` (SwiftUI entry + DI composition root)
+- [x] `DesignSystem` (색상/타이포/공통 컴포넌트)
 - [ ] `DomainSudoku` (solver, rule validation, entities)
 - [ ] `DomainVision` (board detection / OCR protocol contracts)
 - [ ] `InfraOpenCV` (ObjC++ bridge adapter)
 - [ ] `InfraML` (CoreML adapter)
 - [ ] `InfraPermissions` (camera/photo permission service)
-- [ ] `FeatureHome` (SwiftUI)
+- [x] `FeatureHome` (SwiftUI)
 - [ ] `FeatureManualSolve` (SwiftUI)
 - [ ] `FeatureImageSolve` (SwiftUI)
 - [ ] `FeatureCameraSolve` (SwiftUI)
@@ -109,12 +109,12 @@ Last updated: 2026-02-25
 - [x] 필요 시 임시 `UIViewControllerRepresentable` 브리지 사용
 
 ### P2-3. 공통 UI 체계
-- [ ] `DesignSystem`에 컬러/타이포/버튼/알럿 컴포넌트 정리
-- [ ] 로컬라이제이션 키 사용 일관화
+- [x] `DesignSystem`에 컬러/타이포/버튼/알럿 컴포넌트 정리
+- [x] 로컬라이제이션 키 사용 일관화
 
 ### P2 완료 기준 (DoD)
 - [x] 앱 루트 네비게이션이 SwiftUI에서 동작
-- [ ] 기존 기능 진입 동작 유지
+- [x] 기존 기능 진입 동작 유지
 - [x] Storyboard 의존성이 루트에서는 제거됨
 
 ---

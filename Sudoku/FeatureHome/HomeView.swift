@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
     private let flowFactory: LegacyFlowViewControllerBuilding
+    @State private var alertModel: DSAlertModel?
 
     init(flowFactory: LegacyFlowViewControllerBuilding) {
         self.flowFactory = flowFactory
@@ -9,32 +10,60 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                SudokuPreviewGrid()
-                    .frame(maxWidth: 360)
+            ZStack {
+                LinearGradient(
+                    colors: [DSColor.surface, DSColor.background],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
 
-                VStack(spacing: 12) {
-                    ForEach(LegacyFlow.allCases, id: \.self) { flow in
-                        NavigationLink {
-                            LegacyFlowContainerView(flow: flow, factory: flowFactory)
-                                .navigationTitle(flow.title)
-                                .navigationBarTitleDisplayMode(.inline)
-                        } label: {
-                            Text(flow.title)
-                                .font(.system(size: 22, weight: .bold))
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 56)
-                                .foregroundStyle(Color.white)
-                                .background(Color(uiColor: .sudokuColor(.sudokuDeepButton)))
-                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                VStack(spacing: 22) {
+                    Text(L10n.Home.title.localized)
+                        .font(DSTypography.heroTitle)
+                        .foregroundStyle(DSColor.title)
+                        .minimumScaleFactor(0.8)
+
+                    SudokuPreviewGrid()
+                        .frame(maxWidth: 360)
+
+                    VStack(spacing: 12) {
+                        ForEach(LegacyFlow.allCases, id: \.self) { flow in
+                            flowNavigationButton(for: flow)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 12)
-            .navigationTitle("SolDoKu".localized)
+            .navigationTitle(L10n.Home.title.localized)
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .dsAlert(model: $alertModel)
+    }
+
+    @ViewBuilder
+    private func flowNavigationButton(for flow: LegacyFlow) -> some View {
+        if flow.isStoryboardAvailable {
+            NavigationLink {
+                LegacyFlowContainerView(flow: flow, factory: flowFactory)
+                    .navigationTitle(flow.title.localized)
+                    .navigationBarTitleDisplayMode(.inline)
+            } label: {
+                Text(flow.title.localized)
+            }
+            .buttonStyle(DSPrimaryButtonStyle())
+        } else {
+            Button {
+                alertModel = DSAlertModel(
+                    title: L10n.Alert.routeUnavailableTitle,
+                    message: L10n.Alert.routeUnavailableMessage,
+                    buttonText: L10n.Common.confirm
+                )
+            } label: {
+                Text(flow.title.localized)
+            }
+            .buttonStyle(DSPrimaryButtonStyle())
         }
     }
 }
@@ -46,19 +75,19 @@ private struct SudokuPreviewGrid: View {
         LazyVGrid(columns: columns, spacing: 0) {
             ForEach(0..<81, id: \.self) { index in
                 Rectangle()
-                    .fill(Color.white)
+                    .fill(DSColor.surface)
                     .overlay(
                         Rectangle()
-                            .strokeBorder(Color.black.opacity(0.9), lineWidth: borderWidth(for: index))
+                            .strokeBorder(DSColor.gridLine, lineWidth: borderWidth(for: index))
                     )
                     .frame(height: 32)
             }
         }
-        .background(Color.white)
+        .background(DSColor.surface)
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 4, style: .continuous)
-                .stroke(Color.black, lineWidth: 2)
+                .stroke(DSColor.gridBorder, lineWidth: 2)
         )
     }
 
