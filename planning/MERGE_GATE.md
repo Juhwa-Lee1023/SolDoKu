@@ -14,15 +14,15 @@ Last updated: 2026-02-25
 
 - Direct push to `main` is not allowed.
 - Pull request is required before merge.
-- At least one approval review is required.
-- Dismiss stale approvals when new commits are pushed.
+- Approval review count is set to `0` (single-maintainer repository policy).
+- Conversation resolution is required before merge.
 - Require branches to be up to date before merge.
 
 ## Merge Blocking Rules
 
 - If required check fails, merge is blocked.
 - If required check is missing, merge is blocked.
-- If required review count is not met, merge is blocked.
+- If unresolved conversation exists, merge is blocked.
 
 ## Owner Checklist
 
