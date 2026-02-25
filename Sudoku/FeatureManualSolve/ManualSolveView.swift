@@ -283,9 +283,7 @@ private struct ManualKeypad: View {
 
         case .action(let action):
             switch action {
-            case .solve:
-                return DSColor.title
-            case .clean, .delete:
+            case .clean, .delete, .solve:
                 return DSColor.primaryButton
             }
         }

@@ -1,13 +1,6 @@
 import SwiftUI
 
 struct HomeView: View {
-    private let flowFactory: LegacyFlowViewControllerBuilding
-    @State private var alertModel: DSAlertModel?
-
-    init(flowFactory: LegacyFlowViewControllerBuilding) {
-        self.flowFactory = flowFactory
-    }
-
     var body: some View {
         NavigationStack {
             ZStack {
@@ -39,40 +32,27 @@ struct HomeView: View {
             .navigationTitle(L10n.Home.title.localized)
             .navigationBarTitleDisplayMode(.inline)
         }
-        .dsAlert(model: $alertModel)
     }
 
     @ViewBuilder
     private func flowNavigationButton(for flow: LegacyFlow) -> some View {
-        if flow == .manual {
-            NavigationLink {
-                ManualSolveView()
-                    .navigationTitle(flow.title.localized)
-                    .navigationBarTitleDisplayMode(.inline)
-            } label: {
-                Text(flow.title.localized)
-            }
-            .buttonStyle(DSPrimaryButtonStyle())
-        } else if flow.isStoryboardAvailable {
-            NavigationLink {
-                LegacyFlowContainerView(flow: flow, factory: flowFactory)
-                    .navigationTitle(flow.title.localized)
-                    .navigationBarTitleDisplayMode(.inline)
-            } label: {
-                Text(flow.title.localized)
-            }
-            .buttonStyle(DSPrimaryButtonStyle())
-        } else {
-            Button {
-                alertModel = DSAlertModel(
-                    title: L10n.Alert.routeUnavailableTitle,
-                    message: L10n.Alert.routeUnavailableMessage,
-                    buttonText: L10n.Common.confirm
-                )
-            } label: {
-                Text(flow.title.localized)
-            }
-            .buttonStyle(DSPrimaryButtonStyle())
+        NavigationLink {
+            destinationView(for: flow)
+        } label: {
+            Text(flow.title.localized)
+        }
+        .buttonStyle(DSPrimaryButtonStyle())
+    }
+
+    @ViewBuilder
+    private func destinationView(for flow: LegacyFlow) -> some View {
+        switch flow {
+        case .camera:
+            CameraSolveView()
+        case .picker:
+            ImageSolveView()
+        case .manual:
+            ManualSolveView()
         }
     }
 }

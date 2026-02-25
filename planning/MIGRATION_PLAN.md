@@ -124,22 +124,27 @@ Last updated: 2026-02-25
 ### P3-1. Manual Solve (우선)
 - [x] 입력 그리드/키패드 UI를 SwiftUI로 구현 (`FeatureManualSolve`)
 - [x] 충돌 강조, 삭제/초기화, solve UX 동일 기능 이관
-- [ ] 기존 UIKit 화면 제거
+- [x] 기존 UIKit 화면 제거
 
 ### P3-2. Image Solve (2순위)
-- [ ] 이미지 선택/권한/인식/해결/오버레이 흐름 이관
-- [ ] 실패 케이스 UX 표준화
-- [ ] UIKit 의존 코드 제거
+- [x] 이미지 선택/권한/인식/해결/오버레이 흐름 이관
+- [x] 실패 케이스 UX 표준화
+- [x] UIKit 의존 코드 제거
 
 ### P3-3. Camera Solve (3순위)
-- [ ] 카메라 프리뷰 + 프레임 처리 파이프라인 이관
-- [ ] 백그라운드 처리/취소/스로틀링 반영
-- [ ] 기기별 성능 검증
+- [x] 카메라 프리뷰 + 프레임 처리 파이프라인 이관
+- [x] 백그라운드 처리/취소/스로틀링 반영
+- [x] 기기별 성능 검증
 
 ### P3 완료 기준 (DoD)
-- [ ] 3개 플로우가 SwiftUI 기반으로 동작
-- [ ] UIKit ViewController 기반 핵심 화면 제거 완료
-- [ ] 기능 회귀 테스트 green
+- [x] 3개 플로우가 SwiftUI 기반으로 동작
+- [x] UIKit ViewController 기반 핵심 화면 제거 완료
+- [x] 기능 회귀 테스트 green
+
+### P3 검증 로그 (2026-02-25)
+- [x] `xcodebuild` Debug/Release + iOS Device/Simulator 빌드 green
+- [x] `swift test` green (Domain/Infrastructure/AppShell)
+- [x] Home 라우트가 `CameraSolveView`/`ImageSolveView`/`ManualSolveView`로 직접 연결되는지 테스트로 고정
 
 ---
 
