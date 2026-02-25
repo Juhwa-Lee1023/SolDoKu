@@ -16,6 +16,8 @@ final class CameraSessionManager: NSObject, ObservableObject {
     private var lastFrameTimestamp: CFTimeInterval = 0
     private let frameThrottleInterval: CFTimeInterval = 0.12
     private let cornerDetectionSemaphore = DispatchSemaphore(value: 1)
+    private var consecutiveCornerDetectionFailures = 0
+    private let cornerFailureResetThreshold = 3
     private let visionProcessor: SudokuVisionProcessing
 
     init(visionProcessor: SudokuVisionProcessing = OpenCVSudokuVisionAdapter()) {
@@ -137,7 +139,14 @@ extension CameraSessionManager: AVCaptureVideoDataOutputSampleBufferDelegate {
             }
             let corners = self.visionProcessor.detectCorners(in: image)
             DispatchQueue.main.async {
-                guard let corners, corners.count >= 4 else { return }
+                guard let corners, corners.count >= 4 else {
+                    self.consecutiveCornerDetectionFailures += 1
+                    if self.consecutiveCornerDetectionFailures >= self.cornerFailureResetThreshold {
+                        self.latestDetectedCorners = []
+                    }
+                    return
+                }
+                self.consecutiveCornerDetectionFailures = 0
                 self.latestDetectedCorners = Array(corners.prefix(4))
             }
         }

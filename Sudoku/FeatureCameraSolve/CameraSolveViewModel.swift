@@ -28,6 +28,8 @@ final class CameraSolveViewModel: ObservableObject {
     @Published private(set) var isSolving: Bool
     @Published private(set) var solvedImage: UIImage?
     @Published private(set) var recognizedPreviewImage: UIImage?
+    @Published private(set) var latestDetectedCorners: [CGPoint]
+    @Published private(set) var latestFrameSize: CGSize?
     @Published private(set) var primaryButtonMode: PrimaryButtonMode
     @Published var alertKind: AlertKind?
 
@@ -39,6 +41,7 @@ final class CameraSolveViewModel: ObservableObject {
     private let boardSolver: SudokuBoardSolving
 
     private var frameObservation: AnyCancellable?
+    private var cornersObservation: AnyCancellable?
     private var pendingSolveImage: UIImage?
     private var activeSolveToken = UUID()
     private var isLiveRecognitionInProgress = false
@@ -62,6 +65,8 @@ final class CameraSolveViewModel: ObservableObject {
         self.isSolving = false
         self.solvedImage = nil
         self.recognizedPreviewImage = nil
+        self.latestDetectedCorners = []
+        self.latestFrameSize = nil
         self.primaryButtonMode = .shoot
         self.alertKind = nil
         self.pendingSolveImage = nil
@@ -85,6 +90,8 @@ final class CameraSolveViewModel: ObservableObject {
         invalidateSolveToken()
         isSolving = false
         recognizedPreviewImage = nil
+        latestDetectedCorners = []
+        latestFrameSize = nil
         liveRecognitionFrameCounter = 0
         cameraManager.stopRunning()
     }
@@ -107,6 +114,8 @@ final class CameraSolveViewModel: ObservableObject {
         isSolving = false
         primaryButtonMode = .shoot
         recognizedPreviewImage = nil
+        latestDetectedCorners = []
+        latestFrameSize = nil
         liveRecognitionFrameCounter = 0
         pendingSolveImage = nil
         configureAndStartCamera()
@@ -144,10 +153,18 @@ final class CameraSolveViewModel: ObservableObject {
     }
 
     private func bindLivePreviewRecognition() {
+        cornersObservation = cameraManager.$latestDetectedCorners
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] corners in
+                self?.latestDetectedCorners = corners
+            }
+
         frameObservation = cameraManager.$latestFrame
             .receive(on: DispatchQueue.main)
             .sink { [weak self] frame in
-                guard let self, let frame else { return }
+                guard let self else { return }
+                self.latestFrameSize = frame?.size
+                guard let frame else { return }
                 self.updateLiveRecognizedPreviewIfNeeded(from: frame)
             }
     }
@@ -164,8 +181,6 @@ final class CameraSolveViewModel: ObservableObject {
         guard liveRecognitionFrameCounter >= liveRecognitionFrameInterval else { return }
         liveRecognitionFrameCounter = 0
 
-        guard isDetectedRectangleLargeEnough(cameraManager.latestDetectedCorners) else { return }
-
         isLiveRecognitionInProgress = true
         DispatchQueue.global(qos: .userInitiated).async {
             defer {
@@ -175,6 +190,7 @@ final class CameraSolveViewModel: ObservableObject {
             }
 
             guard let detectedRectangle = self.visionProcessor.detectRectangle(in: frame),
+                  self.isDetectedRectangleLargeEnough(detectedRectangle.corners),
                   let recognitionResult = self.puzzleRecognizer.recognizeBoard(
                       from: detectedRectangle.warpedImage,
                       imageSize: 64,
@@ -277,6 +293,8 @@ final class CameraSolveViewModel: ObservableObject {
         invalidateSolveToken()
         solvedImage = nil
         recognizedPreviewImage = nil
+        latestDetectedCorners = []
+        latestFrameSize = nil
         liveRecognitionFrameCounter = 0
         primaryButtonMode = .shoot
         pendingSolveImage = nil

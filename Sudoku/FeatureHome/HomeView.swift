@@ -4,6 +4,7 @@ struct HomeView: View {
     @State private var selectedPreviewIndex: Int?
     @State private var highlightedPreviewIndices: Set<Int> = []
     @State private var pressedPreviewIndex: Int?
+    @State private var releasePressedPreviewWorkItem: DispatchWorkItem?
 
     var body: some View {
         NavigationStack {
@@ -75,12 +76,15 @@ struct HomeView: View {
             pressedPreviewIndex = index
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        releasePressedPreviewWorkItem?.cancel()
+        let workItem = DispatchWorkItem {
             guard pressedPreviewIndex == index else { return }
             withAnimation(.easeOut(duration: 0.1)) {
                 pressedPreviewIndex = nil
             }
         }
+        releasePressedPreviewWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
     }
 
     private static func makeHighlightedIndices(for selectedIndex: Int) -> Set<Int> {

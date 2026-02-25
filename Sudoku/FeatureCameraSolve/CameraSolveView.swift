@@ -2,11 +2,9 @@ import SwiftUI
 
 struct CameraSolveView: View {
     @StateObject private var viewModel: CameraSolveViewModel
-    @ObservedObject private var cameraManager: CameraSessionManager
 
     init(viewModel: CameraSolveViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        _cameraManager = ObservedObject(wrappedValue: viewModel.cameraManager)
     }
 
     var body: some View {
@@ -65,14 +63,14 @@ struct CameraSolveView: View {
 
     private var cameraPreview: some View {
         ZStack {
-            CameraPreviewView(session: cameraManager.session)
+            CameraPreviewView(session: viewModel.cameraManager.session)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
             if viewModel.solvedImage == nil {
                 GeometryReader { geometry in
                     CameraDetectedRectangleOverlay(
-                        corners: cameraManager.latestDetectedCorners,
-                        sourceImageSize: cameraManager.latestFrame?.size,
+                        corners: viewModel.latestDetectedCorners,
+                        sourceImageSize: viewModel.latestFrameSize,
                         canvasSize: geometry.size
                     )
                 }

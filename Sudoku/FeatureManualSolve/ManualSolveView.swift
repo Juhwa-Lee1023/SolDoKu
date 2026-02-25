@@ -3,6 +3,7 @@ import SwiftUI
 struct ManualSolveView: View {
     @StateObject private var viewModel: ManualSolveViewModel
     @State private var pressedCellIndex: Int?
+    @State private var releasePressedCellWorkItem: DispatchWorkItem?
 
     init(viewModel: ManualSolveViewModel = .init()) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -115,12 +116,15 @@ struct ManualSolveView: View {
             pressedCellIndex = index
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        releasePressedCellWorkItem?.cancel()
+        let workItem = DispatchWorkItem {
             guard pressedCellIndex == index else { return }
             withAnimation(.easeOut(duration: 0.1)) {
                 pressedCellIndex = nil
             }
         }
+        releasePressedCellWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
     }
 }
 
