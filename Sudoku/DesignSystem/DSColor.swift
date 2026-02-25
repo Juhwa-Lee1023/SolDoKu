@@ -8,4 +8,9 @@ enum DSColor {
     static let primaryButtonForeground = Color.white
     static let gridLine = Color.black.opacity(0.9)
     static let gridBorder = Color.black
+    static let manualSelectedCell = Color(uiColor: .sudokuColor(.sudokuPurple))
+    static let manualRelatedCell = Color(uiColor: .sudokuColor(.sudokuLightPurple))
+    static let manualConflictingCell = Color(uiColor: .sudokuColor(.sudokuLightRed))
+    static let manualBlockedDigitButton = Color(uiColor: .sudokuColor(.sudokuButton))
+    static let loadingScrim = Color.black.opacity(0.3)
 }

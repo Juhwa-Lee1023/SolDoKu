@@ -1,9 +1,9 @@
 import XCTest
 
 final class AppShellRouteConfigTests: XCTestCase {
-    func testLegacyFlowStoryboardsDeclareInitialViewController() throws {
+    func testLegacyBridgeStoryboardsDeclareInitialViewController() throws {
         let root = repositoryRootURL()
-        let expectedStoryboards = ["photoSudoku", "pickerSudoku", "importSudoku"]
+        let expectedStoryboards = ["photoSudoku", "pickerSudoku"]
 
         for storyboardName in expectedStoryboards {
             let storyboardPath = root
@@ -19,7 +19,7 @@ final class AppShellRouteConfigTests: XCTestCase {
         }
     }
 
-    func testMainStoryboardReferencesAllLegacyFlows() throws {
+    func testMainStoryboardReferencesLegacyBridgeFlows() throws {
         let mainStoryboardPath = repositoryRootURL()
             .appendingPathComponent("Sudoku")
             .appendingPathComponent("StoryBoard")
@@ -29,7 +29,6 @@ final class AppShellRouteConfigTests: XCTestCase {
 
         XCTAssertTrue(xml.contains("storyboardName=\"photoSudoku\""))
         XCTAssertTrue(xml.contains("storyboardName=\"pickerSudoku\""))
-        XCTAssertTrue(xml.contains("storyboardName=\"importSudoku\""))
     }
 
     private func repositoryRootURL(filePath: StaticString = #filePath) -> URL {

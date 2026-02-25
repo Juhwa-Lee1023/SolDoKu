@@ -25,7 +25,23 @@ enum L10n {
         static let routeUnavailableMessage = L10nToken("Please enter Sudoku.")
     }
 
+    enum Manual {
+        static let clean = L10nToken("Clean")
+        static let delete = L10nToken("Delete")
+        static let solve = L10nToken("Solve")
+        static let solving = L10nToken("Currently solving Sudoku")
+        static let reallyWantToSolve = L10nToken("Really want to Solve?")
+        static let requiresMoreThan17 = L10nToken("Sudoku Solve requires more than 17 numbers.")
+        static let cannotSolve = L10nToken("Cannot solve Sudoku.")
+        static let reenterSudoku = L10nToken("Do you want to re-enter Sudoku?")
+        static let cleanSudoku = L10nToken("Clean Sudoku.")
+        static let sudokuNotEntered = L10nToken("Sudoku has not Entered.")
+    }
+
     enum Common {
+        static let yes = L10nToken("Yes")
+        static let no = L10nToken("No")
+        static let cancel = L10nToken("Cancel")
         static let confirm = L10nToken("Confirm")
     }
 }

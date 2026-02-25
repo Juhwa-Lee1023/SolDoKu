@@ -39,6 +39,8 @@
 		3ECA5D66BFDD4D8A81081C53 /* DSPrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8A99487DCB44D687C9CF86 /* DSPrimaryButtonStyle.swift */; };
 		FF1F087E93434CD39F03802D /* DSAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132E7996574B49F6AA113A3E /* DSAlert.swift */; };
 		E32331A2A15A4DDEA2BA1F7B /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C15AB40A434EEBB2482E73 /* L10n.swift */; };
+		9A9B68C3A1F54D29A4A6C101 /* ManualSolveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D26E58D02A44D4A5E7C221 /* ManualSolveView.swift */; };
+		2F35E9C81A0D4E2DA03C7B11 /* ManualSolveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14B9C7FEF4E4B9C8B3A5522 /* ManualSolveViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -106,6 +108,8 @@
 		DE8A99487DCB44D687C9CF86 /* DSPrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		132E7996574B49F6AA113A3E /* DSAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSAlert.swift; sourceTree = "<group>"; };
 		E1C15AB40A434EEBB2482E73 /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		A3D26E58D02A44D4A5E7C221 /* ManualSolveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSolveView.swift; sourceTree = "<group>"; };
+		D14B9C7FEF4E4B9C8B3A5522 /* ManualSolveViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSolveViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +147,7 @@
 			children = (
 				10F06A296FD34C2AB79FF443 /* App */,
 				68CF7C85CF4B45D3AAC10ED7 /* FeatureHome */,
+				F3C9A41D1D8F4AB7A8CD9E33 /* FeatureManualSolve */,
 				14A493F629E44E9D89228F81 /* DesignSystem */,
 				6A94DB75402B4CA496598B40 /* Localization */,
 				D5A7B5CE28F1F033007721B3 /* Localizable */,
@@ -197,6 +202,15 @@
 				E714D572C729490D979D5E31 /* LegacyFlowContainerView.swift */,
 			);
 			path = FeatureHome;
+			sourceTree = "<group>";
+		};
+		F3C9A41D1D8F4AB7A8CD9E33 /* FeatureManualSolve */ = {
+			isa = PBXGroup;
+			children = (
+				A3D26E58D02A44D4A5E7C221 /* ManualSolveView.swift */,
+				D14B9C7FEF4E4B9C8B3A5522 /* ManualSolveViewModel.swift */,
+			);
+			path = FeatureManualSolve;
 			sourceTree = "<group>";
 		};
 		D58069B928E5D0BD00461CD8 /* DL */ = {
@@ -370,10 +384,12 @@
 				B3FE65FB668149CC9B26D41F /* DSTypography.swift in Sources */,
 				D53F618928C77AE20017D756 /* ViewController.swift in Sources */,
 				206FF9097CC54F3793D53F05 /* SudokuApp.swift in Sources */,
+				9A9B68C3A1F54D29A4A6C101 /* ManualSolveView.swift in Sources */,
 				D53F619F28C77C070017D756 /* importSudokuViewController.swift in Sources */,
 				7195192E125E4EB2BA79BA7F /* HomeView.swift in Sources */,
 				D53F618528C77AE20017D756 /* AppDelegate.swift in Sources */,
 				ADD35F8812894B7682087DFD /* AppCompositionRoot.swift in Sources */,
+				2F35E9C81A0D4E2DA03C7B11 /* ManualSolveViewModel.swift in Sources */,
 				3ECA5D66BFDD4D8A81081C53 /* DSPrimaryButtonStyle.swift in Sources */,
 				D597D1E228CFBBCA00694D66 /* model_64.mlpackage in Sources */,
 				D58069B628E4A19300461CD8 /* CALayer+.swift in Sources */,

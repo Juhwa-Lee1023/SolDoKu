@@ -122,8 +122,8 @@ Last updated: 2026-02-25
 ## P3) 기능별 SwiftUI 마이그레이션
 
 ### P3-1. Manual Solve (우선)
-- [ ] 입력 그리드/키패드 UI를 SwiftUI로 구현
-- [ ] 충돌 강조, 삭제/초기화, solve UX 동일 기능 이관
+- [x] 입력 그리드/키패드 UI를 SwiftUI로 구현 (`FeatureManualSolve`)
+- [x] 충돌 강조, 삭제/초기화, solve UX 동일 기능 이관
 - [ ] 기존 UIKit 화면 제거
 
 ### P3-2. Image Solve (2순위)
