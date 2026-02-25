@@ -1,0 +1,28 @@
+name: iOS CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Bootstrap OpenCV
+        run: ./scripts/bootstrap_opencv.sh
+
+      - name: Build (iOS Generic Device)
+        run: xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+
+      - name: Build (iOS Simulator)
+        run: xcodebuild -project Sudoku.xcodeproj -scheme Sudoku -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+
+      - name: Run Domain Tests
+        run: swift test
