@@ -42,11 +42,14 @@ final class CameraSolveViewModel: ObservableObject {
 
     private var frameObservation: AnyCancellable?
     private var cornersObservation: AnyCancellable?
+    private var boardObservation: AnyCancellable?
     private var pendingSolveImage: UIImage?
     private var activeSolveToken = UUID()
     private var isLiveRecognitionInProgress = false
     private var liveRecognitionFrameCounter = 0
-    private let liveRecognitionFrameInterval = 8
+    private let liveRecognitionFrameInterval = 4
+    private var latestBoardObservation: CameraBoardObservation?
+    private var lastLiveRecognitionSignature: Int?
 
     init(
         cameraManager: CameraSessionManager = .init(),
@@ -60,7 +63,7 @@ final class CameraSolveViewModel: ObservableObject {
         self.boardSolver = boardSolver
         self.puzzleRecognizer = SudokuPuzzleRecognizer(
             visionProcessor: visionProcessor,
-            digitPredictor: CoreMLDigitPredictor()
+            digitPredictor: HybridDigitPredictor()
         )
         self.isSolving = false
         self.solvedImage = nil
@@ -92,7 +95,9 @@ final class CameraSolveViewModel: ObservableObject {
         recognizedPreviewImage = nil
         latestDetectedCorners = []
         latestFrameSize = nil
+        latestBoardObservation = nil
         liveRecognitionFrameCounter = 0
+        lastLiveRecognitionSignature = nil
         cameraManager.stopRunning()
     }
 
@@ -116,8 +121,10 @@ final class CameraSolveViewModel: ObservableObject {
         recognizedPreviewImage = nil
         latestDetectedCorners = []
         latestFrameSize = nil
+        latestBoardObservation = nil
         liveRecognitionFrameCounter = 0
         pendingSolveImage = nil
+        lastLiveRecognitionSignature = nil
         configureAndStartCamera()
     }
 
@@ -159,6 +166,16 @@ final class CameraSolveViewModel: ObservableObject {
                 self?.latestDetectedCorners = corners
             }
 
+        boardObservation = cameraManager.$latestBoardObservation
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] observation in
+                self?.latestBoardObservation = observation
+                if observation == nil {
+                    self?.lastLiveRecognitionSignature = nil
+                    self?.recognizedPreviewImage = nil
+                }
+            }
+
         frameObservation = cameraManager.$latestFrame
             .receive(on: DispatchQueue.main)
             .sink { [weak self] frame in
@@ -175,11 +192,21 @@ final class CameraSolveViewModel: ObservableObject {
               primaryButtonMode == .shoot else {
             return
         }
+        guard let observation = latestBoardObservation,
+              observation.isStable,
+              observation.boardAreaRatio >= SudokuOCRConfig.Preview.minimumPreviewBoardAreaRatio,
+              observation.qualityScore >= SudokuOCRConfig.Preview.minimumPreviewQualityScore else {
+            return
+        }
         guard !isLiveRecognitionInProgress else { return }
 
         liveRecognitionFrameCounter += 1
         guard liveRecognitionFrameCounter >= liveRecognitionFrameInterval else { return }
         liveRecognitionFrameCounter = 0
+
+        let signature = observation.recognitionSignature
+        guard signature != lastLiveRecognitionSignature else { return }
+        lastLiveRecognitionSignature = signature
 
         isLiveRecognitionInProgress = true
         DispatchQueue.global(qos: .userInitiated).async {
@@ -190,42 +217,51 @@ final class CameraSolveViewModel: ObservableObject {
             }
 
             guard let detectedRectangle = self.visionProcessor.detectRectangle(in: frame),
-                  self.isDetectedRectangleLargeEnough(detectedRectangle.corners),
+                  self.isRectangleConsistent(with: observation, detectedRectangle: detectedRectangle),
                   let recognitionResult = self.puzzleRecognizer.recognizeBoard(
                       from: detectedRectangle.warpedImage,
                       imageSize: 64,
                       cutOffset: 0
                   ),
                   let boardImage = UIImage(named: "sudoku") else {
+                DispatchQueue.main.async {
+                    if self.lastLiveRecognitionSignature == signature {
+                        self.lastLiveRecognitionSignature = nil
+                    }
+                }
                 return
             }
 
+            let previewBoard: [[Int]]
+            if let corrected = self.puzzleRecognizer.solveRecognizedBoard(from: recognitionResult, using: self.boardSolver) {
+                previewBoard = corrected.correctedBoard
+            } else {
+                previewBoard = recognitionResult.board
+            }
+
             let previewImage = SudokuBoardOverlayRenderer.drawRecognizedBoard(
-                board: recognitionResult.board,
+                board: previewBoard,
                 on: boardImage
             )
 
             DispatchQueue.main.async {
                 guard self.solvedImage == nil,
                       !self.isSolving,
-                      self.primaryButtonMode == .shoot else { return }
+                      self.primaryButtonMode == .shoot,
+                      self.latestBoardObservation?.recognitionSignature == signature else { return }
                 self.recognizedPreviewImage = previewImage
             }
         }
     }
 
-    private func isDetectedRectangleLargeEnough(_ corners: [CGPoint]) -> Bool {
-        guard corners.count >= 4 else { return false }
-        let valueX = corners[0].x - corners[3].x
-        let valueY = corners[0].y - corners[1].y
-        let valueX2 = corners[1].x - corners[2].x
-        let valueY2 = corners[2].y - corners[3].y
-        return abs(valueX) > 100 && abs(valueY) > 100 && abs(valueX2) > 100 && abs(valueY2) > 100
-    }
-
     private func startSolve(ignoreMinimumDigits: Bool, sourceImage: UIImage?) {
         guard !isSolving else { return }
         guard let frame = sourceImage ?? cameraManager.latestFrame else {
+            alertKind = .solveFailed
+            return
+        }
+
+        if sourceImage == nil && !isCameraReadyForSolve() {
             alertKind = .solveFailed
             return
         }
@@ -236,8 +272,28 @@ final class CameraSolveViewModel: ObservableObject {
         cameraManager.stopRunning()
 
         DispatchQueue.global(qos: .userInitiated).async {
-            guard let warpedImage = self.visionProcessor.detectRectangle(in: frame)?.warpedImage,
-                  let recognitionResult = self.puzzleRecognizer.recognizeBoard(from: warpedImage, imageSize: 64, cutOffset: 0) else {
+            let analysis: SudokuPuzzleAnalysis?
+            if let sourceImage {
+                analysis = self.puzzleRecognizer.analyzePuzzle(
+                    in: sourceImage,
+                    imageSize: 64,
+                    cutOffset: 0,
+                    using: self.boardSolver
+                )
+            } else if let observation = self.latestBoardObservation,
+                      let detectedRectangle = self.visionProcessor.detectRectangle(in: frame),
+                      self.isRectangleConsistent(with: observation, detectedRectangle: detectedRectangle) {
+                analysis = self.puzzleRecognizer.analyzePuzzle(
+                    in: frame,
+                    imageSize: 64,
+                    cutOffset: 0,
+                    using: self.boardSolver
+                )
+            } else {
+                analysis = nil
+            }
+
+            guard let analysis else {
                 DispatchQueue.main.async {
                     guard self.activeSolveToken == solveToken else { return }
                     self.isSolving = false
@@ -250,42 +306,38 @@ final class CameraSolveViewModel: ObservableObject {
 
             DispatchQueue.main.async {
                 guard self.activeSolveToken == solveToken else { return }
+                let recognitionResult = analysis.recognitionResult
                 if !ignoreMinimumDigits && recognitionResult.recognizedCount < 17 {
                     self.isSolving = false
-                    self.pendingSolveImage = warpedImage
+                    self.pendingSolveImage = sourceImage ?? frame
                     self.alertKind = .insufficientDigits
                     return
                 }
 
-                self.solveRecognizedBoard(recognitionResult.board, warpedImage: warpedImage, solveToken: solveToken)
+                self.solveRecognizedBoard(analysis, solveToken: solveToken)
             }
         }
     }
 
-    private func solveRecognizedBoard(_ recognizedBoard: [[Int]], warpedImage: UIImage, solveToken: UUID) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let result = self.boardSolver.solve(board: recognizedBoard, iterationLimit: 1_000_000)
+    private func solveRecognizedBoard(_ analysis: SudokuPuzzleAnalysis, solveToken: UUID) {
+        DispatchQueue.main.async {
+            guard self.activeSolveToken == solveToken else { return }
+            self.isSolving = false
 
-            DispatchQueue.main.async {
-                guard self.activeSolveToken == solveToken else { return }
-                self.isSolving = false
-
-                switch result {
-                case .success(let solvedBoard):
-                    self.solvedImage = SudokuBoardOverlayRenderer.drawSolvedBoard(
-                        solvedBoard: solvedBoard,
-                        recognizedBoard: recognizedBoard,
-                        on: warpedImage
-                    )
-                    self.primaryButtonMode = .shootAgain
-                    self.pendingSolveImage = nil
-
-                case .failure:
-                    self.primaryButtonMode = .shoot
-                    self.alertKind = .solveFailed
-                    self.cameraManager.startRunning()
-                }
+            guard let solveResult = analysis.correctionResult else {
+                self.primaryButtonMode = .shoot
+                self.alertKind = .solveFailed
+                self.cameraManager.startRunning()
+                return
             }
+
+            self.solvedImage = SudokuBoardOverlayRenderer.drawSolvedBoard(
+                solvedBoard: solveResult.solvedBoard,
+                recognizedBoard: solveResult.correctedBoard,
+                on: analysis.detectedBoard.warpedImage
+            )
+            self.primaryButtonMode = .shootAgain
+            self.pendingSolveImage = nil
         }
     }
 
@@ -295,13 +347,35 @@ final class CameraSolveViewModel: ObservableObject {
         recognizedPreviewImage = nil
         latestDetectedCorners = []
         latestFrameSize = nil
+        latestBoardObservation = nil
         liveRecognitionFrameCounter = 0
         primaryButtonMode = .shoot
         pendingSolveImage = nil
+        lastLiveRecognitionSignature = nil
         configureAndStartCamera()
     }
 
     private func invalidateSolveToken() {
         activeSolveToken = UUID()
+    }
+
+    private func isCameraReadyForSolve() -> Bool {
+        guard let observation = latestBoardObservation else { return false }
+        return observation.isStable
+            && observation.boardAreaRatio >= SudokuOCRConfig.Preview.minimumPreviewBoardAreaRatio
+            && observation.qualityScore >= SudokuOCRConfig.Preview.minimumPreviewQualityScore
+    }
+
+    private func isRectangleConsistent(with observation: CameraBoardObservation, detectedRectangle: OpenCVDetectedRectangle) -> Bool {
+        guard observation.corners.count == 4, detectedRectangle.corners.count == 4 else { return false }
+        let referenceSide = max(max(observation.frameSize.width, observation.frameSize.height), 1)
+        let maximumAllowedDrift = referenceSide * SudokuOCRConfig.Preview.maximumCornerDriftRatio * CGFloat(1.5)
+        let averageCornerDrift = zip(observation.corners, detectedRectangle.corners)
+            .map { hypot($0.x - $1.x, $0.y - $1.y) }
+            .reduce(CGFloat(0), +) / 4.0
+        let areaDelta = abs(observation.boardAreaRatio - detectedRectangle.boardAreaRatio)
+        return averageCornerDrift <= maximumAllowedDrift
+            && areaDelta <= SudokuOCRConfig.Preview.maximumAreaRatioDelta * CGFloat(1.5)
+            && detectedRectangle.qualityScore >= SudokuOCRConfig.Preview.minimumPreviewQualityScore
     }
 }

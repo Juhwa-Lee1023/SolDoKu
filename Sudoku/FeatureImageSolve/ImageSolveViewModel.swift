@@ -47,7 +47,7 @@ final class ImageSolveViewModel: ObservableObject {
         self.boardSolver = boardSolver
         self.puzzleRecognizer = SudokuPuzzleRecognizer(
             visionProcessor: visionProcessor,
-            digitPredictor: CoreMLDigitPredictor()
+            digitPredictor: HybridDigitPredictor()
         )
         self.displayImage = nil
         self.isSolving = false
@@ -71,11 +71,10 @@ final class ImageSolveViewModel: ObservableObject {
         invalidateSolveToken()
         isSolving = false
         let normalized = image.fixOrientation()
+        sourceImage = normalized
         if let detectedRectangle = visionProcessor.detectRectangle(in: normalized) {
-            sourceImage = detectedRectangle.warpedImage
             displayImage = detectedRectangle.warpedImage
         } else {
-            sourceImage = normalized
             displayImage = normalized
         }
     }
@@ -116,15 +115,22 @@ final class ImageSolveViewModel: ObservableObject {
         activeSolveToken = solveToken
         isSolving = true
         DispatchQueue.global(qos: .userInitiated).async {
-            let recognitionResult = self.puzzleRecognizer.recognizeBoard(from: image, imageSize: 64, cutOffset: 0)
+            let analysis = self.puzzleRecognizer.analyzePuzzle(
+                in: image,
+                imageSize: 64,
+                cutOffset: 0,
+                using: self.boardSolver
+            )
 
             DispatchQueue.main.async {
                 guard self.activeSolveToken == solveToken else { return }
-                guard let recognitionResult else {
+                guard let analysis else {
                     self.isSolving = false
                     self.alertKind = .unsolvable
                     return
                 }
+
+                let recognitionResult = analysis.recognitionResult
 
                 if !ignoreMinimumDigits && recognitionResult.recognizedCount < 17 {
                     self.isSolving = false
@@ -132,30 +138,26 @@ final class ImageSolveViewModel: ObservableObject {
                     return
                 }
 
-                self.solveRecognizedBoard(recognitionResult.board, on: image, solveToken: solveToken)
+                self.solveRecognizedBoard(analysis, solveToken: solveToken)
             }
         }
     }
 
-    private func solveRecognizedBoard(_ recognizedBoard: [[Int]], on image: UIImage, solveToken: UUID) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let solveResult = self.boardSolver.solve(board: recognizedBoard, iterationLimit: 1_000_000)
+    private func solveRecognizedBoard(_ analysis: SudokuPuzzleAnalysis, solveToken: UUID) {
+        DispatchQueue.main.async {
+            guard self.activeSolveToken == solveToken else { return }
+            self.isSolving = false
 
-            DispatchQueue.main.async {
-                guard self.activeSolveToken == solveToken else { return }
-                self.isSolving = false
-
-                switch solveResult {
-                case .success(let solvedBoard):
-                    self.displayImage = SudokuBoardOverlayRenderer.drawSolvedBoard(
-                        solvedBoard: solvedBoard,
-                        recognizedBoard: recognizedBoard,
-                        on: image
-                    )
-                case .failure:
-                    self.alertKind = .unsolvable
-                }
+            guard let solveResult = analysis.correctionResult else {
+                self.alertKind = .unsolvable
+                return
             }
+
+            self.displayImage = SudokuBoardOverlayRenderer.drawSolvedBoard(
+                solvedBoard: solveResult.solvedBoard,
+                recognizedBoard: solveResult.correctedBoard,
+                on: analysis.detectedBoard.warpedImage
+            )
         }
     }
 

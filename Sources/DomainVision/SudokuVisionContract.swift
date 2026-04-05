@@ -39,3 +39,36 @@ public protocol SudokuCellSlicing {
 public protocol SudokuDigitPredicting {
     func predictDigits(in cellImageData: [Data]) throws -> [Int]
 }
+
+public struct SudokuDigitAlternative: Equatable {
+    public let digit: Int
+    public let confidence: Double
+
+    public init(digit: Int, confidence: Double) {
+        self.digit = digit
+        self.confidence = confidence
+    }
+}
+
+public struct SudokuDigitPredictionDetail: Equatable {
+    public let digit: Int
+    public let confidence: Double
+    public let alternatives: [SudokuDigitAlternative]
+    public let isBlankLikely: Bool
+
+    public init(
+        digit: Int,
+        confidence: Double,
+        alternatives: [SudokuDigitAlternative],
+        isBlankLikely: Bool
+    ) {
+        self.digit = digit
+        self.confidence = confidence
+        self.alternatives = alternatives
+        self.isBlankLikely = isBlankLikely
+    }
+}
+
+public protocol SudokuDigitPredictingDetailed: SudokuDigitPredicting {
+    func predictDigitsDetailed(in cellImageData: [Data]) throws -> [SudokuDigitPredictionDetail]
+}

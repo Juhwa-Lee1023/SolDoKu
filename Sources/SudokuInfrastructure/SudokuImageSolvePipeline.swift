@@ -58,8 +58,14 @@ public struct SudokuImageSolvePipeline {
         }
 
         let digits: [Int]
+        let predictionDetails: [SudokuDigitPredictionDetail]?
         do {
             digits = try predictor.predictDigits(in: cellImages)
+            if let detailedPredictor = predictor as? SudokuDigitPredictingDetailed {
+                predictionDetails = try detailedPredictor.predictDigitsDetailed(in: cellImages)
+            } else {
+                predictionDetails = nil
+            }
         } catch {
             return .failure(mapVisionError(error))
         }
@@ -78,6 +84,24 @@ public struct SudokuImageSolvePipeline {
         case .success(let solvedBoard):
             return .success(solvedBoard)
         case .failure(let error):
+            if case .invalidBoard = error,
+               let correctedBoard = correctedSolveIfPossible(
+                    board: board,
+                    details: predictionDetails,
+                    iterationLimit: iterationLimit
+               ) {
+                return .success(correctedBoard)
+            }
+
+            if case .unsolvable = error,
+               let correctedBoard = correctedSolveIfPossible(
+                    board: board,
+                    details: predictionDetails,
+                    iterationLimit: iterationLimit
+               ) {
+                return .success(correctedBoard)
+            }
+
             return .failure(mapSolverError(error))
         }
     }
@@ -115,6 +139,28 @@ public struct SudokuImageSolvePipeline {
             return .unsolvable
         case .iterationLimitExceeded:
             return .iterationLimitExceeded
+        }
+    }
+
+    private func correctedSolveIfPossible(
+        board: [[Int]],
+        details: [SudokuDigitPredictionDetail]?,
+        iterationLimit: Int
+    ) -> [[Int]]? {
+        guard let details, details.count == 81 else { return nil }
+        guard let corrected = DetailedPredictionCorrection.solveIfNeeded(
+            board: board,
+            details: details,
+            solver: solver
+        ) else {
+            return nil
+        }
+
+        switch solver.solve(corrected.correctedBoard, iterationLimit: iterationLimit) {
+        case .success(let solvedBoard):
+            return solvedBoard
+        case .failure:
+            return corrected.solvedBoard
         }
     }
 }
