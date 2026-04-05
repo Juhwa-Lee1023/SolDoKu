@@ -2,9 +2,9 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ZIP_PATH="$ROOT_DIR/Framework/opencv2.framework.zip"
-CHECKSUM_PATH="$ROOT_DIR/Framework/opencv2.framework.zip.sha256"
-FRAMEWORK_DIR="$ROOT_DIR/Framework/opencv2.framework"
+ZIP_PATH="$ROOT_DIR/Framework/opencv2.xcframework.zip"
+CHECKSUM_PATH="$ROOT_DIR/Framework/opencv2.xcframework.zip.sha256"
+FRAMEWORK_DIR="$ROOT_DIR/Framework/opencv2.xcframework"
 
 if [[ ! -f "$ZIP_PATH" ]]; then
   echo "error: missing $ZIP_PATH"
@@ -23,7 +23,7 @@ echo "Verifying OpenCV archive checksum..."
 )
 
 if [[ -d "$FRAMEWORK_DIR" ]]; then
-  echo "opencv2.framework already exists: $FRAMEWORK_DIR"
+  echo "opencv2.xcframework already exists: $FRAMEWORK_DIR"
   exit 0
 fi
 
@@ -36,12 +36,12 @@ trap cleanup EXIT
 echo "Extracting OpenCV framework..."
 unzip -q "$ZIP_PATH" -d "$TMP_DIR"
 
-if [[ -d "$TMP_DIR/opencv2.framework" ]]; then
-  mv "$TMP_DIR/opencv2.framework" "$FRAMEWORK_DIR"
-elif [[ -d "$TMP_DIR/Framework/opencv2.framework" ]]; then
-  mv "$TMP_DIR/Framework/opencv2.framework" "$FRAMEWORK_DIR"
+if [[ -d "$TMP_DIR/opencv2.xcframework" ]]; then
+  mv "$TMP_DIR/opencv2.xcframework" "$FRAMEWORK_DIR"
+elif [[ -d "$TMP_DIR/Framework/opencv2.xcframework" ]]; then
+  mv "$TMP_DIR/Framework/opencv2.xcframework" "$FRAMEWORK_DIR"
 else
-  echo "error: failed to find opencv2.framework in archive"
+  echo "error: failed to find opencv2.xcframework in archive"
   exit 1
 fi
 

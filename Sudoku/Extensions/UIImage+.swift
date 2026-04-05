@@ -101,4 +101,31 @@ extension UIImage {
         guard let outputImage = cgValue.makeImage() else { return self }
         return UIImage(cgImage: outputImage)
     }
+
+    func insetCropped(ratio: CGFloat) -> UIImage? {
+        let normalizedImage = fixOrientation()
+        guard let cgImage = normalizedImage.cgImage else { return nil }
+
+        let clampedRatio = min(max(ratio, 0), 0.4)
+        let insetX = normalizedImage.size.width * clampedRatio
+        let insetY = normalizedImage.size.height * clampedRatio
+        let cropRect = CGRect(
+            x: insetX,
+            y: insetY,
+            width: normalizedImage.size.width - (insetX * 2),
+            height: normalizedImage.size.height - (insetY * 2)
+        ).integral
+
+        guard cropRect.width >= 4, cropRect.height >= 4 else { return nil }
+
+        let scaledCropRect = CGRect(
+            x: cropRect.origin.x * normalizedImage.scale,
+            y: cropRect.origin.y * normalizedImage.scale,
+            width: cropRect.width * normalizedImage.scale,
+            height: cropRect.height * normalizedImage.scale
+        ).integral
+
+        guard let cropped = cgImage.cropping(to: scaledCropRect) else { return nil }
+        return UIImage(cgImage: cropped, scale: normalizedImage.scale, orientation: .up)
+    }
 }

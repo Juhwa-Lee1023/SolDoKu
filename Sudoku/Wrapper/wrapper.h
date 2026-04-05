@@ -10,10 +10,12 @@
 
 @interface wrapper : NSObject
 
-+ (NSMutableArray *) detectRectangle: (UIImage *)image;
++ (NSDictionary *) detectRectangle: (UIImage *)image;
++ (NSDictionary *) warpBoard: (UIImage *)image corners: (NSArray<NSValue *> *)corners;
 + (NSMutableArray *) sliceImages: (UIImage *)image imageSize: (int)imageSize cutOffset: (int)cutOffset;
 + (NSMutableArray *) getNumImage: (UIImage *)sourceImage imageSize: (int)imageSize;
-+ (NSArray *) detectRect: (UIImage *)image;
++ (NSDictionary *) analyzeCell: (UIImage *)sourceImage imageSize: (int)imageSize;
++ (NSDictionary *) detectRect: (UIImage *)image;
 
 
 @end
